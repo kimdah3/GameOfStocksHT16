@@ -22,6 +22,7 @@
   "devDependencies": {
     "@types/core-js": "^0.9.34",
     "@types/jasmine": "^2.5.38",
-    "@types/node": "^6.0.47"
+    "@types/node": "^6.0.47",
+    "gulp": "3.9.1" 
   }
 }
