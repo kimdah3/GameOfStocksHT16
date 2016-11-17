@@ -50,5 +50,5 @@ gulp.task('restore', [
     'restore:systemjs',
     'restore:rxjs',
     'restore:angular-in-memory-web-api',
-    'restore:angular',
+    'restore:angular'
 ]);

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,8 +11,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using GameOfStocksHT16.Data;
+using GameOfStocksHT16.Logic;
 using GameOfStocksHT16.Models;
 using GameOfStocksHT16.Services;
+using Microsoft.AspNetCore.Identity;
 
 namespace GameOfStocksHT16
 {
@@ -23,6 +26,8 @@ namespace GameOfStocksHT16
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
+
+            Task.Run(() => StockHandler.SaveStocksOnStartup(env.WebRootPath));
 
             if (env.IsDevelopment())
             {
@@ -43,8 +48,14 @@ namespace GameOfStocksHT16
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<ApplicationUser, IdentityRole>(options => options.Password = new PasswordOptions
+            {
+                RequireDigit = true,
+                RequiredLength = 6,
+                RequireLowercase = true,
+                RequireUppercase = true,
+                RequireNonAlphanumeric = false
+            }).AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
             services.AddMvc();
