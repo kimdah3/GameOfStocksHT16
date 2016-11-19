@@ -2,7 +2,7 @@
 
 @Component({
     selector: 'gos-app',
-    templateUrl: 'app/html/app.component.html'
+    templateUrl: 'app/templates/app.component.html'
 })
 
 export class AppComponent { }
