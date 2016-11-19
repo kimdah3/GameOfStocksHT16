@@ -15,7 +15,7 @@ var AppComponent = (function () {
     AppComponent = __decorate([
         core_1.Component({
             selector: 'gos-app',
-            templateUrl: 'app/htmlTemplates/app/app.component.html'
+            templateUrl: 'app/html/app.component.html'
         }), 
         __metadata('design:paramtypes', [])
     ], AppComponent);
