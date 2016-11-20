@@ -9,25 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var platform_browser_1 = require('@angular/platform-browser');
-var app_routing_1 = require("./app.routing");
-var app_component_1 = require('./app.component');
-var welcome_component_1 = require("./welcome/welcome.component");
-var AppModule = (function () {
-    function AppModule() {
+var WelcomeComponent = (function () {
+    function WelcomeComponent() {
     }
-    AppModule = __decorate([
-        core_1.NgModule({
-            imports: [
-                platform_browser_1.BrowserModule,
-                app_routing_1.routing
-            ],
-            declarations: [app_component_1.AppComponent, welcome_component_1.WelcomeComponent],
-            bootstrap: [app_component_1.AppComponent]
+    WelcomeComponent = __decorate([
+        core_1.Component({
+            selector: 'welcome',
+            template: '<h1>Välkommen!</h1>'
         }), 
         __metadata('design:paramtypes', [])
-    ], AppModule);
-    return AppModule;
+    ], WelcomeComponent);
+    return WelcomeComponent;
 }());
-exports.AppModule = AppModule;
-//# sourceMappingURL=app.module.js.map
+exports.WelcomeComponent = WelcomeComponent;
+//# sourceMappingURL=welcome.component.js.map
