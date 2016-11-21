@@ -7,6 +7,7 @@ import { routing } from "./app.routing";
 import { AppComponent } from './app.component';
 import { WelcomeComponent } from "./welcome/welcome.component";
 import { StockListComponent } from "./Stocks/stock-list.component";
+import { StockComponent } from "./Stocks/stock.component";
 
 @NgModule({
     imports: [
@@ -14,7 +15,12 @@ import { StockListComponent } from "./Stocks/stock-list.component";
         routing,
         HttpModule
     ],
-    declarations: [AppComponent, WelcomeComponent, StockListComponent],
+    declarations: [
+        AppComponent,
+        WelcomeComponent,
+        StockListComponent,
+        StockComponent
+    ],
     bootstrap: [AppComponent]
 })
 

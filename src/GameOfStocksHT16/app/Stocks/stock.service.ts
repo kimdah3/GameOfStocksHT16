@@ -9,15 +9,21 @@ import { IStock } from './stock';
 
 @Injectable()
 export class StockService {
-    private _stockUrl = 'api/stocks';
+    private _stocksUrl = 'api/stocks';
     constructor(private _http: Http) {
 
     }
     getStocks(): Observable<IStock[]> {
-        return this._http.get(this._stockUrl)
+        return this._http.get(this._stocksUrl)
             .map((response: Response) => <IStock[]>response.json())
             .do(data => console.log('All: ' + JSON.stringify(data)))
             .catch(this.handleError);
+    }
+    
+    getStock(id: string): Observable<IStock> {
+        return this.getStocks()
+            .map((stocks: IStock[]) => stocks.find(s => s.label === id))
+            .do(data => console.log(JSON.stringify(data)));
     }
 
     private handleError(error: Response) {

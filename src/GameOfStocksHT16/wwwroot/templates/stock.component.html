@@ -14,11 +14,9 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor='let stock of stocks'>
+        <tr>
             <td>
-                <a routerLink="['Stock',{id: stock.label}]">
-                    {{stock.label}}
-                </a>
+                {{stock.label}}
             </td>
             <td>
                 {{stock.name}}
@@ -52,3 +50,7 @@
         </tr>
     </tbody>
 </table>
+
+<a class="btn btn-default" (click)="onBack()">
+    <i class="glyphicon glyphicon-chevron-left"></i> Bakåt
+</a>

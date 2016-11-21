@@ -15,6 +15,7 @@ var app_routing_1 = require("./app.routing");
 var app_component_1 = require('./app.component');
 var welcome_component_1 = require("./welcome/welcome.component");
 var stock_list_component_1 = require("./Stocks/stock-list.component");
+var stock_component_1 = require("./Stocks/stock.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -25,7 +26,12 @@ var AppModule = (function () {
                 app_routing_1.routing,
                 http_1.HttpModule
             ],
-            declarations: [app_component_1.AppComponent, welcome_component_1.WelcomeComponent, stock_list_component_1.StockListComponent],
+            declarations: [
+                app_component_1.AppComponent,
+                welcome_component_1.WelcomeComponent,
+                stock_list_component_1.StockListComponent,
+                stock_component_1.StockComponent
+            ],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
