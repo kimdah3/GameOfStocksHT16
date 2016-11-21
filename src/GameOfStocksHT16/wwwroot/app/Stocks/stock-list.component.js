@@ -9,17 +9,23 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var AppComponent = (function () {
-    function AppComponent() {
+var stock_service_1 = require("./stock.service");
+var StockListComponent = (function () {
+    function StockListComponent(_stockService) {
+        this._stockService = _stockService;
     }
-    AppComponent = __decorate([
+    StockListComponent.prototype.ngOnInit = function () {
+        var _this = this;
+        this._stockService.getStocks().subscribe(function (stocks) { return _this.stocks = stocks; }, function (error) { return _this.errorMessage = error; });
+    };
+    StockListComponent = __decorate([
         core_1.Component({
-            selector: 'gos-app',
-            templateUrl: 'app/app.component.html'
+            templateUrl: 'templates/stock-list.component.html',
+            providers: [stock_service_1.StockService]
         }), 
-        __metadata('design:paramtypes', [])
-    ], AppComponent);
-    return AppComponent;
+        __metadata('design:paramtypes', [stock_service_1.StockService])
+    ], StockListComponent);
+    return StockListComponent;
 }());
-exports.AppComponent = AppComponent;
-//# sourceMappingURL=app.component.js.map
+exports.StockListComponent = StockListComponent;
+//# sourceMappingURL=stock-list.component.js.map

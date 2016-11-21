@@ -10,9 +10,11 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
+var http_1 = require('@angular/http');
 var app_routing_1 = require("./app.routing");
 var app_component_1 = require('./app.component');
 var welcome_component_1 = require("./welcome/welcome.component");
+var stock_list_component_1 = require("./Stocks/stock-list.component");
 var AppModule = (function () {
     function AppModule() {
     }
@@ -20,9 +22,10 @@ var AppModule = (function () {
         core_1.NgModule({
             imports: [
                 platform_browser_1.BrowserModule,
-                app_routing_1.routing
+                app_routing_1.routing,
+                http_1.HttpModule
             ],
-            declarations: [app_component_1.AppComponent, welcome_component_1.WelcomeComponent],
+            declarations: [app_component_1.AppComponent, welcome_component_1.WelcomeComponent, stock_list_component_1.StockListComponent],
             bootstrap: [app_component_1.AppComponent]
         }), 
         __metadata('design:paramtypes', [])
