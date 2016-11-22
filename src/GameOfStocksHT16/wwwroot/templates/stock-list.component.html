@@ -1,4 +1,12 @@
-﻿<table class='table'>
+﻿
+        <form id="custom-search-form" class="form-search form-horizontal">
+            <div class="input-append">
+                <input [(ngModel)]="listFilter" [ngModelOptions]="{standalone: true}" type="text" class="search-query mac-style" placeholder="Filtrera">
+                <button type="submit" class="btn"><i class="glyphicon glyphicon-search"></i></button>
+            </div>
+        </form>
+
+<table class='table'>
     <thead>
         <tr>
             <th>Label</th>
@@ -14,7 +22,7 @@
         </tr>
     </thead>
     <tbody>
-        <tr *ngFor='let stock of stocks'>
+        <tr *ngFor='let stock of stocks | stockFilter:listFilter'>
             <td>
                 <a [routerLink]="['/stock', stock.label]">
                     {{stock.label}}

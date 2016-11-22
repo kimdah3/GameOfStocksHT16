@@ -21,6 +21,7 @@ var StockListComponent = (function () {
     StockListComponent = __decorate([
         core_1.Component({
             templateUrl: 'templates/stock-list.component.html',
+            styleUrls: ['css/stock-list.component.css'],
             providers: [stock_service_1.StockService]
         }), 
         __metadata('design:paramtypes', [stock_service_1.StockService])

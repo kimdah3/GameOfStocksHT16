@@ -7,6 +7,7 @@
 /// <reference path="app/stocks/stock.component.js" />
 /// <reference path="app/Stocks/stock.js" />
 /// <reference path="app/Stocks/stock.service.js" />
+/// <reference path="app/stocks/stock-filter.pipe.js" />
 /// <reference path="app/stocks/stock-list.component.js" />
 /// <reference path="app/welcome/welcome.component.js" />
 /// <reference path="js/site.js" />

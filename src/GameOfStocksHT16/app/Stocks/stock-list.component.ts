@@ -5,11 +5,14 @@ import { IStock } from './stock';
 
 @Component({
     templateUrl: 'templates/stock-list.component.html',
+    styleUrls: ['css/stock-list.component.css'],
     providers: [ StockService ]
 })
 export class StockListComponent implements OnInit {
     stocks: IStock[];
+    listFilter: string;
     errorMessage: string;
+
     constructor(private _stockService: StockService) {
     }
 

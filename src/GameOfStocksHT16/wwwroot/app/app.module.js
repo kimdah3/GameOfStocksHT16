@@ -10,12 +10,14 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 var core_1 = require('@angular/core');
 var platform_browser_1 = require('@angular/platform-browser');
+var forms_1 = require('@angular/forms');
 var http_1 = require('@angular/http');
 var app_routing_1 = require("./app.routing");
 var app_component_1 = require('./app.component');
 var welcome_component_1 = require("./welcome/welcome.component");
 var stock_list_component_1 = require("./Stocks/stock-list.component");
 var stock_component_1 = require("./Stocks/stock.component");
+var stock_filter_pipe_1 = require('./Stocks/stock-filter.pipe');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -23,6 +25,7 @@ var AppModule = (function () {
         core_1.NgModule({
             imports: [
                 platform_browser_1.BrowserModule,
+                forms_1.FormsModule,
                 app_routing_1.routing,
                 http_1.HttpModule
             ],
@@ -30,7 +33,8 @@ var AppModule = (function () {
                 app_component_1.AppComponent,
                 welcome_component_1.WelcomeComponent,
                 stock_list_component_1.StockListComponent,
-                stock_component_1.StockComponent
+                stock_component_1.StockComponent,
+                stock_filter_pipe_1.StockFilterPipe
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 
