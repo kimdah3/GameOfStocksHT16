@@ -1,5 +1,6 @@
 ﻿import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
+import { Subscription } from 'rxjs/Subscription';
 
 import { StockService } from "./stock.service";
 import { IStock } from './stock';
@@ -13,16 +14,17 @@ export class StockComponent implements OnInit {
     stock: IStock;
     stockLabel: string;
     errorMessage: string;
+    private sub: Subscription;
 
     constructor(
-        private _stockService: StockService,
         private _route: ActivatedRoute,
-        private _router: Router) {
+        private _router: Router,
+        private _stockService: StockService) {
     }
 
     ngOnInit(): void {
-        //this.stockLabel = this._route.snapshot.params['id'];
-        this.getStock("REJL-B.ST");
+        this.stockLabel = this._route.snapshot.params['id'];
+        this.getStock(this.stockLabel);
     }
 
     getStock(id: string) {

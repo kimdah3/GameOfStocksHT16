@@ -8,7 +8,7 @@ const appRoutes: Routes = [
     { path: "", redirectTo: "welcome", pathMatch: "full" },
     { path: "welcome", component: WelcomeComponent },
     { path: "stocks", component: StockListComponent },
-    { path: "stocks/: id", component: StockComponent }
+    { path: "stock/:id", component: StockComponent }
 ];
 
 export const routing = RouterModule.forRoot(appRoutes);

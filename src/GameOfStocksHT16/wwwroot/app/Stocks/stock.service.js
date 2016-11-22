@@ -18,18 +18,16 @@ var StockService = (function () {
     function StockService(_http) {
         this._http = _http;
         this._stocksUrl = 'api/stocks';
-        this._stockUrl = 'api/stocks/';
     }
     StockService.prototype.getStocks = function () {
         return this._http.get(this._stocksUrl)
             .map(function (response) { return response.json(); })
-            .do(function (data) { return console.log('All: ' + JSON.stringify(data)); })
             .catch(this.handleError);
     };
     StockService.prototype.getStock = function (id) {
         return this.getStocks()
             .map(function (stocks) { return stocks.find(function (s) { return s.label === id; }); })
-            .do(function (data) { return console.log("11111111111111111111111112222222222222333333333333" + JSON.stringify(data)); });
+            .catch(this.handleError);
     };
     StockService.prototype.handleError = function (error) {
         console.log(error);

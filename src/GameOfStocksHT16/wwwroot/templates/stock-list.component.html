@@ -16,7 +16,7 @@
     <tbody>
         <tr *ngFor='let stock of stocks'>
             <td>
-                <a routerLink="['Stock',{id: stock.label}]">
+                <a [routerLink]="['/stock', stock.label]">
                     {{stock.label}}
                 </a>
             </td>

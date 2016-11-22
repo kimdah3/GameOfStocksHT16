@@ -12,14 +12,14 @@ var core_1 = require("@angular/core");
 var router_1 = require("@angular/router");
 var stock_service_1 = require("./stock.service");
 var StockComponent = (function () {
-    function StockComponent(_stockService, _route, _router) {
-        this._stockService = _stockService;
+    function StockComponent(_route, _router, _stockService) {
         this._route = _route;
         this._router = _router;
+        this._stockService = _stockService;
     }
     StockComponent.prototype.ngOnInit = function () {
-        //this.stockLabel = this._route.snapshot.params['id'];
-        this.getStock("REJL-B.ST");
+        this.stockLabel = this._route.snapshot.params['id'];
+        this.getStock(this.stockLabel);
     };
     StockComponent.prototype.getStock = function (id) {
         var _this = this;
@@ -34,7 +34,7 @@ var StockComponent = (function () {
             templateUrl: 'templates/stock.component.html',
             providers: [stock_service_1.StockService]
         }), 
-        __metadata('design:paramtypes', [stock_service_1.StockService, router_1.ActivatedRoute, router_1.Router])
+        __metadata('design:paramtypes', [router_1.ActivatedRoute, router_1.Router, stock_service_1.StockService])
     ], StockComponent);
     return StockComponent;
 }());
