@@ -1,0 +1,21 @@
+
+.list-group {
+    max-height: 300px;
+    overflow: hidden;
+    overflow-y: auto;
+}
+
+.list-group-item a{
+    display: block; 
+    padding: 10px;
+    color: black;
+}
+
+.list-group-item a:hover{
+    background: lightblue;
+    text-decoration: none;
+}
+
+.navSearch .list-group .list-group-item{
+    padding: 0;
+}

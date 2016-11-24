@@ -4,6 +4,7 @@
 /// <reference path="app/app.module.js" />
 /// <reference path="app/app.routing.js" />
 /// <reference path="app/main.js" />
+/// <reference path="app/search/search.component.js" />
 /// <reference path="app/stocks/stock.component.js" />
 /// <reference path="app/Stocks/stock.js" />
 /// <reference path="app/Stocks/stock.service.js" />

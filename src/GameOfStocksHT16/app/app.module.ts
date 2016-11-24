@@ -10,6 +10,7 @@ import { WelcomeComponent } from "./welcome/welcome.component";
 import { StockListComponent } from "./Stocks/stock-list.component";
 import { StockComponent } from "./Stocks/stock.component";
 import { StockFilterPipe } from './Stocks/stock-filter.pipe';
+import { SearchComponent } from './Search/search.component';
 
 @NgModule({
     imports: [
@@ -23,7 +24,8 @@ import { StockFilterPipe } from './Stocks/stock-filter.pipe';
         WelcomeComponent,
         StockListComponent,
         StockComponent,
-        StockFilterPipe
+        StockFilterPipe,
+        SearchComponent
     ],
     bootstrap: [AppComponent]
 })

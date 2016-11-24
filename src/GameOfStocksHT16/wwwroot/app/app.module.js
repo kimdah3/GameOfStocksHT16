@@ -18,6 +18,7 @@ var welcome_component_1 = require("./welcome/welcome.component");
 var stock_list_component_1 = require("./Stocks/stock-list.component");
 var stock_component_1 = require("./Stocks/stock.component");
 var stock_filter_pipe_1 = require('./Stocks/stock-filter.pipe');
+var search_component_1 = require('./Search/search.component');
 var AppModule = (function () {
     function AppModule() {
     }
@@ -34,7 +35,8 @@ var AppModule = (function () {
                 welcome_component_1.WelcomeComponent,
                 stock_list_component_1.StockListComponent,
                 stock_component_1.StockComponent,
-                stock_filter_pipe_1.StockFilterPipe
+                stock_filter_pipe_1.StockFilterPipe,
+                search_component_1.SearchComponent
             ],
             bootstrap: [app_component_1.AppComponent]
         }), 
