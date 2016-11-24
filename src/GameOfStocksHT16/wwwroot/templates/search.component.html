@@ -1,6 +1,6 @@
 <form class="navbar-form navbar-left navSearch" role="search">
     <div class="form-group">
-        <input [(ngModel)]="searchFilter" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Search">
+        <input [(ngModel)]="searchFilter" [ngModelOptions]="{standalone: true}" type="text" class="form-control" placeholder="Hitta aktie">
     </div>
         <ul *ngIf="searchFilter" class="list-group" style="position: absolute;">
             <li *ngFor='let stock of stocks | stockFilter:searchFilter' class="list-group-item">

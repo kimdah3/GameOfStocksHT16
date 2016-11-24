@@ -9,19 +9,33 @@
             </button>
             <a class="navbar-brand" routerLink="">Game of Stocks</a>
         </div>
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-2">
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <navsearch></navsearch>
             <ul class="nav navbar-nav navbar-right">
-                <li routerLinkActive="active"><a routerLink="welcome"><span class="glyphicon glyphicon-home"></span> <span class="sr-only"></span></a></li>
-                <li routerLinkActive="active"><a routerLink="stocks"><span class="glyphicon glyphicon-list-alt"></span><span class="sr-only"></span></a></li>
+                <li routerLinkActive="active"><a routerLink="welcome">
+                    <i class="fa fa-home fa-2x"></i> <span class="sr-only"></span></a>
+                </li>
+                <li routerLinkActive="active"><a routerLink="stocks">
+                    <i class="fa fa-line-chart fa-2x"></i><span class="sr-only"></span></a>
+                </li>
+                <li routerLinkActive="" class="disabled">
+                    <a routerLink="">
+                        <i class="fa fa-list-alt fa-2x"></i><span class="sr-only"></span>
+                    </a>
+                </li>
+                <li routerLinkActive="" class="disabled">
+                    <a routerLink="">
+                        <i class="fa fa-users fa-2x"></i><span class="sr-only"></span>
+                    </a>
+                </li>
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="glyphicon glyphicon-cog"></span></a>
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="fa fa-2x fa-cog"></span></a>
                     <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Profil</a></li>
+                        <li class="disabled"><a href="#">Profil</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">Inställningar</a></li>
+                        <li class="disabled"><a href="#">Inställningar</a></li>
                         <li class="divider"></li>
-                        <li><a href="#">Logga ut</a></li>
+                        <li class="disabled"><a href="#">Logga ut</a></li>
                     </ul>
                 </li>
             </ul>
