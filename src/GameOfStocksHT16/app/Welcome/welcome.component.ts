@@ -2,7 +2,7 @@
 
 @Component({
     selector: 'welcome',
-    template: '<h1>Välkommen!</h1>'
+    templateUrl: 'templates/welcome.component.html',
 })
 
 export class WelcomeComponent { }
