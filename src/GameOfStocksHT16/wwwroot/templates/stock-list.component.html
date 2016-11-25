@@ -24,11 +24,6 @@
                 </thead>
                 <tbody>
                     <tr *ngFor='let stock of stocks | stockFilter:listFilter'>
-                        <!--<td>
-                            <a [routerLink]="['/stock', stock.label]">
-                                {{stock.label}}
-                            </a>
-                        </td>-->
                         <td>
                             <a [routerLink]="['/stock', stock.label]">
                                 {{stock.name}}

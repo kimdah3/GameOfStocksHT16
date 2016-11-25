@@ -1,21 +1,25 @@
+.navSearch input[type=text] {
+    width: 300px !important;
+}
 
 .list-group {
-    max-height: 300px;
+    width: 300px;
+    max-height: 270px;
     overflow: hidden;
     overflow-y: auto;
 }
 
-.list-group-item a{
-    display: block; 
+.list-group-item a {
+    display: block;
     padding: 10px;
     color: black;
 }
 
-.list-group-item a:hover{
-    background: lightblue;
-    text-decoration: none;
-}
+    .list-group-item a:hover {
+        background: #53A2BE;
+        text-decoration: none;
+    }
 
-.navSearch .list-group .list-group-item{
+.navSearch .list-group .list-group-item {
     padding: 0;
 }
