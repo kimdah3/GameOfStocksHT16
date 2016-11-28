@@ -1,58 +1,61 @@
 ﻿<h1 *ngIf='errorMessage && errorMessage.length'>{{errorMessage}}</h1>
+<section class="section-padding-medium">
+    <div class="container">
+        <table class='table' *ngIf="stock">
+            <thead>
+                <tr>
+                    <!--<th>Label</th>-->
+                    <th>Name</th>
+                    <th>Change</th>
+                    <th>Volume</th>
+                    <th>Open</th>
+                    <th>Days Low</th>
+                    <th>Days High</th>
+                    <th>Last Trade Price</th>
+                    <th>Last Trade Time</th>
+                    <th>Last Trade Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <!--<td>
+                        {{stock.label}}
+                    </td>-->
+                    <td>
+                        {{stock.name}}
+                    </td>
+                    <td>
+                        {{stock.change}}
+                    </td>
+                    <td>
+                        {{stock.volume}}
+                    </td>
+                    <td>
+                        {{stock.open}}
+                    </td>
 
-<table class='table' *ngIf="stock">
-    <thead>
-        <tr>
-            <th>Label</th>
-            <th>Name</th>
-            <th>Change</th>
-            <th>Volume</th>
-            <th>Open</th>
-            <th>Days Low</th>
-            <th>Days High</th>
-            <th>Last Trade Price</th>
-            <th>Last Trade Time</th>
-            <th>Last Trade Date</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>
-                {{stock.label}}
-            </td>
-            <td>
-                {{stock.name}}
-            </td>
-            <td>
-                {{stock.change}}
-            </td>
-            <td>
-                {{stock.volume}}
-            </td>
-            <td>
-                {{stock.open}}
-            </td>
+                    <td>
+                        {{stock.daysLow}}
+                    </td>
+                    <td>
+                        {{stock.daysHigh}}
+                    </td>
+                    <td>
+                        {{stock.lastTradePriceOnly}}
+                    </td>
+                    <td>
+                        {{stock.lastTradeTime}}
+                    </td>
+                    <td>
+                        {{stock.lastTradeDate}}
+                    </td>
 
-            <td>
-                {{stock.daysLow}}
-            </td>
-            <td>
-                {{stock.daysHigh}}
-            </td>
-            <td>
-                {{stock.lastTradePriceOnly}}
-            </td>
-            <td>
-                {{stock.lastTradeTime}}
-            </td>
-            <td>
-                {{stock.lastTradeDate}}
-            </td>
+                </tr>
+            </tbody>
+        </table>
 
-        </tr>
-    </tbody>
-</table>
-
-<a class="btn btn-default" (click)="onBack()">
-    <i class="glyphicon glyphicon-chevron-left"></i> Bakåt
-</a>
+        <a class="btn btn-default" (click)="onBack()">
+            <i class="glyphicon glyphicon-chevron-left"></i> Bakåt
+        </a>
+    </div>
+</section>
