@@ -25,4 +25,10 @@ export class SearchComponent implements OnInit {
     clearSearch(): void {
         this.searchFilter = "";
     }
+
+    colorSelector(value: string): boolean {
+        if (value.charAt(0) == "+") {
+            return true;
+        }
+    }
 }

@@ -21,6 +21,11 @@ var SearchComponent = (function () {
     SearchComponent.prototype.clearSearch = function () {
         this.searchFilter = "";
     };
+    SearchComponent.prototype.colorSelector = function (value) {
+        if (value.charAt(0) == "+") {
+            return true;
+        }
+    };
     SearchComponent = __decorate([
         core_1.Component({
             selector: 'navsearch',

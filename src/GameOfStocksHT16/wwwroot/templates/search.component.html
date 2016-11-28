@@ -4,7 +4,7 @@
     </div>
         <ul *ngIf="searchFilter" class="list-group" style="position: absolute;">
             <li *ngFor='let stock of stocks | stockFilter:searchFilter' class="list-group-item">
-                <a (click)="clearSearch()" [routerLink]="['/stock', stock.label]">{{stock.name}}</a>
+                <a (click)="clearSearch()" [routerLink]="['/stock', stock.label]">{{stock.name}}<br />Förändring: <span [style.color] = "colorSelector(stock.change) ? 'green': 'red'">{{stock.change}}</span></a>
             </li>
         </ul>
 </form>
