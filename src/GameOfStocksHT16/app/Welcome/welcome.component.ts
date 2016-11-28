@@ -2,7 +2,7 @@
 
 @Component({
     selector: 'welcome',
-    templateUrl: 'templates/welcome.component.html',
+    templateUrl: 'templates/welcome.component.html'
 })
 
 export class WelcomeComponent { }

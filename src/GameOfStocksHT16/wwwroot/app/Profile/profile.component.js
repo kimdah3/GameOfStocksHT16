@@ -9,17 +9,17 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var core_1 = require('@angular/core');
-var WelcomeComponent = (function () {
-    function WelcomeComponent() {
+var ProfileComponent = (function () {
+    function ProfileComponent() {
     }
-    WelcomeComponent = __decorate([
+    ProfileComponent = __decorate([
         core_1.Component({
-            selector: 'welcome',
-            templateUrl: 'templates/welcome.component.html'
+            templateUrl: 'templates/profile.component.html',
+            styleUrls: ['css/profile.component.css']
         }), 
         __metadata('design:paramtypes', [])
-    ], WelcomeComponent);
-    return WelcomeComponent;
+    ], ProfileComponent);
+    return ProfileComponent;
 }());
-exports.WelcomeComponent = WelcomeComponent;
-//# sourceMappingURL=welcome.component.js.map
+exports.ProfileComponent = ProfileComponent;
+//# sourceMappingURL=profile.component.js.map

@@ -11,6 +11,7 @@ import { StockListComponent } from "./Stocks/stock-list.component";
 import { StockComponent } from "./Stocks/stock.component";
 import { StockFilterPipe } from './Stocks/stock-filter.pipe';
 import { SearchComponent } from './Search/search.component';
+import { ProfileComponent } from './Profile/profile.component';
 
 @NgModule({
     imports: [
@@ -25,7 +26,8 @@ import { SearchComponent } from './Search/search.component';
         StockListComponent,
         StockComponent,
         StockFilterPipe,
-        SearchComponent
+        SearchComponent,
+        ProfileComponent
     ],
     bootstrap: [AppComponent]
 })
