@@ -17,5 +17,6 @@ namespace GameOfStocksHT16.Logic
         public decimal LastTradePriceOnly { get; set; }
         public string LastTradeTime { get; set; }
         public string LastTradeDate { get; set; }
+        public string Cap { get; set; }
     }
 }

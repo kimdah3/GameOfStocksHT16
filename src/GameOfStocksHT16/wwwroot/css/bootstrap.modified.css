@@ -107,7 +107,7 @@
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
 
-    .jumbotron-custom h1, h2, h3, h4, h5, small {
+    .jumbotron-custom h1, .jumbotron-custom h2, .jumbotron-custom h3, .jumbotron-custom h4, .jumbotron-custom h5, small {
         color: #FFF;
     }
 

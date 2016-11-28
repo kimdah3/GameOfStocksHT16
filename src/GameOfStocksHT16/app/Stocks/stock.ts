@@ -9,4 +9,5 @@
     lastTradePriceOnly: string;
     lastTradeTime: string;
     lastTradeDate: string;
+    cap: string;
 }
