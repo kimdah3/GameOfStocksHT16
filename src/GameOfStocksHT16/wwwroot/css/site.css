@@ -1,0 +1,9 @@
+﻿.section-padding-medium{
+    padding:40px 0;
+}
+#section-welcome-header .jumbotron{
+    background-image: url("../images/gustaf.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: darkblue;
+}
