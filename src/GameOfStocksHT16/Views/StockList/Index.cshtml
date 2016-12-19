@@ -1,0 +1,94 @@
+@{
+    ViewData["Title"] = "Stock List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section-padding-medium">
+    <div class="container">
+        <div class="panel">
+            <div class="panel-body">
+                <div class="table-responsive">
+                    <table id="stock-table" class="table table-bordered table-hover table-striped table-condensed">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Change</th>
+                                <th>Volume</th>
+                                <th>Open</th>
+                                <th>DaysLow</th>
+                                <th>DaysHigh</th>
+                                <th>LastTradePriceOnly</th>
+                                <th>LastTradeTime</th>
+                                <th>LastTradeDate</th>
+                                <th>Cap</th>
+                            </tr>
+                        </thead>
+                        <tbody id="stock-table-body">
+                            @* ROWS ARE FILLED WITH JS *@
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+</section>
+
+
+
+@section scripts
+{
+    <script type="text/javascript">
+        $.get("http://localhost:49275/api/stocks", function (data) {
+            var i = 0;
+            $.each(data,
+                function () {
+                    //var html = "<tr data-toggle='collapse' data-target='#row" + i + "' class='accordion-toggle'>";
+                    var html = "<tr >";
+                    html += "<td>" + this.name + "</td>";
+
+                    var changeColor;
+                    if (parseFloat(this.change) / 100.0 > 0) {
+                        changeColor = "red";
+                    } else {
+                        changeColor = "green";
+                    }
+
+                    html += "<td style='color:"+changeColor+"'><b>" + this.change + "</b></td>";
+                    html += "<td>" + this.volume + "</td>";
+                    html += "<td>" + this.open + "</td>";
+                    html += "<td>" + this.daysLow + "</td>";
+                    html += "<td>" + this.daysHigh + "</td>";
+                    html += "<td>" + this.lastTradePriceOnly + "</td>";
+                    html += "<td>" + this.lastTradeTime + "</td>";
+                    html += "<td>" + this.lastTradeDate + "</td>";
+                    html += "<td>" + this.cap + "</td>";
+                    html += "</tr>";
+
+                    //html += "<tr>";
+                    //html += "<td colspan='10' class='hidden-table-row'>";
+                    //html += "<div class='accordion-body collapse' id='row" + i + "'>";
+                    //html += "<form>";
+                    //html += "<div class='form-group'>";
+                    //html += "     <input type='email' class='form-control' id='amount' placeholder='Amount'>";
+                    //html += " <button type=\"submit\" class=\"btn btn-default\">Buy</button>";
+                    //html += "</div>";
+                    //html += "</form>";
+                    //html += "</div>";
+                    //html += "</td>";
+                    //html += "</tr>";
+
+                    $('#stock-table-body').append(html);
+                    //i++;
+                    //$('.collapse').on('show.bs.collapse', function () {
+                    //    $('.collapse.in').collapse('hide');
+                    //});
+                });
+            $('#stock-table').DataTable({
+                "iDisplayLength": 50
+            });
+        });
+
+    </script>
+}
