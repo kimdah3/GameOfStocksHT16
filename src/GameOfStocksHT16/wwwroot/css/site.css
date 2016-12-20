@@ -7,6 +7,25 @@
     height: 40px;
     width: auto;
 }
+#logoutForm button
+{
+   display: block;
+    padding: 3px 20px;
+    clear: both;
+    font-weight: normal;
+    line-height: 1.846;
+    color: #666666;
+    white-space: nowrap;
+    background-color: white;
+    border: none;
+    outline:none;
+}
+#logoutForm:hover,#logoutForm button:hover
+{
+    text-decoration: none;
+  color: #141414;
+  background-color: #eeeeee;
+}
 
 /*Welcome*/
 #section-welcome-header {

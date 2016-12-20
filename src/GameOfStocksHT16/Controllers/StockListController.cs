@@ -12,5 +12,10 @@ namespace GameOfStocksHT16.Controllers
         {
             return View();
         }
+
+        public IActionResult Stock(string label)
+        {
+            return View();
+        }
     }
 }

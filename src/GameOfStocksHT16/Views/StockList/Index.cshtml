@@ -14,11 +14,11 @@
                                 <th>Change</th>
                                 <th>Volume</th>
                                 <th>Open</th>
-                                <th>DaysLow</th>
-                                <th>DaysHigh</th>
-                                <th>LastTradePriceOnly</th>
-                                <th>LastTradeTime</th>
-                                <th>LastTradeDate</th>
+                                <th>Days Low</th>
+                                <th>Days High</th>
+                                <th>Last Trade Price Only</th>
+                                <th>Last Trade Time</th>
+                                <th>Last Trade Date</th>
                                 <th>Cap</th>
                             </tr>
                         </thead>
@@ -35,7 +35,37 @@
 
 </section>
 
-
+<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 id="modal-stock-title" class="modal-title"></h4>
+            </div>
+        <hr/>
+            <div class="modal-body">
+                <div id="modal-stock-info">
+                    <p>+0.15%</p>
+                    <p>113890</p>
+                    <p>196.8</p>
+                    <p>196.8</p>
+                    <p>197.7</p>
+                    <p>197.2</p>
+                    <p>10:01am</p>
+                    <p>12/20/2016 </p>
+                    <p>LargeCap</p>
+                </div>
+            </div>
+        <hr/>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary">Save changes</button>
+            </div>
+        </div><!-- /.modal-content -->
+        
+        
+    </div>
+</div>
 
 @section scripts
 {
@@ -46,7 +76,8 @@
                 function () {
                     //var html = "<tr data-toggle='collapse' data-target='#row" + i + "' class='accordion-toggle'>";
                     var html = "<tr >";
-                    html += "<td>" + this.name + "</td>";
+
+                    html += "<td><a href='' id="+this.label+" class='stock-button' data-toggle='modal' data-target='.bs-example-modal-lg'>" + this.name + "</a></td>";
 
                     var changeColor;
                     if (parseFloat(this.change) / 100.0 > 0) {
@@ -84,6 +115,12 @@
                     //$('.collapse').on('show.bs.collapse', function () {
                     //    $('.collapse.in').collapse('hide');
                     //});
+                });
+           
+            $('.stock-button')
+                .on('click', function() {
+                    $('#modal-stock-title').html($(this).attr('id'));
+                    console.log($(this).attr('id'));
                 });
             $('#stock-table').DataTable({
                 "iDisplayLength": 50
