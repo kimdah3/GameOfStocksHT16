@@ -123,7 +123,9 @@ namespace GameOfStocksHT16.Controllers
                 User = user
             };
 
+            user.Money -= stockTransaction.TotalMoney;
             _context.StockTransaction.Add(stockTransaction);
+
             try
             {
                 await _context.SaveChangesAsync();

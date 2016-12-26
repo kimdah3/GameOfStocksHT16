@@ -24,5 +24,6 @@ namespace GameOfStocksHT16.Data
         }
 
         public DbSet<StockTransaction> StockTransaction { get; set; }
+        public DbSet<StockOwnership> StockOwnership { get; set; }
     }
 }

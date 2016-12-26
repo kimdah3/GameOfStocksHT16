@@ -8,8 +8,10 @@ using System.Net;
 using System.Threading.Tasks;
 using CsvHelper;
 using GameOfStocksHT16.Data;
+using GameOfStocksHT16.Models;
 using GameOfStocksHT16.StocksLogic;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 
 namespace GameOfStocksHT16.Services
@@ -25,21 +27,43 @@ namespace GameOfStocksHT16.Services
             _hostingEnvironment = hostingEnvironment;
         }
 
-        public void CompleteStockTransactions(object state)
+        public async void CompleteStockTransactions(object state)
         {
-            var pendingStockTransactions = _dbContext.StockTransaction.Where(x => x.IsPending);
+            var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => x.IsPending);
+            if (!await pendingStockTransactions.AnyAsync()) { return; }
+            var newOwnerships = new List<StockOwnership>();
+            var newSoldStocks = new List<object>();
             foreach (var transaction in pendingStockTransactions)
             {
+
                 if (transaction.IsBuying)
                 {
-                    
-                }else if (transaction.IsSelling)
-                {
-                    
+                    newOwnerships.Add(new StockOwnership()
+                    {
+                        Name = transaction.Name,
+                        Label = transaction.Label,
+                        DateBought = DateTime.Now,
+                        Quantity = transaction.Quantity,
+                        Ask = GetStockByLabel(transaction.Label).LastTradePriceOnly,
+                        User = transaction.User
+                    });
                 }
-                
+                else if (transaction.IsSelling)
+                {
+
+                }
+                _dbContext.StockTransaction.FirstOrDefault(x => x.Id == transaction.Id).IsPending = false;
             }
-            Debug.WriteLine("COMPLETESTOCKTRANSACTIONS-------------------------");
+            _dbContext.StockOwnership.AddRange(newOwnerships);
+
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (DbUpdateException ex)
+            {
+                Debug.WriteLine(ex.Entries.ToString());
+            }
         }
 
         public async void SaveStocksOnStartup(object state)
@@ -154,11 +178,25 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        public Stock GetStockByLabel(string label)
+        {
+            var stocks = new List<Stock>();
+            var webRootPath = _hostingEnvironment.WebRootPath;
+            var path = Path.Combine(webRootPath, "stocks.json");
+            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+            {
+                var json = r.ReadToEnd();
+                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+            }
+
+            return stocks.Find(x => x.Label.ToLower() == label.ToLower());
+        }
+
         private static void WriteToDebug(string path, DateTime date, string message)
         {
             using (var sw = File.AppendText(path))
             {
-                sw.Write(date.ToString("U") + " " + message + Environment.NewLine);   
+                sw.Write(date.ToString("U") + " " + message + Environment.NewLine);
             }
         }
     }
