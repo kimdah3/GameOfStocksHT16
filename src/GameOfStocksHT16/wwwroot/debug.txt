@@ -1,0 +1,5 @@
+26 December 2016 15:58:53 sucess
+26 December 2016 16:03:12 sucess
+26 December 2016 16:04:39 sucess, stockList.Count = 331
+26 December 2016 19:30:26 sucess, stockList.Count = 331
+26 December 2016 20:14:48 sucess, stockList.Count = 331

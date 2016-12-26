@@ -1,0 +1,122 @@
+@model DisplayProfileViewModel
+
+@{
+    ViewData["Title"] = "Profile";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="container">
+    <h2>Info</h2>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Money)
+                </th>
+                
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Model.Email
+                </td>
+                <td>
+                    @Model.UserName
+                </td>
+                <td>
+                    @Model.Money
+                </td>
+                
+            </tr>
+        </tbody>
+    </table>
+    <h4>
+        @Html.DisplayNameFor(model => model.StockTransactions)
+    </h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Label
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    TotalMoney
+                </th>
+                <th>
+                    Bid
+                </th>
+                <th>
+                    IsBuying
+                </th>
+                <th>
+                    IsSelling
+                </th>
+                <th>IsPending</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StockTransactions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Label)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsBuying)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsSelling)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsPending)
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
+                        @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+
+</div>

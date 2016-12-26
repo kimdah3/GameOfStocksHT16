@@ -16,10 +16,13 @@ namespace GameOfStocksHT16.Controllers
     public class StocksController : Controller
     {
         private readonly IHostingEnvironment _hostingEnvironment;
+        private readonly StockHandler _stockHandler;
+
 
         public StocksController(IHostingEnvironment hostingEnvironment)
         {
             _hostingEnvironment = hostingEnvironment;
+            _stockHandler = new StockHandler(_hostingEnvironment);
         }
 
 
@@ -39,18 +42,9 @@ namespace GameOfStocksHT16.Controllers
         }
 
         [HttpGet("{id}")]
-        public Stock GetById(string id)
+        public Stock GetById(string label)
         {
-            var stocks = new List<Stock>();
-            var webRootPath = _hostingEnvironment.WebRootPath;
-            var path = Path.Combine(webRootPath, "stocks.json");
-            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
-            {
-                var json = r.ReadToEnd();
-                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
-            }
-
-            return stocks.Find(x => x.Label.ToLower() == id.ToLower());
+            return _stockHandler.GetStockByLabel(label);
         }
 
     }

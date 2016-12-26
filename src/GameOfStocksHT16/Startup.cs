@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Threading;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -12,21 +10,21 @@ using Microsoft.Extensions.Logging;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Models;
 using GameOfStocksHT16.Services;
-using GameOfStocksHT16.StocksLogic;
 using Microsoft.AspNetCore.Identity;
 
 namespace GameOfStocksHT16
 {
     public class Startup
     {
+        private Timer _downloadStocksTimer;
+        private Timer _completeStockTransTimer;
+
         public Startup(IHostingEnvironment env)
         {
             var builder = new ConfigurationBuilder()
                 .SetBasePath(env.ContentRootPath)
                 .AddJsonFile("appsettings.json", optional: true, reloadOnChange: true)
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            Task.Run(() => StockHandler.SaveStocksOnStartup(env.WebRootPath));
 
             if (env.IsDevelopment())
             {
@@ -36,6 +34,7 @@ namespace GameOfStocksHT16
 
             builder.AddEnvironmentVariables();
             Configuration = builder.Build();
+
         }
 
         public IConfigurationRoot Configuration { get; }
@@ -62,7 +61,16 @@ namespace GameOfStocksHT16
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddScoped<IStockService, StockService>();
+
+            var serviceProvider = services.BuildServiceProvider();
+            var stockService = serviceProvider.GetService<IStockService>();
+
+            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20*1000, Timeout.Infinite);
+            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 10*1000, 250);
+
         }
+
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
