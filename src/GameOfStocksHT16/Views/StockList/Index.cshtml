@@ -1,3 +1,11 @@
+@using GameOfStocksHT16.Models.UsersViewModels
+@using Microsoft.AspNetCore.Identity
+
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+
 @{
     ViewData["Title"] = "Stock List";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -35,35 +43,74 @@
 
 </section>
 
-<div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-lg" role="document">
+<div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+    <div class="modal-dialog modal-md" role="document">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 <h4 id="modal-stock-title" class="modal-title"></h4>
             </div>
-        <hr/>
             <div class="modal-body">
-                <div id="modal-stock-info">
-                    <p>+0.15%</p>
-                    <p>113890</p>
-                    <p>196.8</p>
-                    <p>196.8</p>
-                    <p>197.7</p>
-                    <p>197.2</p>
-                    <p>10:01am</p>
-                    <p>12/20/2016 </p>
-                    <p>LargeCap</p>
+                <div class="table-responsive">
+                    <table class="table table-bordered table-hover table-striped table-condensed">
+                        <tbody>
+                            <tr>
+                                <td>Label</td>
+                                <td id="modal-stock-label"></td>
+                            </tr>
+                            <tr>
+                                <td>Change</td>
+                                <td id="modal-stock-change"></td>
+                            </tr>
+                            <tr>
+                                <td>Volume</td>
+                                <td id="modal-stock-volume"></td>
+                            </tr>
+                            <tr>
+                                <td>Open</td>
+                                <td id="modal-stock-open"></td>
+                            </tr>
+                            <tr>
+                                <td>Days Low</td>
+                                <td id="modal-stock-dayslow"></td>
+                            </tr>
+                            <tr>
+                                <td>Days High</td>
+                                <td id="modal-stock-dayshigh"></td>
+                            </tr>
+                            <tr>
+                                <td>Last Trade Price Only</td>
+                                <td id="modal-stock-ltpo"></td>
+                            </tr>
+                            <tr>
+                                <td>Last Trade Time</td>
+                                <td id="modal-stock-ltt"></td>
+                            </tr>
+                            <tr>
+                                <td>Last Trade Date</td>
+                                <td id="modal-stock-ltd"></td>
+                            </tr>
+                            <tr>
+                                <td>Cap</td>
+                                <td id="modal-stock-cap"></td>
+                            </tr>
+                    </table>
                 </div>
+                @if (SignInManager.IsSignedIn(User))
+                {
+                <form>
+                    <div class="form-group">
+                        <label for="model-buy-amount">Amount:</label>
+                        <input type="number" class="form-control" id="modal-buy-amount">
+                        <button id="modal-buy-stock" type="submit" class="btn btn-default">Buy</button>
+                    </div>
+                </form>
+                }
             </div>
-        <hr/>
             <div class="modal-footer">
-                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
             </div>
         </div><!-- /.modal-content -->
-        
-        
     </div>
 </div>
 
@@ -74,10 +121,13 @@
             var i = 0;
             $.each(data,
                 function () {
-                    //var html = "<tr data-toggle='collapse' data-target='#row" + i + "' class='accordion-toggle'>";
                     var html = "<tr >";
-
-                    html += "<td><a href='' id="+this.label+" class='stock-button' data-toggle='modal' data-target='.bs-example-modal-lg'>" + this.name + "</a></td>";
+                    html += "" +
+                        "<td>"
+                        + "<a href='' id=" + this.label + " class='stock-button' data-toggle='modal' data-target='.bs-example-modal-md'>"
+                            + this.name
+                        + "</a>" +
+                        "</td>";
 
                     var changeColor;
                     if (parseFloat(this.change) / 100.0 > 0) {
@@ -86,7 +136,7 @@
                         changeColor = "green";
                     }
 
-                    html += "<td style='color:"+changeColor+"'><b>" + this.change + "</b></td>";
+                    html += "<td style='color:" + changeColor + "'><b>" + this.change + "</b></td>";
                     html += "<td>" + this.volume + "</td>";
                     html += "<td>" + this.open + "</td>";
                     html += "<td>" + this.daysLow + "</td>";
@@ -97,30 +147,44 @@
                     html += "<td>" + this.cap + "</td>";
                     html += "</tr>";
 
-                    //html += "<tr>";
-                    //html += "<td colspan='10' class='hidden-table-row'>";
-                    //html += "<div class='accordion-body collapse' id='row" + i + "'>";
-                    //html += "<form>";
-                    //html += "<div class='form-group'>";
-                    //html += "     <input type='email' class='form-control' id='amount' placeholder='Amount'>";
-                    //html += " <button type=\"submit\" class=\"btn btn-default\">Buy</button>";
-                    //html += "</div>";
-                    //html += "</form>";
-                    //html += "</div>";
-                    //html += "</td>";
-                    //html += "</tr>";
-
                     $('#stock-table-body').append(html);
-                    //i++;
-                    //$('.collapse').on('show.bs.collapse', function () {
-                    //    $('.collapse.in').collapse('hide');
-                    //});
                 });
-           
+
             $('.stock-button')
-                .on('click', function() {
-                    $('#modal-stock-title').html($(this).attr('id'));
-                    console.log($(this).attr('id'));
+                .on('click', function () {
+                    var label = $(this).attr('id');
+                    $.get("http://localhost:49275/api/stocks/id?=" + label,
+                        function (data) {
+                            var changeColor;
+
+                            if (parseFloat(data.change) / 100.0 > 0) {
+                                changeColor = "red";
+                            } else {
+                                changeColor = "green";
+                            }
+
+                            $('#modal-stock-title').html(data.name);
+                            $('#modal-stock-label').html(data.label);
+                            $('#modal-stock-change').html("<b>" + data.change + "</b>");
+                            $('#modal-stock-change').attr("style", "color:" + changeColor + "");
+                            $('#modal-stock-volume').html(data.volume);
+                            $('#modal-stock-open').html(data.open);
+                            $('#modal-stock-dayslow').html(data.daysLow);
+                            $('#modal-stock-dayshigh').html(data.daysHigh);
+                            $('#modal-stock-ltpo').html(data.lastTradePriceOnly);
+                            $('#modal-stock-ltt').html(data.lastTradeTime);
+                            $('#modal-stock-ltd').html(data.lastTradeDate);
+                            $('#modal-stock-cap').html(data.cap);
+
+                            $('#modal-buy-stock').on('click', function () {
+                                var quantity = $('#modal-buy-amount').val();
+                                $.post("http://localhost:49275/api/StockTransactions/?label=" + label + "&quantity=" + quantity,
+                                    function (data, status) {
+                                    });
+                            });
+                            console.log(data);
+                        });
+
                 });
             $('#stock-table').DataTable({
                 "iDisplayLength": 50
