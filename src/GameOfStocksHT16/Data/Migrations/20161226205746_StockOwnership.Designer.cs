@@ -73,7 +73,7 @@ namespace GameOfStocksHT16.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<decimal>("Ask");
+                    b.Property<decimal>("PriceBought");
 
                     b.Property<DateTime>("DateBought");
 

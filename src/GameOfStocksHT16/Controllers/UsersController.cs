@@ -38,13 +38,13 @@ namespace GameOfStocksHT16.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
-
                 var model = new DisplayProfileViewModel()
                 {
                     UserName = user.UserName,
                     Email = user.Email,
                     Money = user.Money,
-                    StockTransactions = DbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList()
+                    StockTransactions = DbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList(),
+                    StockOwnerships = DbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList()
                 };
                 return View(model);
             }

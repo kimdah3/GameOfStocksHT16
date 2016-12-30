@@ -29,10 +29,11 @@ namespace GameOfStocksHT16.Services
 
         public async void CompleteStockTransactions(object state)
         {
-            var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => x.IsPending);
+            var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
             if (!await pendingStockTransactions.AnyAsync()) { return; }
             var newOwnerships = new List<StockOwnership>();
-            var newSoldStocks = new List<object>();
+            var newSoldStocks = new List<StockSold>();
+
             foreach (var transaction in pendingStockTransactions)
             {
 
@@ -50,11 +51,20 @@ namespace GameOfStocksHT16.Services
                 }
                 else if (transaction.IsSelling)
                 {
-
+                    newSoldStocks.Add(new StockSold()
+                    {
+                        Name = transaction.Name,
+                        Label = transaction.Label,
+                        DateSold = DateTime.Now,
+                        Quantity = transaction.Quantity,
+                        LastTradePrice = GetStockByLabel(transaction.Label).LastTradePriceOnly,
+                        User = transaction.User
+                    });
                 }
-                _dbContext.StockTransaction.FirstOrDefault(x => x.Id == transaction.Id).IsPending = false;
+                _dbContext.StockTransaction.FirstOrDefault(x => x.Id == transaction.Id).IsCompleted = true;
             }
             _dbContext.StockOwnership.AddRange(newOwnerships);
+            _dbContext.StockSold.AddRange(newSoldStocks);
 
             try
             {

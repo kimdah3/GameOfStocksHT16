@@ -8,9 +8,10 @@ using GameOfStocksHT16.Data;
 namespace GameOfStocksHT16.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20161230105812_StockSold")]
+    partial class StockSold
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -72,13 +73,13 @@ namespace GameOfStocksHT16.Data.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
+                    b.Property<decimal>("PriceBought");
+
                     b.Property<DateTime>("DateBought");
 
                     b.Property<string>("Label");
 
                     b.Property<string>("Name");
-
-                    b.Property<decimal>("PriceBought");
 
                     b.Property<int>("Quantity");
 

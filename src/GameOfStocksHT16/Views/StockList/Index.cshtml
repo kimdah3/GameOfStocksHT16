@@ -184,13 +184,15 @@
 
                                     $('#modal-buy-stock')
                                         .on('click',
-                                            function() {
+                                            function () {
                                                 var quantity = $('#modal-buy-amount').val();
-                                                $.post("http://localhost:49275/api/StockTransactions/?label=" +
+                                                
+                                                $.post("http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" +
                                                     label +
                                                     "&quantity=" +
                                                     quantity,
-                                                    function(data, status) {
+                                                    function (data, status) {
+                                                        console.log(data);
                                                     });
                                             });
                                     console.log(data);

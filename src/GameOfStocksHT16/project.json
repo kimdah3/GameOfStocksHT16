@@ -44,7 +44,8 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "CsvHelper": "2.16.3"
+    "CsvHelper": "2.16.3",
+    "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1"
   },
 
   "tools": {

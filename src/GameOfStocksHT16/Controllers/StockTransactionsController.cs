@@ -16,7 +16,7 @@ namespace GameOfStocksHT16.Controllers
 {
     [Authorize]
     [Produces("application/json")]
-    [Route("api/StockTransactions")]
+    [Route("api/[controller]/[action]")]
     public class StockTransactionsController : Controller
     {
         private readonly ApplicationDbContext _context;
@@ -92,7 +92,6 @@ namespace GameOfStocksHT16.Controllers
         }
 
         // POST: api/StockTransactions
-
         [HttpPost]
         public async Task<IActionResult> PostBuyingStockTransaction(string label, int quantity)
         {
@@ -119,7 +118,7 @@ namespace GameOfStocksHT16.Controllers
                 Name = stock.Name,
                 Quantity = quantity,
                 TotalMoney = quantity * stock.LastTradePriceOnly,
-                IsPending = true,
+                IsCompleted = false,
                 User = user
             };
 
@@ -143,6 +142,60 @@ namespace GameOfStocksHT16.Controllers
             }
 
             return NoContent();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PostSellingStockTransaction(string label, int ownershipId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == ownershipId);
+
+            if (user == null || stockOwnership.User != user)
+            {
+                return BadRequest();
+            }
+
+            var stock = StockHandler.GetStockByLabel(label);
+
+            var stockTransaction = new StockTransaction()
+            {
+                Bid = stock.LastTradePriceOnly,
+                Date = DateTime.Now,
+                IsBuying = false,
+                IsSelling = true,
+                Label = stock.Label,
+                Name = stock.Name,
+                Quantity = stockOwnership.Quantity,
+                TotalMoney = stockOwnership.Quantity * stock.LastTradePriceOnly,
+                IsCompleted = false,
+                User = user
+            };
+
+            _context.StockTransaction.Add(stockTransaction);
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (StockTransactionExists(stockTransaction.Id))
+                {
+                    return new StatusCodeResult(StatusCodes.Status409Conflict);
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return Ok();
         }
 
         // DELETE: api/StockTransactions/5

@@ -11,5 +11,6 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public string UserName { get; set; }
         public decimal Money { get; set; }
         public List<StockTransaction> StockTransactions { get; set; }
+        public List<StockOwnership> StockOwnerships { get; set; }
     }
 }
