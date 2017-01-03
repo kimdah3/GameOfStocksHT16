@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace GameOfStocksHT16.StocksLogic
+namespace GameOfStocksHT16.Services
 {
     public class Stock
     {

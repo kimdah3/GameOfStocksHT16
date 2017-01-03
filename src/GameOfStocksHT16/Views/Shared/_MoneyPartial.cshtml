@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using GameOfStocksHT16.Models
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <p class="navbar-text "><span id="user-money"></span><span class="sr-only"> </span></p>
+
+}
+else
+{
+}

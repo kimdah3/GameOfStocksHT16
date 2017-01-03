@@ -10,5 +10,9 @@ namespace GameOfStocksHT16.Services
         void CompleteStockTransactions(object o);
 
         void SaveStocksOnStartup(object o);
+
+        Stock GetStockByLabel(string label);
+
+        List<Stock> GetStocks();
     }
 }

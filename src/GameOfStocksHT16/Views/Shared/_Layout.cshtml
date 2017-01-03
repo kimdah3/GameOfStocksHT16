@@ -16,8 +16,10 @@
         <link rel="stylesheet" href="https://bootswatch.com/paper/bootstrap.min.css"
               asp-fallback-href="~/lib/bootswatch/paper/bootstrap.min.css"
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
-        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap.min.css" asp-append-version="true" />
-        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+        <link rel="stylesheet" href="~/lib/font-awesome/css/font-awesome.css" />
+        <link rel="stylesheet" href="~/css/bootstrap.modified.css" />
+        <link rel="stylesheet" href="~/lib/datatables/media/css/dataTables.bootstrap.css" />
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     </environment>
 </head>
 <body>
@@ -33,7 +35,9 @@
                 <a class="pull-left" href="/"><img id="sesam-logo" alt="Sesam logga" src="/images/sesam-logo-medium.png"></a>
                 <a asp-area="" asp-controller="Home" asp-action="Index" class="navbar-brand">Game Of Stocks</a>
             </div>
+                    
             <div class="navbar-collapse collapse">
+                @await Html.PartialAsync("_MoneyPartial")
                 <ul class="nav navbar-nav navbar-right">
                     <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home fa-2x"></i> <span class="sr-only"></span></a></li>
                     <li><a asp-area="" asp-controller="StockList" asp-action="Index"><i class="fa fa-line-chart fa-2x"></i><span class="sr-only"></span></a></li>
@@ -87,6 +91,7 @@
                 asp-fallback-src="~/lib/datatables/media/js/jquery.dataTables.min.js">
         
         </script>
+        <script src="~/lib/datatables/media/js/dataTables.bootstrap.js"></script>
         <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
     </environment>

@@ -43,88 +43,17 @@
 
 </section>
 
-<div class="modal fade bs-example-modal-md" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
-    <div class="modal-dialog modal-md" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 id="modal-stock-title" class="modal-title"></h4>
-            </div>
-            <div class="modal-body">
-                <div class="table-responsive">
-                    <table class="table table-bordered table-hover table-striped table-condensed">
-                        <tbody>
-                            <tr>
-                                <td>Label</td>
-                                <td id="modal-stock-label"></td>
-                            </tr>
-                            <tr>
-                                <td>Change</td>
-                                <td id="modal-stock-change"></td>
-                            </tr>
-                            <tr>
-                                <td>Volume</td>
-                                <td id="modal-stock-volume"></td>
-                            </tr>
-                            <tr>
-                                <td>Open</td>
-                                <td id="modal-stock-open"></td>
-                            </tr>
-                            <tr>
-                                <td>Days Low</td>
-                                <td id="modal-stock-dayslow"></td>
-                            </tr>
-                            <tr>
-                                <td>Days High</td>
-                                <td id="modal-stock-dayshigh"></td>
-                            </tr>
-                            <tr>
-                                <td>Last Trade Price Only</td>
-                                <td id="modal-stock-ltpo"></td>
-                            </tr>
-                            <tr>
-                                <td>Last Trade Time</td>
-                                <td id="modal-stock-ltt"></td>
-                            </tr>
-                            <tr>
-                                <td>Last Trade Date</td>
-                                <td id="modal-stock-ltd"></td>
-                            </tr>
-                            <tr>
-                                <td>Cap</td>
-                                <td id="modal-stock-cap"></td>
-                            </tr>
-                    </table>
-                </div>
-                @if (SignInManager.IsSignedIn(User))
-                {
-                <form>
-                    <div class="form-group">
-                        <label for="model-buy-amount">Amount:</label>
-                        <input type="number" class="form-control" id="modal-buy-amount">
-                        <button id="modal-buy-stock" type="submit" class="btn btn-default">Buy</button>
-                    </div>
-                </form>
-                }
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>
-            </div>
-        </div><!-- /.modal-content -->
-    </div>
-</div>
-
 @section scripts
 {
     <script type="text/javascript">
-        $.get("http://localhost:49275/api/stocks",
-            function(data) {
+        $.get("http://gameofstocksht16.azurewebsites.net/api/stocks",
+            function (data) {
                 var i = 0;
                 $.each(data,
-                    function() {
+                    function () {
                         var html = "<tr >";
                         html += "" +
-                            "<td>" +
+                            "<td class='buy-control'>" +
                             "<a href='' id=" +
                             this.label +
                             " class='stock-button' data-toggle='modal' data-target='.bs-example-modal-md'>" +
@@ -157,10 +86,10 @@
 
                 $('.stock-button')
                     .on('click',
-                        function() {
+                        function () {
                             var label = $(this).attr('id');
-                            $.get("http://localhost:49275/api/stocks/id?=" + label,
-                                function(data) {
+                            $.get("http://gameofstocksht16.azurewebsites.net/api/stocks/id?=" + label,
+                                function (data) {
                                     var changeColor;
 
                                     if (parseFloat(data.change) / 100.0 > 0) {
@@ -169,25 +98,12 @@
                                         changeColor = "green";
                                     }
 
-                                    $('#modal-stock-title').html(data.name);
-                                    $('#modal-stock-label').html(data.label);
-                                    $('#modal-stock-change').html("<b>" + data.change + "</b>");
-                                    $('#modal-stock-change').attr("style", "color:" + changeColor + "");
-                                    $('#modal-stock-volume').html(data.volume);
-                                    $('#modal-stock-open').html(data.open);
-                                    $('#modal-stock-dayslow').html(data.daysLow);
-                                    $('#modal-stock-dayshigh').html(data.daysHigh);
-                                    $('#modal-stock-ltpo').html(data.lastTradePriceOnly);
-                                    $('#modal-stock-ltt').html(data.lastTradeTime);
-                                    $('#modal-stock-ltd').html(data.lastTradeDate);
-                                    $('#modal-stock-cap').html(data.cap);
-
-                                    $('#modal-buy-stock')
+                                    $('#buy-stock')
                                         .on('click',
                                             function () {
-                                                var quantity = $('#modal-buy-amount').val();
-                                                
-                                                $.post("http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" +
+                                                var quantity = $('#buy-amount').val();
+
+                                                $.post("http://gameofstocksht16.azurewebsites.net/api/StockTransactions/PostBuyingStockTransaction/?label=" +
                                                     label +
                                                     "&quantity=" +
                                                     quantity,
@@ -195,14 +111,41 @@
                                                         console.log(data);
                                                     });
                                             });
-                                    console.log(data);
                                 });
 
                         });
-                $('#stock-table')
+                var table = $('#stock-table')
                     .DataTable({
                         "iDisplayLength": 50
                     });
+                table.rows().every(function () {
+                    this.child(
+                        "<form>" +
+                            "<div class='form-group'>" +
+                                "<label for='model-buy-amount'>Amount:</label>" +
+                                "<input type='number' class='form-control' id='buy-amount'>" +
+                                "<button id='buy-stock' type='submit' class='btn btn-default'>Buy</button>" +
+                            "</div>" +
+                        "</form>");
+                });
+
+                $('#stock-table tbody').on('click', 'td.buy-control', function () {
+                    var child = table.row(this).child;
+
+                    if (child.isShown()) {
+                        child.hide();
+                    }
+                    else {
+                        table.rows().eq(0).each(function (idx) {
+                            var row = table.row(idx);
+
+                            if (row.child.isShown()) {
+                                row.child.hide();
+                            }
+                        });
+                        child.show();
+                    }
+                });
             });
 
     </script>

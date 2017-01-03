@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 using CsvHelper;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Models;
-using GameOfStocksHT16.StocksLogic;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
@@ -51,15 +50,18 @@ namespace GameOfStocksHT16.Services
                 }
                 else if (transaction.IsSelling)
                 {
+                    var lastTradePrice = GetStockByLabel(transaction.Label).LastTradePriceOnly;
                     newSoldStocks.Add(new StockSold()
                     {
                         Name = transaction.Name,
                         Label = transaction.Label,
                         DateSold = DateTime.Now,
                         Quantity = transaction.Quantity,
-                        LastTradePrice = GetStockByLabel(transaction.Label).LastTradePriceOnly,
+                        LastTradePrice = lastTradePrice,
                         User = transaction.User
                     });
+                    var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == transaction.User.Id);
+                    user.Money += lastTradePrice * transaction.Quantity;
                 }
                 _dbContext.StockTransaction.FirstOrDefault(x => x.Id == transaction.Id).IsCompleted = true;
             }
@@ -179,13 +181,17 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        private static void SerializeToJson(string path, List<Stock> stockList)
+        public List<Stock> GetStocks()
         {
-            using (var file = File.CreateText(path))
+            var stocks = new List<Stock>();
+            var webRootPath = _hostingEnvironment.WebRootPath;
+            var path = Path.Combine(webRootPath, "stocks.json");
+            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
             {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(file, stockList);
+                var json = r.ReadToEnd();
+                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
             }
+            return stocks;
         }
 
         public Stock GetStockByLabel(string label)
@@ -200,6 +206,15 @@ namespace GameOfStocksHT16.Services
             }
 
             return stocks.Find(x => x.Label.ToLower() == label.ToLower());
+        }
+
+        private static void SerializeToJson(string path, List<Stock> stockList)
+        {
+            using (var file = File.CreateText(path))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(file, stockList);
+            }
         }
 
         private static void WriteToDebug(string path, DateTime date, string message)

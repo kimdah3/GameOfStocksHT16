@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Models;
-using GameOfStocksHT16.StocksLogic;
+using GameOfStocksHT16.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
@@ -21,13 +21,13 @@ namespace GameOfStocksHT16.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly StockHandler StockHandler;
+        private readonly IStockService _stockService;
 
-        public StockTransactionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment)
+        public StockTransactionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IStockService stockService)
         {
             _context = context;
             _userManager = userManager;
-            StockHandler = new StockHandler(hostingEnvironment);
+            _stockService = stockService;
         }
 
         // GET: api/StockTransactions
@@ -107,7 +107,7 @@ namespace GameOfStocksHT16.Controllers
                 return BadRequest();
             }
 
-            var stock = StockHandler.GetStockByLabel(label);
+            var stock = _stockService.GetStockByLabel(label);
             var stockTransaction = new StockTransaction()
             {
                 Bid = stock.LastTradePriceOnly,
@@ -154,14 +154,14 @@ namespace GameOfStocksHT16.Controllers
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == ownershipId);
+            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == ownershipId && s.User == user);
 
             if (user == null || stockOwnership.User != user)
             {
                 return BadRequest();
             }
 
-            var stock = StockHandler.GetStockByLabel(label);
+            var stock = _stockService.GetStockByLabel(label);
 
             var stockTransaction = new StockTransaction()
             {
@@ -178,6 +178,7 @@ namespace GameOfStocksHT16.Controllers
             };
 
             _context.StockTransaction.Add(stockTransaction);
+            _context.StockOwnership.Remove(stockOwnership);
 
             try
             {

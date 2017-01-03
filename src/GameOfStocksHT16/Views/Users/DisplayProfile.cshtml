@@ -18,6 +18,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.Money)
             </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalWorth)
+            </th>
         </tr>
         </thead>
         <tbody>
@@ -30,6 +33,9 @@
             </td>
             <td>
                 @Model.Money
+            </td>
+            <td>
+                @Model.TotalWorth
             </td>
         </tr>
         </tbody>
@@ -106,8 +112,6 @@
                     @Html.DisplayFor(modelItem => item.IsCompleted)
                 </td>
                 <td>
-                    @Html.ActionLink("Edit", "Edit", new {/* id=item.PrimaryKey */}) |
-                    @Html.ActionLink("Details", "Details", new {/* id=item.PrimaryKey */}) |
                     @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
                 </td>
             </tr>
@@ -138,7 +142,8 @@
             <th>
                 Ask
             </th>
-            <th></th>
+            <th>LastTradePrice</th>
+            <th>Sell</th>
         </tr>
         </thead>
         <tbody>
@@ -164,12 +169,15 @@
                     @Html.DisplayFor(modelItem => item.Ask)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.LastTradePrice)
+                </td>
+                <td>
                     <form asp-controller="api/StockTransactions"
                           asp-action="PostSellingStockTransaction"
                           asp-route-ownershipId="@item.Id" asp-route-label="@item.Label"
                           data-ajax-success="ajaxSuccess();"
                           data-ajax="true" data-ajax-method="POST">
-                        <button type="submit">Sell</button>
+                        <button class="btn btn-primary" type="submit">Sell</button>
                     </form>
                 </td>
             </tr>

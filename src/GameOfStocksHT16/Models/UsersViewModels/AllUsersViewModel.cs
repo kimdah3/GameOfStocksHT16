@@ -14,5 +14,6 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     {
         public string Email { get; set; }
         public decimal Money { get; set; }
+
     }
 }

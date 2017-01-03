@@ -10,7 +10,14 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public string Email { get; set; }
         public string UserName { get; set; }
         public decimal Money { get; set; }
+        public decimal TotalWorth { get; set; }
+
         public List<StockTransaction> StockTransactions { get; set; }
-        public List<StockOwnership> StockOwnerships { get; set; }
+        public List<StockOwnershipWithLastTradePrice> StockOwnerships { get; set; }
+    }
+
+    public class StockOwnershipWithLastTradePrice : StockOwnership
+    {
+        public decimal LastTradePrice { get; set; }
     }
 }
