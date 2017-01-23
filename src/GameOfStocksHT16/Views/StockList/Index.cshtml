@@ -46,7 +46,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        $.get("http://gameofstocksht16.azurewebsites.net/api/stocks",
+        $.get("http://localhost:49275/api/stocks",
             function (data) {
                 var i = 0;
                 $.each(data,
@@ -88,7 +88,7 @@
                     .on('click',
                         function () {
                             var label = $(this).attr('id');
-                            $.get("http://gameofstocksht16.azurewebsites.net/api/stocks/id?=" + label,
+                            $.get("http://localhost:49275/api/stocks/id?=" + label,
                                 function (data) {
                                     var changeColor;
 
@@ -103,12 +103,15 @@
                                             function () {
                                                 var quantity = $('#buy-amount').val();
 
-                                                $.post("http://gameofstocksht16.azurewebsites.net/api/StockTransactions/PostBuyingStockTransaction/?label=" +
+                                                $.post("http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" +
                                                     label +
                                                     "&quantity=" +
                                                     quantity,
                                                     function (data, status) {
                                                         console.log(data);
+                                                    }).fail(function (data) {
+                                                        window.location.replace(window.location.protocol + "/Account/Login");
+
                                                     });
                                             });
                                 });
@@ -138,7 +141,6 @@
                     else {
                         table.rows().eq(0).each(function (idx) {
                             var row = table.row(idx);
-
                             if (row.child.isShown()) {
                                 row.child.hide();
                             }
@@ -147,6 +149,5 @@
                     }
                 });
             });
-
     </script>
 }

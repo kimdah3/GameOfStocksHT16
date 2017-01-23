@@ -49,3 +49,6 @@ den 3 januari 2017 18:01:08 sucess, stockList.Count = 330
 den 3 januari 2017 18:05:31 sucess, stockList.Count = 330
 den 3 januari 2017 19:31:02 sucess, stockList.Count = 330
 den 3 januari 2017 19:52:15 sucess, stockList.Count = 330
+den 23 januari 2017 20:13:27 sucess, stockList.Count = 331
+den 23 januari 2017 20:19:36 sucess, stockList.Count = 331
+den 23 januari 2017 20:38:00 sucess, stockList.Count = 331
