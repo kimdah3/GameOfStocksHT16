@@ -6,6 +6,9 @@
     "jquery": "2.2.0",
     "jquery-validation": "1.14.0",
     "jquery-validation-unobtrusive": "3.2.6",
-    "fontawesome": "4.7.0"
+    "font-awesome": "4.6.1",
+    "bootswatch": "3.3.6",
+    "datatables": "1.10.11",
+    "jquery-ajax-unobtrusive": "3.2.4"
   }
 }

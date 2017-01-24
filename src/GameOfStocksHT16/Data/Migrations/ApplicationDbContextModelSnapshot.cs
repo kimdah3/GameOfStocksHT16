@@ -34,6 +34,8 @@ namespace GameOfStocksHT16.Data.Migrations
 
                     b.Property<DateTimeOffset?>("LockoutEnd");
 
+                    b.Property<decimal>("Money");
+
                     b.Property<string>("NormalizedEmail")
                         .HasAnnotation("MaxLength", 256);
 
@@ -63,6 +65,89 @@ namespace GameOfStocksHT16.Data.Migrations
                         .HasName("UserNameIndex");
 
                     b.ToTable("AspNetUsers");
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockOwnership", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateBought");
+
+                    b.Property<string>("Label");
+
+                    b.Property<string>("Name");
+
+                    b.Property<decimal>("PriceBought");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StockOwnership");
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockSold", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("DateSold");
+
+                    b.Property<string>("Label");
+
+                    b.Property<decimal>("LastTradePrice");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StockSold");
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockTransaction", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<decimal>("Bid");
+
+                    b.Property<DateTime>("Date");
+
+                    b.Property<bool>("IsBuying");
+
+                    b.Property<bool>("IsCompleted");
+
+                    b.Property<bool>("IsSelling");
+
+                    b.Property<string>("Label");
+
+                    b.Property<string>("Name");
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<decimal>("TotalMoney");
+
+                    b.Property<string>("UserId")
+                        .IsRequired();
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("StockTransaction");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
@@ -170,6 +255,30 @@ namespace GameOfStocksHT16.Data.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens");
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockOwnership", b =>
+                {
+                    b.HasOne("GameOfStocksHT16.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockSold", b =>
+                {
+                    b.HasOne("GameOfStocksHT16.Models.ApplicationUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("GameOfStocksHT16.Models.StockTransaction", b =>
+                {
+                    b.HasOne("GameOfStocksHT16.Models.ApplicationUser", "User")
+                        .WithMany("StockTransactions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRoleClaim<string>", b =>

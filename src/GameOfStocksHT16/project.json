@@ -1,5 +1,5 @@
 {
-  "userSecretsId": "aspnet-GameOfStocksHT16-a4d5cd08-be83-465a-8fec-159e119c3653",
+  "userSecretsId": "aspnet-GameOfStocksHT16-f0f6e4d9-ac45-46a9-ad05-1749806d8283",
 
   "dependencies": {
     "Microsoft.NETCore.App": {
@@ -44,7 +44,8 @@
       "version": "1.0.0-preview2-final",
       "type": "build"
     },
-    "CsvHelper": "2.16.3"
+    "CsvHelper": "2.16.3",
+    "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1"
   },
 
   "tools": {

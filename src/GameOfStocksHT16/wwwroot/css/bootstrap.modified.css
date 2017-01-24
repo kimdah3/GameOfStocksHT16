@@ -12,8 +12,8 @@
     color: #FFFFFF;
     background-color: #3B469D;
     border-color: #333333;
-    margin-bottom: 0px;
-    border-radius: 0px;
+    margin-bottom: 0;
+    border-radius: 0;
 }
 
 .navbar-inverse .navbar-nav > .disabled > a, .navbar-inverse .navbar-nav > .disabled > a:hover, .navbar-inverse .navbar-nav > .disabled > a:focus {

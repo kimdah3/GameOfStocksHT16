@@ -1,0 +1,29 @@
+@model AllUsersViewModel
+@{
+    ViewData["Title"] = "Stock List";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section-padding-medium">
+    <div class="container">
+        <div class="panel">
+            @foreach (var item in Model.AllUsers)
+            {
+                <div class="panel-body">
+
+                    <h4>@item.Email</h4>
+                    <h5>@item.Money kr</h5>
+
+                </div>
+            }
+        </div>
+        <div class=""></div>
+
+
+    </div>
+</section>
+
+@section scripts
+{
+    <script type="text/javascript">
+    </script>
+}

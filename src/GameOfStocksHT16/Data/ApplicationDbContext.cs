@@ -22,5 +22,9 @@ namespace GameOfStocksHT16.Data
             // For example, you can rename the ASP.NET Identity table names and more.
             // Add your customizations after calling base.OnModelCreating(builder);
         }
+
+        public DbSet<StockTransaction> StockTransaction { get; set; }
+        public DbSet<StockOwnership> StockOwnership { get; set; }
+        public DbSet<StockSold> StockSold { get; set; }
     }
 }
