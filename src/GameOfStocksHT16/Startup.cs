@@ -37,7 +37,7 @@ namespace GameOfStocksHT16
 
         }
 
-        public IConfigurationRoot Configuration { get; }
+        public static IConfigurationRoot Configuration;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -61,7 +61,7 @@ namespace GameOfStocksHT16
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IStockService, StockService>();
+            services.AddSingleton<IStockService, StockService>();
 
             var serviceProvider = services.BuildServiceProvider();
             var stockService = serviceProvider.GetService<IStockService>();
