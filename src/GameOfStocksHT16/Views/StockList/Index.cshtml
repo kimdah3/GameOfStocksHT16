@@ -84,70 +84,103 @@
                         $('#stock-table-body').append(html);
                     });
 
-                $('.stock-button')
-                    .on('click',
-                        function () {
-                            var label = $(this).attr('id');
-                            $.get("http://localhost:49275/api/stocks/id?=" + label,
-                                function (data) {
-                                    var changeColor;
+                //$('.stock-button')
+                //    .on('click',
+                //        function () {
+                //            var label = $(this).attr('id');
+                //            console.log($('#buy-stock'));
+                //            $('#buy-stock')
+                //                .on('click',
+                //                    function () {
+                //                        alert(label);
+                //                        var quantity = $('#buy-amount').val();
+                //                        var query = "http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" + label + "&quantity=" + quantity;
 
-                                    if (parseFloat(data.change) / 100.0 > 0) {
-                                        changeColor = "red";
-                                    } else {
-                                        changeColor = "green";
-                                    }
+                //                        $.post(query,
+                //                            function (data, status) {
+                //                                console.log(data);
+                //                            }).fail(function (data) {
+                //                                window.location.replace(window.location.protocol + "/Account/Login");
+                //                            });
+                //                    });
+                //        });
 
-                                    $('#buy-stock')
-                                        .on('click',
-                                            function () {
-                                                var quantity = $('#buy-amount').val();
 
-                                                $.post("http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" +
-                                                    label +
-                                                    "&quantity=" +
-                                                    quantity,
-                                                    function (data, status) {
-                                                        console.log(data);
-                                                    }).fail(function (data) {
-                                                        window.location.replace(window.location.protocol + "/Account/Login");
-
-                                                    });
-                                            });
-                                });
-
-                        });
                 var table = $('#stock-table')
                     .DataTable({
                         "iDisplayLength": 50
                     });
                 table.rows().every(function () {
+                    var label = $(table.row(this).data()[0]).attr('id');
+                    var buttonId = "btn-buy-" + label;
+
                     this.child(
                         "<form>" +
                             "<div class='form-group'>" +
                                 "<label for='model-buy-amount'>Amount:</label>" +
                                 "<input type='number' class='form-control' id='buy-amount'>" +
-                                "<button id='buy-stock' type='submit' class='btn btn-default'>Buy</button>" +
+                                "<button id='btn-buy-stock' type='submit' class='btn btn-default'>Buy</button>" +
                             "</div>" +
-                        "</form>");
+                        "</form>"
+                        );
                 });
+
+
 
                 $('#stock-table tbody').on('click', 'td.buy-control', function () {
                     var child = table.row(this).child;
-
                     if (child.isShown()) {
                         child.hide();
                     }
                     else {
                         table.rows().eq(0).each(function (idx) {
                             var row = table.row(idx);
+
                             if (row.child.isShown()) {
                                 row.child.hide();
                             }
                         });
                         child.show();
+
+                        var event = $._data($('#btn-buy-stock').get(0), "events");
+                        var quantity = $('#buy-amount').val();
+
+                        var label = $(table.row(this).data()[0]).attr('id');
+                        console.log(label);
+                        console.log(quantity);
+                        if (event == null) {
+                            $('#btn-buy-stock').on('click', function () {
+                                quantity = $('#buy-amount').val();
+                                var query = "http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" + label + "&quantity=" + quantity;
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: query,
+                                    async: false,
+                                    success: function(data, textStatus, jqXHR)
+                                    {
+                                        alert(data.quantity+" of the stock: "+data.label+" has been placed in your pending stocks!");
+                                    },
+                                    error: function (jqXHR, textStatus, errorThrown) {
+                                        alert("Something went wrong., " + textStatus);
+                                    }
+                                });
+                            //    $.post(query,
+                            //        function (data, status) {
+                            //            console.log(data);
+                            //        }, textStatus, null).done(function (data) {
+                            //        }).fail(function (data) {
+                            //            alert("något gick fel.")
+                            //            window.location.replace(window.location.protocol + "/Account/Login");
+                            //        }).always(function () {
+                            //            window.location.replace(window.location.protocol + "/Users/DisplayProfile");
+                            //        });
+                            });
+                        }
                     }
                 });
+
+
             });
     </script>
 }

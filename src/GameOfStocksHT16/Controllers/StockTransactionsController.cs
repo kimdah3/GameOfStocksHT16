@@ -14,7 +14,6 @@ using Microsoft.AspNetCore.Identity;
 
 namespace GameOfStocksHT16.Controllers
 {
-    [Authorize]
     [Produces("application/json")]
     [Route("api/[controller]/[action]")]
     public class StockTransactionsController : Controller
@@ -38,7 +37,7 @@ namespace GameOfStocksHT16.Controllers
         }
 
         // GET: api/StockTransactions/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetStockTransaction")]
         public async Task<IActionResult> GetStockTransaction([FromRoute] int id)
         {
             if (!ModelState.IsValid)
@@ -141,7 +140,7 @@ namespace GameOfStocksHT16.Controllers
                 }
             }
 
-            return NoContent();
+            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, stockTransaction);
         }
 
         [HttpPost]
