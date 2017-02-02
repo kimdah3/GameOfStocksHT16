@@ -200,6 +200,58 @@
         }
         </tbody>
     </table>
+    <h4>
+        @Html.DisplayNameFor(model => model.StockSolds)
+    </h4>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Id
+                </th>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Label
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    DateSold
+                </th>
+                <th>
+                    LastTradePrice
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StockSolds)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Label)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateSold)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastTradePrice)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
 </div>
 <script>
     function ajaxSuccess() {

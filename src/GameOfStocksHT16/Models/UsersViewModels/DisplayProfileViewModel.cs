@@ -14,6 +14,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
 
         public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }
         public List<StockOwnershipWithLastTradePrice> StockOwnerships { get; set; }
+        public List<StockSold> StockSolds { get; set; }
     }
 
     public class StockOwnershipWithLastTradePrice : StockOwnership

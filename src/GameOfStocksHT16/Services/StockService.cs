@@ -92,7 +92,7 @@ namespace GameOfStocksHT16.Services
                 var currentTime = DateTime.Now.TimeOfDay;
                 var morningOpen = new TimeSpan(09, 10, 0);
                 var eveningClose = new TimeSpan(18, 00, 0);
-
+                var isTradingTime = currentTime <= morningOpen || currentTime >= eveningClose;
                 var url = Startup.Configuration["StockQueries:HT16LargeMidSmall"];
                 //LARGE 0 - 105 
                 //MID 106 - 225 (120 st)
@@ -108,31 +108,24 @@ namespace GameOfStocksHT16.Services
 
                 using (var response = (HttpWebResponse)(await Task<WebResponse>.Factory.FromAsync(req.BeginGetResponse, req.EndGetResponse, null)))
                 {
-                    using (var reader = new StreamReader(response.GetResponseStream()))
+                    using (var streamReader = new StreamReader(response.GetResponseStream()))
                     {
-                        var parser = new CsvReader(reader);
-                        while (true)
-                        {
-                            var row = parser.Read();
-                            var rowNumber = parser.Row;
-                            var cap = "LargeCap";
+                        var csvReader = new CsvReader(streamReader);
+                        csvReader.Configuration.HasHeaderRecord = false;    //Reads first row, skips it if this is false!
 
-                            if (row == false)
-                            {
-                                break;
-                            }
+                        while (csvReader.Read())
+                        {
+                            var rowNumber = csvReader.Row;
+                            var cap = "LargeCap";
 
                             // Kollar om aktien är large - mid - small cap
                             if (rowNumber > 105 && rowNumber < 226)
-                            {
                                 cap = "MidCap";
-                            }
                             else if (rowNumber > 225)
-                            {
                                 cap = "SmallCap";
-                            }
+                            
 
-                            var fields = parser.CurrentRecord;
+                            var fields = csvReader.CurrentRecord;
 
                             var lastTradeDate = fields[0];
                             var daysLow = fields[1];
@@ -145,10 +138,17 @@ namespace GameOfStocksHT16.Services
                             var lastTradeTime = fields[8];
                             var volume = fields[9];
 
-                            if (lastTradePriceOnly == null || daysLow.Equals("N/A") || daysHigh.Equals("N/A"))
-                            {
-                                continue;
-                            }
+                            if (lastTradePriceOnly == null)
+                                lastTradePriceOnly = open;
+
+                            if (open.Equals("N/A"))
+                                open = "0";
+
+                            if (daysLow.Equals("N/A"))
+                                daysLow = open;
+
+                            if (daysHigh.Equals("N/A"))
+                                daysHigh = open;
 
                             var stock = new Stock()
                             {
@@ -174,7 +174,7 @@ namespace GameOfStocksHT16.Services
             }
             catch (Exception exception)
             {
-                WriteToDebug(debugPath, DateTime.Now, exception.Message);
+                WriteToDebug(debugPath, DateTime.Now, "something went wrong while downloading stocks, " + exception.Message);
 
             }
         }
@@ -195,6 +195,7 @@ namespace GameOfStocksHT16.Services
         public Stock GetStockByLabel(string label)
         {
             var stocks = new List<Stock>();
+            Stock stock;
             var webRootPath = _hostingEnvironment.WebRootPath;
             var path = Path.Combine(webRootPath, "stocks.json");
             using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
@@ -202,11 +203,18 @@ namespace GameOfStocksHT16.Services
                 var json = r.ReadToEnd();
                 stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
             }
+            stock = stocks.Find(x => x.Label.ToLower() == label.ToLower());
 
-            return stocks.Find(x => x.Label.ToLower() == label.ToLower());
+            if (stock == null) throw new NullReferenceException("Stock not found in stocks.json");
+            return stock;
         }
 
-        private static void SerializeToJson(string path, List<Stock> stockList)
+        private string GetStoredOpen(string label)
+        {
+            return GetStockByLabel(label).Open + "";
+        }
+
+        private void SerializeToJson(string path, List<Stock> stockList)
         {
             using (var file = File.CreateText(path))
             {
@@ -215,7 +223,7 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        private static void WriteToDebug(string path, DateTime date, string message)
+        private void WriteToDebug(string path, DateTime date, string message)
         {
             using (var sw = File.AppendText(path))
             {

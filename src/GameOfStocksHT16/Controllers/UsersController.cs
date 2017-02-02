@@ -50,7 +50,8 @@ namespace GameOfStocksHT16.Controllers
                     Money = user.Money,
                     TotalWorth = user.Money,
                     StockTransactions = GetStockTransWithTimeLeft(user),
-                    StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user)
+                    StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
+                    StockSolds  = DbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
                 };
 
                 foreach (var s in model.StockOwnerships)

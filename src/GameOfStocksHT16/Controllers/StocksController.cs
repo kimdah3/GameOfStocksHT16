@@ -25,20 +25,11 @@ namespace GameOfStocksHT16.Controllers
             _stockService = stockService;
         }
 
-
         // GET: api/Stocks
         [HttpGet]
         public IEnumerable<Stock> Get()
         {
-            var stocks = new List<Stock>();
-            var webRootPath = _hostingEnvironment.WebRootPath;
-            var path = Path.Combine(webRootPath, "stocks.json");
-            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
-            {
-                var json = r.ReadToEnd();
-                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
-            }
-            return stocks;
+            return _stockService.GetStocks();
         }
 
         [HttpGet("{id}")]
