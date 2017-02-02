@@ -92,21 +92,26 @@ namespace GameOfStocksHT16.Controllers
 
         // POST: api/StockTransactions
         [HttpPost]
-        public async Task<IActionResult> PostBuyingStockTransaction(string label, int quantity)
+        public IActionResult PostBuyingStockTransaction(string label, int quantity)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
 
             if (user == null)
+                return BadRequest();
+
+            var stock = _stockService.GetStockByLabel(label);
+
+            if (user.Money <= stock.LastTradePriceOnly * quantity)
             {
                 return BadRequest();
             }
 
-            var stock = _stockService.GetStockByLabel(label);
             var stockTransaction = new StockTransaction()
             {
                 Bid = stock.LastTradePriceOnly,
@@ -126,7 +131,7 @@ namespace GameOfStocksHT16.Controllers
 
             try
             {
-                await _context.SaveChangesAsync();
+                _context.SaveChanges();
             }
             catch (DbUpdateException)
             {

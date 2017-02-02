@@ -42,16 +42,17 @@ namespace GameOfStocksHT16.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             if (user != null)
             {
+
                 var model = new DisplayProfileViewModel()
                 {
                     UserName = user.UserName,
                     Email = user.Email,
                     Money = user.Money,
                     TotalWorth = user.Money,
-                    StockTransactions = DbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList(),
+                    StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user)
                 };
-                
+
                 foreach (var s in model.StockOwnerships)
                 {
                     model.TotalWorth += (s.Quantity * s.LastTradePrice);
@@ -59,13 +60,53 @@ namespace GameOfStocksHT16.Controllers
 
                 return View(model);
             }
-            return RedirectToAction("Login","Account");
+            return RedirectToAction("Login", "Account");
+        }
+
+
+
+        [HttpGet]
+        [Authorize]
+        [Route("api/Users/[action]")]
+        public async Task<string> GetMoney()
+        {
+            var user = await _userManager.GetUserAsync(HttpContext.User);
+            return user.Money.ToString();
+        }
+
+        private List<StockTransWithTimeLeftViewModel> GetStockTransWithTimeLeft(ApplicationUser user)
+        {
+            var stockTrans = new List<StockTransWithTimeLeftViewModel>();
+            foreach (var tran in DbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList())
+            {
+                var timeLeft = tran.Date.AddMinutes(15) - DateTime.Now;
+                if(timeLeft.CompareTo(TimeSpan.Zero) < 0)
+                    timeLeft = TimeSpan.Zero;
+
+                stockTrans.Add(new StockTransWithTimeLeftViewModel()
+                {
+                    Id = tran.Id,
+                    Bid = tran.Bid,
+                    Date = tran.Date,
+                    IsBuying = tran.IsBuying,
+                    IsCompleted = tran.IsCompleted,
+                    IsSelling = tran.IsSelling,
+                    Label = tran.Label,
+                    Name = tran.Name,
+                    Quantity = tran.Quantity,
+                    User = tran.User,
+                    TotalMoney = tran.TotalMoney,
+                    TimeLeftToCompletion = timeLeft
+                });
+
+            }
+            return stockTrans;
         }
 
         private List<StockOwnershipWithLastTradePrice> GetOwnershipsWithLastTradePriceByUser(ApplicationUser user)
         {
             var ownerships = new List<StockOwnershipWithLastTradePrice>();
-            foreach(var s in DbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
+            foreach (var s in DbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
             {
                 ownerships.Add(new StockOwnershipWithLastTradePrice()
                 {
@@ -80,15 +121,6 @@ namespace GameOfStocksHT16.Controllers
                 });
             }
             return ownerships;
-        }
-
-        [HttpGet]
-        [Authorize]
-        [Route("api/Users/[action]")]
-        public async Task<string> GetMoney()
-        {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            return user.Money.ToString();
         }
     }
 }

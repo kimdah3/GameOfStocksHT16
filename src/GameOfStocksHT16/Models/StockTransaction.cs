@@ -17,7 +17,6 @@ namespace GameOfStocksHT16.Models
         public decimal Bid { get; set; }
         public bool IsBuying { get; set; }
         public bool IsSelling { get; set; }
-
         public bool IsCompleted { get; set; }
 
         [Required]

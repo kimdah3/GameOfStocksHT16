@@ -36,6 +36,8 @@ namespace GameOfStocksHT16.Services
 
             foreach (var transaction in pendingStockTransactions)
             {
+                var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                if (DateTime.Now < newTime) continue;
 
                 if (transaction.IsBuying)
                 {

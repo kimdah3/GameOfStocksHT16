@@ -46,9 +46,9 @@
     <table class="table">
         <thead>
         <tr>
-            <th>
+            @*<th>
                 Id
-            </th>
+            </th>*@
             <th>
                 Name
             </th>
@@ -73,7 +73,12 @@
             <th>
                 IsSelling
             </th>
-            <th>IsCompleted</th>
+            <th>
+                <i class="fa fa-clock-o"></i>
+            </th>
+            <th>IsCompleted
+            
+            </th>
             <th></th>
         </tr>
         </thead>
@@ -81,9 +86,9 @@
         @foreach (var item in Model.StockTransactions)
         {
             <tr>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Id)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
@@ -109,10 +114,21 @@
                     @Html.DisplayFor(modelItem => item.IsSelling)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.IsCompleted)
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new {/* id=item.PrimaryKey */})
+                    @if (item.TimeLeftToCompletion.Minutes > 10)
+                    {
+                            <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
+                    }
+                    else
+                    {
+
+                    }
+
                 </td>
             </tr>
         }

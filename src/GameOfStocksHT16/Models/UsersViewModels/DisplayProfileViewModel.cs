@@ -12,12 +12,18 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public decimal Money { get; set; }
         public decimal TotalWorth { get; set; }
 
-        public List<StockTransaction> StockTransactions { get; set; }
+        public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }
         public List<StockOwnershipWithLastTradePrice> StockOwnerships { get; set; }
     }
 
     public class StockOwnershipWithLastTradePrice : StockOwnership
     {
         public decimal LastTradePrice { get; set; }
+
+    }
+
+    public class StockTransWithTimeLeftViewModel : StockTransaction
+    {
+        public TimeSpan TimeLeftToCompletion { get; set; }
     }
 }
