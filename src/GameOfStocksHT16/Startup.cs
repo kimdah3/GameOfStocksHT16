@@ -67,6 +67,7 @@ namespace GameOfStocksHT16
             var stockService = serviceProvider.GetService<IStockService>();
 
             _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20*1000, Timeout.Infinite);
+            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30*1000, 30*1000);
 
         }
 
