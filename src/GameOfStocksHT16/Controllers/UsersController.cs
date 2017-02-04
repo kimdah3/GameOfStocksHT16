@@ -51,13 +51,32 @@ namespace GameOfStocksHT16.Controllers
                     TotalWorth = user.Money,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                    StockSolds  = DbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
+                    FullstockOwnerships = new List<FullStockOnwerShipViewModel>(),
+                    StockSolds = DbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
                 };
 
                 foreach (var s in model.StockOwnerships)
                 {
                     model.TotalWorth += (s.Quantity * s.LastTradePrice);
                 }
+
+                foreach (var s in model.StockOwnerships)
+                {
+                    if (!model.FullstockOwnerships.Exists(x => x.Label == s.Label))
+                    {
+
+                        model.FullstockOwnerships.Add(new FullStockOnwerShipViewModel()
+                        {
+                            Label = s.Label,
+                            Name = s.Name,
+                            LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
+                            Quantity = s.Quantity
+                        });
+                    }
+                    else
+                        model.FullstockOwnerships.Find(x => x.Label == s.Label).Quantity += s.Quantity;
+                }
+
 
                 return View(model);
             }
@@ -104,12 +123,12 @@ namespace GameOfStocksHT16.Controllers
             return stockTrans;
         }
 
-        private List<StockOwnershipWithLastTradePrice> GetOwnershipsWithLastTradePriceByUser(ApplicationUser user)
+        private List<StockOwnerShipViewModel> GetOwnershipsWithLastTradePriceByUser(ApplicationUser user)
         {
-            var ownerships = new List<StockOwnershipWithLastTradePrice>();
+            var ownerships = new List<StockOwnerShipViewModel>();
             foreach (var s in DbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
             {
-                ownerships.Add(new StockOwnershipWithLastTradePrice()
+                ownerships.Add(new StockOwnerShipViewModel()
                 {
                     Id = s.Id,
                     Label = s.Label,
