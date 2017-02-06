@@ -8,196 +8,183 @@
     <h2>Info</h2>
     <table class="table">
         <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UserName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Money)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalWorth)
-            </th>
-        </tr>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.UserName)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Money)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TotalWorth)
+                </th>
+            </tr>
         </thead>
         <tbody>
-        <tr>
-            <td>
-                @Model.Email
-            </td>
-            <td>
-                @Model.UserName
-            </td>
-            <td>
-                @Model.Money
-            </td>
-            <td>
-                @Model.TotalWorth
-            </td>
-        </tr>
+            <tr>
+                <td>
+                    @Model.Email
+                </td>
+                <td>
+                    @Model.UserName
+                </td>
+                <td>
+                    @Model.Money
+                </td>
+                <td>
+                    @Model.TotalWorth
+                </td>
+            </tr>
         </tbody>
     </table>
     <h4>
-        @Html.DisplayNameFor(model => model.StockTransactions)
+        Pending
     </h4>
     <table class="table">
         <thead>
-        <tr>
-            @*<th>
-                Id
-            </th>*@
-            <th>
-                Name
-            </th>
-            <th>
-                Label
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th>
-                Date
-            </th>
-            <th>
-                TotalMoney
-            </th>
-            <th>
-                Bid
-            </th>
-            <th>
-                IsBuying
-            </th>
-            <th>
-                IsSelling
-            </th>
-            <th>
-                <i class="fa fa-clock-o"></i>
-            </th>
-            <th>IsCompleted
-            
-            </th>
-            <th></th>
-        </tr>
+            <tr>
+                <th>
+                    Name
+                </th>
+                <th>
+                    Label
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Date
+                </th>
+                <th>
+                    TotalMoney
+                </th>
+                <th>
+                    Bid
+                </th>
+                <th>
+                    IsBuying
+                </th>
+                <th>
+                    IsSelling
+                </th>
+                <th>
+                    <i class="fa fa-clock-o"></i>
+                </th>
+                <th>
+                    IsCompleted
+                </th>
+                <th></th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.StockTransactions)
-        {
-            <tr>
-                @*<td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>*@
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Label)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Date)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalMoney)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Bid)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsBuying)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsSelling)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.IsCompleted)
-                </td>
-                <td>
-                    @if (item.TimeLeftToCompletion.Minutes > 10)
-                    {
+            @foreach (var item in Model.StockTransactions)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Label)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsBuying)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsSelling)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsCompleted)
+                    </td>
+                    <td>
+                        @if (item.TimeLeftToCompletion.Minutes >= 10)
+                        {
                             <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
-                    }
-                    else
-                    {
+                        }
+                        else
+                        {
 
-                    }
+                        }
 
-                </td>
-            </tr>
-        }
+                    </td>
+                </tr>
+            }
+
         </tbody>
     </table>
     <h4>
-        @Html.DisplayNameFor(model => model.StockOwnerships)
+        Detailed Ownership
     </h4>
     <table class="table">
         <thead>
-        <tr>
-            <th>
-                Id
-            </th>
-            <th>
-                Name
-            </th>
-            <th>
-                Label
-            </th>
-            <th>
-                Quantity
-            </th>
-            <th>
-                DateBought
-            </th>
-            <th>
-                Ask
-            </th>
-            <th>LastTradePrice</th>
-            <th>Sell</th>
-        </tr>
+            <tr>
+                @*<th>
+                        Id
+                    </th>*@
+                <th>
+                    Name
+                </th>
+                <th>
+                    Label
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    DateBought
+                </th>
+                <th>
+                    Ask
+                </th>
+                <th>LastTradePrice</th>
+                <th>Sell</th>
+            </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model.StockOwnerships)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Name)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Label)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateBought)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Ask)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LastTradePrice)
-                </td>
-                <td>
-                    <form asp-controller="api/StockTransactions"
-                          asp-action="PostSellingStockTransaction"
-                          asp-route-ownershipId="@item.Id" asp-route-label="@item.Label"
-                          data-ajax-success="ajaxSuccess();"
-                          data-ajax="true" data-ajax-method="POST">
-                        <button class="btn btn-primary" type="submit">Sell</button>
-                    </form>
-                </td>
-            </tr>
-        }
+            @foreach (var item in Model.StockOwnerships)
+            {
+                <tr>
+                    @*<td>
+                            @Html.DisplayFor(modelItem => item.Id)
+                        </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Label)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateBought)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ask)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.LastTradePrice)
+                    </td>
+                    <td></td>
+                </tr>
+            }
         </tbody>
     </table>
     <h4>
@@ -216,6 +203,7 @@
                     Quantity
                 </th>
                 <th>LastTradePrice</th>
+                <th>Sell</th>
             </tr>
         </thead>
         <tbody>
@@ -232,7 +220,22 @@
                         @Html.DisplayFor(modelItem => item.Quantity)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.LastTradePrice) 
+                        @Html.DisplayFor(modelItem => item.LastTradePrice)
+                    </td>
+                    <td>
+                        <form asp-controller="api/StockTransactions"
+                              asp-action="PostSellingStockTransaction"
+                              asp-route-label="@item.Label"
+                              asp-anti-forgery="true"
+                              data-ajax-success="ajaxSuccess();"
+                              data-ajax="true" data-ajax-method="POST">
+                            <div class="input-group">
+                                <input name="quantity" id="quantity" type="number" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">Sell</button>
+                                </span>
+                            </div>
+                        </form>
                     </td>
                 </tr>
             }
@@ -265,7 +268,7 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in Model.StockSolds)     
+            @foreach (var item in Model.StockSolds)
             {
                 <tr>
                     <td>

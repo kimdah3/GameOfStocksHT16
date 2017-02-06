@@ -16,6 +16,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public List<StockOwnerShipViewModel> StockOwnerships { get; set; }
         public List<FullStockOnwerShipViewModel> FullstockOwnerships { get; set; }
         public List<StockSold> StockSolds { get; set; }
+
     }
 
     public class StockOwnerShipViewModel : StockOwnership

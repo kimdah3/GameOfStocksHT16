@@ -148,9 +148,10 @@ namespace GameOfStocksHT16.Controllers
             return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, stockTransaction);
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PostSellingStockTransaction(string label, int ownershipId)
+        public async Task<IActionResult> PostSellingStockTransaction(string label, int quantity)
         {
             if (!ModelState.IsValid)
             {
@@ -158,7 +159,7 @@ namespace GameOfStocksHT16.Controllers
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == ownershipId && s.User == user);
+            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == 1 && s.User == user);
 
             if (user == null || stockOwnership.User != user)
             {

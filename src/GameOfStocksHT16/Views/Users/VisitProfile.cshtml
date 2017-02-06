@@ -1,0 +1,182 @@
+@model DisplayProfileViewModel
+
+@{
+    ViewData["Title"] = @Model.Email;
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<section class="section-padding-medium">
+    <div class="container">
+        <h5>@Model.Email</h5>
+        <dl>
+            <dt>Balance</dt>
+            <dd>@Model.Money  kr</dd>
+            <dt>Total worth</dt>
+            <dd>@Model.TotalWorth kr</dd>
+        </dl>
+        <div class="col-lg-12">
+            <h4>
+                Stocks
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Label
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>Progress</th>
+                        <th>LastTradePrice</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.FullstockOwnerships)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Name)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Label)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastTradePrice)
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+
+        <div class="col-lg-6">
+            <h4>
+                Buy history
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Label
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            TotalMoney
+                        </th>
+                        <th>
+                            Bid
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockTransactions)
+                    {
+                        if (item.IsBuying && item.IsCompleted)
+                        {
+
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Label)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalMoney)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Bid)
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+        <div class="col-lg-6">
+            <h4>
+                Sell history
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Name
+                        </th>
+                        <th>
+                            Label
+                        </th>
+                        <th>
+                            Quantity
+                        </th>
+                        <th>
+                            Date
+                        </th>
+                        <th>
+                            TotalMoney
+                        </th>
+                        <th>
+                            Bid
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockTransactions)
+                    {
+                        if (item.IsSelling && item.IsCompleted)
+                        {
+
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Label)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalMoney)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Bid)
+                                </td>
+                            </tr>
+                        }
+                    }
+
+                </tbody>
+            </table>
+        </div>
+
+
+    </div>
+</section>

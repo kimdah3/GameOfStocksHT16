@@ -10,7 +10,11 @@
             {
                 <div class="panel-body">
 
-                    <h4>@item.Email</h4>
+                    <h4>
+                        <a asp-action="VisitProfile" asp-route-email="@item.Email">
+                            @item.Email
+                        </a>
+                    </h4>
                     <h5>@item.Money kr</h5>
 
                 </div>

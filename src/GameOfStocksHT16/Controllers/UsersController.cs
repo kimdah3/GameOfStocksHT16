@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Models;
@@ -15,13 +16,13 @@ namespace GameOfStocksHT16.Controllers
 {
     public class UsersController : Controller
     {
-        private ApplicationDbContext DbContext { get; set; }
+        private ApplicationDbContext _dbContext { get; set; }
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
 
         public UsersController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IStockService stockService)
         {
-            DbContext = dbContext;
+            _dbContext = dbContext;
             _userManager = userManager;
             _stockService = stockService;
         }
@@ -29,11 +30,56 @@ namespace GameOfStocksHT16.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = DbContext.Users.ToList();
+            var users = _dbContext.Users.ToList();
             var model = new AllUsersViewModel() { AllUsers = new List<User>() };
             users.ForEach(x => model.AllUsers.Add(new User() { Email = x.Email, Money = x.Money }));
             return View(model);
         }
+
+        [HttpGet]
+        public ActionResult VisitProfile(string email)
+        {
+            var user = _dbContext.Users.FirstOrDefault(u => u.Email == email);
+            if (user == null)
+            {
+                ModelState.AddModelError("email", "No user with that email");
+                return View();
+            }
+
+            var model = new DisplayProfileViewModel
+            {
+                Email = user.Email,
+                Money = user.Money,
+                StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
+                FullstockOwnerships = new List<FullStockOnwerShipViewModel>(),
+                StockTransactions = GetStockTransWithTimeLeft(user),
+                TotalWorth = user.Money
+            };
+
+            foreach (var s in model.StockOwnerships)
+            {
+                model.TotalWorth += (s.Quantity * s.LastTradePrice);
+            }
+
+            foreach (var s in model.StockOwnerships)
+            {
+                if (!model.FullstockOwnerships.Exists(x => x.Label == s.Label))
+                {
+                    model.FullstockOwnerships.Add(new FullStockOnwerShipViewModel()
+                    {
+                        Label = s.Label,
+                        Name = s.Name,
+                        LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
+                        Quantity = s.Quantity
+                    });
+                }
+                else
+                    model.FullstockOwnerships.Find(x => x.Label == s.Label).Quantity += s.Quantity;
+            }
+
+            return View(model);
+        }
+
 
         [HttpGet]
         [Authorize]
@@ -52,7 +98,7 @@ namespace GameOfStocksHT16.Controllers
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                     FullstockOwnerships = new List<FullStockOnwerShipViewModel>(),
-                    StockSolds = DbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
+                    StockSolds = _dbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
                 };
 
                 foreach (var s in model.StockOwnerships)
@@ -97,10 +143,10 @@ namespace GameOfStocksHT16.Controllers
         private List<StockTransWithTimeLeftViewModel> GetStockTransWithTimeLeft(ApplicationUser user)
         {
             var stockTrans = new List<StockTransWithTimeLeftViewModel>();
-            foreach (var tran in DbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList())
+            foreach (var tran in _dbContext.StockTransaction.Where(x => x.User.Id == user.Id).ToList())
             {
                 var timeLeft = tran.Date.AddMinutes(15) - DateTime.Now;
-                if(timeLeft.CompareTo(TimeSpan.Zero) < 0)
+                if (timeLeft.CompareTo(TimeSpan.Zero) < 0)
                     timeLeft = TimeSpan.Zero;
 
                 stockTrans.Add(new StockTransWithTimeLeftViewModel()
@@ -126,7 +172,7 @@ namespace GameOfStocksHT16.Controllers
         private List<StockOwnerShipViewModel> GetOwnershipsWithLastTradePriceByUser(ApplicationUser user)
         {
             var ownerships = new List<StockOwnerShipViewModel>();
-            foreach (var s in DbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
+            foreach (var s in _dbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
             {
                 ownerships.Add(new StockOwnerShipViewModel()
                 {
