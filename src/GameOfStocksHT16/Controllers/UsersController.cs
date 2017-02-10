@@ -30,7 +30,7 @@ namespace GameOfStocksHT16.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = _dbContext.Users.ToList();
+            var users = _dbContext.Users.OrderByDescending(x => x.Money).ToList();
             var model = new AllUsersViewModel() { AllUsers = new List<User>() };
             users.ForEach(x => model.AllUsers.Add(new User() { Email = x.Email, Money = x.Money }));
             return View(model);

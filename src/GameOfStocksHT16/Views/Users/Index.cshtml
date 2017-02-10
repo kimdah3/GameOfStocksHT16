@@ -5,18 +5,19 @@
 }
 <section class="section-padding-medium">
     <div class="container">
+        <h3>Topplista:</h3>
         <div class="panel">
             @foreach (var item in Model.AllUsers)
             {
+                int i = Model.AllUsers.IndexOf(item);
                 <div class="panel-body">
-
-                    <h4>
+                    <h4> @(i+1).
                         <a asp-action="VisitProfile" asp-route-email="@item.Email">
-                            @item.Email
+                           @item.Email
                         </a>
                     </h4>
                     <h5>@item.Money kr</h5>
-
+                    
                 </div>
             }
         </div>
