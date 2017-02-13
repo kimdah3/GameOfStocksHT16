@@ -55,6 +55,9 @@ namespace GameOfStocksHT16.Controllers
                 TotalWorth = user.Money
             };
 
+
+
+
             foreach (var s in model.StockOwnerships)
             {
                 model.TotalWorth += (s.Quantity * s.LastTradePrice);
@@ -88,9 +91,6 @@ namespace GameOfStocksHT16.Controllers
                 {
                     model.TotalWorth += (s.Quantity * s.LastTradePrice);
                 }
-
-                
-
 
                 return View(model);
             }

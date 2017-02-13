@@ -9,7 +9,9 @@ using System.Threading.Tasks;
 using CsvHelper;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Models;
+using GameOfStocksHT16.Models.HomeViewModels;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
@@ -234,6 +236,7 @@ namespace GameOfStocksHT16.Services
             return stocks;
         }
 
+
         public Stock GetStockByLabel(string label)
         {
             var stocks = new List<Stock>();
@@ -251,10 +254,36 @@ namespace GameOfStocksHT16.Services
             return stock;
         }
 
-        private string GetStoredOpen(string label)
+        public void SaveUsersTotalWorthPerDay(object state)
         {
-            return GetStockByLabel(label).Open + "";
+            var today = DateTime.Today;
+            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + today.ToString("M") + ".json";
+            var users = _dbContext.Users.Include(u => u.StockOwnerships).ToList();
+            var allUsersTotalWorth = new List<UsersTotalWorth>();
+
+            foreach (var user in users)
+            {
+                var usersTotalWorth = new UsersTotalWorth()
+                {
+                    Email = user.Email,
+                    TotalWorth = user.Money
+                };
+
+                foreach (var stockOwnership in user.StockOwnerships)
+                {
+                    usersTotalWorth.TotalWorth += GetStockByLabel(stockOwnership.Label).LastTradePriceOnly * stockOwnership.Quantity;
+                }
+
+                allUsersTotalWorth.Add(usersTotalWorth);
+            }
+
+            using (var file = File.CreateText(path))
+            {
+                var serializer = new JsonSerializer();
+                serializer.Serialize(file, allUsersTotalWorth);
+            }
         }
+        
 
         private void SerializeToJson(string path, List<Stock> stockList)
         {

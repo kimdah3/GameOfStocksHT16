@@ -1,7 +1,35 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<h2>@ViewData["Title"].</h2>
-<h3>@ViewData["Message"]</h3>
+<div class="container">
+    <h2>Info </h2>
+    <h3></h3>
 
-<p>Use this area to provide additional information.</p>
+    <p>You start with 100 000 kr in balance, buy and sell stocks. There is a 15 min delay. (Mer info)</p>
+    <h4>Was this page helpful?</h4>
+    <a class="btn btn-success" data-toggle="modal" data-target="#myModal">Yes</a>
+    <a id="btn-no" class="btn btn-danger" data-toggle="modal" data-target="#myModal">No</a>
+    <p>(95% think this was helpful.)</p>
+    <p>(5% think this a little helpful.)</p>
+</div>
+
+<!-- Modal -->
+<div id="myModal" class="modal fade" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Thank you for voting YES!</h4>
+            </div>
+            <div class="modal-body">
+                <p>Game Of Stocks Developer Team</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>

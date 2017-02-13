@@ -14,5 +14,7 @@ namespace GameOfStocksHT16.Services
         Stock GetStockByLabel(string label);
 
         List<Stock> GetStocks();
+
+        void SaveUsersTotalWorthPerDay(object state);
     }
 }

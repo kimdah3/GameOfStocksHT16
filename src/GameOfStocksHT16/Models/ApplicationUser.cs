@@ -13,5 +13,6 @@ namespace GameOfStocksHT16.Models
         public decimal PendingMoney { get; set; }
 
         public virtual List<StockTransaction> StockTransactions { get; set; }
+        public virtual List<StockOwnership> StockOwnerships { get; set; }
     }
 }

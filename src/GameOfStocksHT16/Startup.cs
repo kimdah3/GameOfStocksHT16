@@ -18,6 +18,7 @@ namespace GameOfStocksHT16
     {
         private Timer _downloadStocksTimer;
         private Timer _completeStockTransTimer;
+        private Timer _saveUsersTotalWorthPerDay;
 
         public Startup(IHostingEnvironment env)
         {
@@ -68,6 +69,7 @@ namespace GameOfStocksHT16
 
             _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20*1000, Timeout.Infinite);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30*1000, 30*1000);
+            _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
         }
 
@@ -101,6 +103,17 @@ namespace GameOfStocksHT16
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private int GetMillisecondsToMidnight()
+        {
+            var openTime = DateTime.Today.AddHours(0.0);
+            var now = DateTime.Now;
+
+            if (now > openTime)
+                openTime = openTime.AddDays(1);
+
+            return (int)((openTime - now).TotalMilliseconds);
         }
     }
 }
