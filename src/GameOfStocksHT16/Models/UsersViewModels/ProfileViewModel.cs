@@ -1,11 +1,12 @@
-﻿using System;
+﻿using GameOfStocksHT16.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace GameOfStocksHT16.Models.UsersViewModels
 {
-    public class DisplayProfileViewModel
+    public class ProfileViewModel
     {
         public string Email { get; set; }
         public string UserName { get; set; }
@@ -21,7 +22,6 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     public class StockOwnerShipViewModel : StockOwnership
     {
         public decimal LastTradePrice { get; set; }
-
     }
 
     public class StockTransWithTimeLeftViewModel : StockTransaction

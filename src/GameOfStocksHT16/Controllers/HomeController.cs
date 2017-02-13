@@ -25,15 +25,16 @@ namespace GameOfStocksHT16.Controllers
         public IActionResult Index()
         {
             var users = _dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
-            //var model = new AllUsersViewModel() { AllUsers = new List<User>() };
             var allUsers = new List<UserInfoModel>();
 
             var model = new HomeViewModel()
             {
                 CurrentLeaderBoard = new List<UserInfoModel>(),
-                TodaysLoosers =  new List<UserInfoModel>(),
+                TodaysLoosers = new List<UserInfoModel>(),
                 TodaysWinners = new List<UserInfoModel>()
             };
+
+            if (users == null) return View(model);
 
             foreach (var user in users)
             {
@@ -41,18 +42,39 @@ namespace GameOfStocksHT16.Controllers
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money
+                    TotalWorth = user.Money + user.PendingMoney
                 };
 
                 foreach (var stockOwnership in user.StockOwnerships)
                 {
-                    userWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(stockOwnership.Label).LastTradePriceOnly *stockOwnership.Quantity;
+                    userWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(stockOwnership.Label).LastTradePriceOnly * stockOwnership.Quantity;
+                    userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
                 }
 
                 allUsers.Add(userWithTotalWorth);
             }
 
-            model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).ToList().GetRange(0,5);
+            model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).ToList();
+
+            if (allUsers.Count > 5)
+                model.CurrentLeaderBoard = model.CurrentLeaderBoard.GetRange(0, 5);
+
+            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
+            var usersWithPercentPerDay = new List<UserInfoModel>();
+
+            foreach (var userWithTotal in usersTotalWorthPerDay)
+            {
+                if (!allUsers.Any(u => u.Email == userWithTotal.Email)) continue;
+
+                usersWithPercentPerDay.Add(new UserInfoModel()
+                {
+                    Email = userWithTotal.Email,
+                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
+                });
+            }
+
+            model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).ToList();
+            model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).ToList();
 
             return View(model);
         }

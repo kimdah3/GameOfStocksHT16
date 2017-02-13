@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using GameOfStocksHT16.Services;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Controllers
 {
@@ -46,17 +47,14 @@ namespace GameOfStocksHT16.Controllers
                 return View();
             }
 
-            var model = new DisplayProfileViewModel
+            var model = new ProfileViewModel
             {
                 Email = user.Email,
                 Money = user.Money,
                 StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                 StockTransactions = GetStockTransWithTimeLeft(user),
-                TotalWorth = user.Money
+                TotalWorth = user.Money + user.PendingMoney
             };
-
-
-
 
             foreach (var s in model.StockOwnerships)
             {
@@ -76,13 +74,13 @@ namespace GameOfStocksHT16.Controllers
             if (user != null)
             {
 
-                var model = new DisplayProfileViewModel()
+                var model = new ProfileViewModel()
                 {
                     UserName = user.UserName,
                     Email = user.Email,
                     Money = user.Money,
                     PendingMoney = user.PendingMoney,
-                    TotalWorth = user.Money,
+                    TotalWorth = user.Money + user.PendingMoney,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                 };

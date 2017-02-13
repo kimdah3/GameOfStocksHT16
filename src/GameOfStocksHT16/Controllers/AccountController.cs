@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
-using GameOfStocksHT16.Models;
+using GameOfStocksHT16.Entities;
 using GameOfStocksHT16.Models.AccountViewModels;
 using GameOfStocksHT16.Services;
 

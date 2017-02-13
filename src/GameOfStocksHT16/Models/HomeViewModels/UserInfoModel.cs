@@ -10,6 +10,7 @@ namespace GameOfStocksHT16.Models.HomeViewModels
         public string Email { get; set; }
         public decimal Money { get; set; }
         public decimal TotalWorth { get; set; }
-        public decimal Percent { get; set; }
+        public decimal GrowthPercent { get; set; }
+        public decimal PercentPerDay { get; set; }
     }
 }

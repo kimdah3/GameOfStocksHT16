@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using GameOfStocksHT16.Models;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Data
 {

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using GameOfStocksHT16.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -16,5 +17,7 @@ namespace GameOfStocksHT16.Services
         List<Stock> GetStocks();
 
         void SaveUsersTotalWorthPerDay(object state);
+
+        List<UserTotalWorth> GetUsersTotalWorthPerDay();
     }
 }

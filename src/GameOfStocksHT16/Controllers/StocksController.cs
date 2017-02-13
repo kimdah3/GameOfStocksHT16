@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using GameOfStocksHT16.Services;
+using GameOfStocksHT16.Models;
 
 namespace GameOfStocksHT16.Controllers
 {

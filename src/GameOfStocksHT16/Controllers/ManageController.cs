@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using GameOfStocksHT16.Models;
 using GameOfStocksHT16.Models.ManageViewModels;
 using GameOfStocksHT16.Services;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Controllers
 {

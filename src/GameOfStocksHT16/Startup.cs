@@ -8,7 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using GameOfStocksHT16.Data;
-using GameOfStocksHT16.Models;
+using GameOfStocksHT16.Entities;
 using GameOfStocksHT16.Services;
 using Microsoft.AspNetCore.Identity;
 

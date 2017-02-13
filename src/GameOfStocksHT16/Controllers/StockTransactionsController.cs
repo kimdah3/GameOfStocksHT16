@@ -11,6 +11,7 @@ using GameOfStocksHT16.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Controllers
 {

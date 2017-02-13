@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Services
 {
@@ -107,7 +108,6 @@ namespace GameOfStocksHT16.Services
         public async void SaveStocksOnStartup(object state)
         {
             var stockPath = Path.Combine(_hostingEnvironment.WebRootPath, "stocks.json");
-            var debugPath = Path.Combine(_hostingEnvironment.WebRootPath, "debug.txt");
 
             try
             {
@@ -120,7 +120,6 @@ namespace GameOfStocksHT16.Services
                 //LARGE 0 - 105 
                 //MID 106 - 225 (120 st)
                 //SMALL 226 - 334 (109 st)
-
 
                 //if (currentTime <= morningOpen || currentTime >= eveningClose) return;
 
@@ -214,11 +213,11 @@ namespace GameOfStocksHT16.Services
                 }
 
                 SerializeToJson(stockPath, stockList);
-                WriteToDebug(debugPath, DateTime.Now, "sucess, stockList.Count = " + stockList.Count);
+                WriteToDebug(DateTime.Now, "sucess, stockList.Count = " + stockList.Count);
             }
             catch (Exception exception)
             {
-                WriteToDebug(debugPath, DateTime.Now, "something went wrong while downloading stocks, " + exception.Message);
+                WriteToDebug(DateTime.Now, "something went wrong while downloading stocks, " + exception.Message);
 
             }
         }
@@ -257,16 +256,16 @@ namespace GameOfStocksHT16.Services
         public void SaveUsersTotalWorthPerDay(object state)
         {
             var today = DateTime.Today;
-            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + today.ToString("M") + ".json";
+            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + today.ToString("M", CultureInfo.InvariantCulture) + ".json";
             var users = _dbContext.Users.Include(u => u.StockOwnerships).ToList();
-            var allUsersTotalWorth = new List<UsersTotalWorth>();
+            var allUsersTotalWorth = new List<UserTotalWorth>();
 
             foreach (var user in users)
             {
-                var usersTotalWorth = new UsersTotalWorth()
+                var usersTotalWorth = new UserTotalWorth()
                 {
                     Email = user.Email,
-                    TotalWorth = user.Money
+                    TotalWorth = user.Money + user.PendingMoney
                 };
 
                 foreach (var stockOwnership in user.StockOwnerships)
@@ -283,7 +282,27 @@ namespace GameOfStocksHT16.Services
                 serializer.Serialize(file, allUsersTotalWorth);
             }
         }
-        
+
+        public List<UserTotalWorth> GetUsersTotalWorthPerDay()
+        {
+            var usersTotalWorth = new List<UserTotalWorth>();
+
+            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json";
+            try
+            {
+                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+                {
+                    var json = r.ReadToEnd();
+                    usersTotalWorth = JsonConvert.DeserializeObject<List<UserTotalWorth>>(json);
+                }
+            }
+            catch (Exception ex)
+            {
+                WriteToDebug(DateTime.Now, "something went wrong while reading daily UsersTotalWorth, " + ex.Message);
+            }
+
+            return usersTotalWorth;
+        }
 
         private void SerializeToJson(string path, List<Stock> stockList)
         {
@@ -294,9 +313,10 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        private void WriteToDebug(string path, DateTime date, string message)
+        private void WriteToDebug(DateTime date, string message)
         {
-            using (var sw = File.AppendText(path))
+            var debugPath = Path.Combine(_hostingEnvironment.WebRootPath, "debug.txt");
+            using (var sw = File.AppendText(debugPath))
             {
                 sw.Write(date.ToString("U") + " " + message + Environment.NewLine);
             }
