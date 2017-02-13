@@ -10,12 +10,11 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public string Email { get; set; }
         public string UserName { get; set; }
         public decimal Money { get; set; }
+        public decimal PendingMoney { get; set; }
         public decimal TotalWorth { get; set; }
 
         public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }
         public List<StockOwnerShipViewModel> StockOwnerships { get; set; }
-        public List<FullStockOnwerShipViewModel> FullstockOwnerships { get; set; }
-        public List<StockSold> StockSolds { get; set; }
 
     }
 
@@ -23,14 +22,6 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     {
         public decimal LastTradePrice { get; set; }
 
-    }
-
-    public class FullStockOnwerShipViewModel
-    {
-        public string Name { get; set; }
-        public string Label { get; set; }
-        public int Quantity { get; set; }
-        public decimal LastTradePrice { get; set; }
     }
 
     public class StockTransWithTimeLeftViewModel : StockTransaction

@@ -127,6 +127,7 @@ namespace GameOfStocksHT16.Controllers
             };
 
             user.Money -= stockTransaction.TotalMoney;
+            user.PendingMoney += stockTransaction.TotalMoney;
             _context.StockTransaction.Add(stockTransaction);
 
             try

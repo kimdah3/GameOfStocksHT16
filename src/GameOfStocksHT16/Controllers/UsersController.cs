@@ -51,7 +51,6 @@ namespace GameOfStocksHT16.Controllers
                 Email = user.Email,
                 Money = user.Money,
                 StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                FullstockOwnerships = new List<FullStockOnwerShipViewModel>(),
                 StockTransactions = GetStockTransWithTimeLeft(user),
                 TotalWorth = user.Money
             };
@@ -61,22 +60,7 @@ namespace GameOfStocksHT16.Controllers
                 model.TotalWorth += (s.Quantity * s.LastTradePrice);
             }
 
-            foreach (var s in model.StockOwnerships)
-            {
-                if (!model.FullstockOwnerships.Exists(x => x.Label == s.Label))
-                {
-                    model.FullstockOwnerships.Add(new FullStockOnwerShipViewModel()
-                    {
-                        Label = s.Label,
-                        Name = s.Name,
-                        LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
-                        Quantity = s.Quantity
-                    });
-                }
-                else
-                    model.FullstockOwnerships.Find(x => x.Label == s.Label).Quantity += s.Quantity;
-            }
-
+           
             return View(model);
         }
 
@@ -94,11 +78,10 @@ namespace GameOfStocksHT16.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Money = user.Money,
+                    PendingMoney = user.PendingMoney,
                     TotalWorth = user.Money,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                    FullstockOwnerships = new List<FullStockOnwerShipViewModel>(),
-                    StockSolds = _dbContext.StockSold.Where(x => x.User.Id == user.Id).ToList()
                 };
 
                 foreach (var s in model.StockOwnerships)
@@ -106,22 +89,7 @@ namespace GameOfStocksHT16.Controllers
                     model.TotalWorth += (s.Quantity * s.LastTradePrice);
                 }
 
-                foreach (var s in model.StockOwnerships)
-                {
-                    if (!model.FullstockOwnerships.Exists(x => x.Label == s.Label))
-                    {
-
-                        model.FullstockOwnerships.Add(new FullStockOnwerShipViewModel()
-                        {
-                            Label = s.Label,
-                            Name = s.Name,
-                            LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
-                            Quantity = s.Quantity
-                        });
-                    }
-                    else
-                        model.FullstockOwnerships.Find(x => x.Label == s.Label).Quantity += s.Quantity;
-                }
+                
 
 
                 return View(model);
@@ -179,11 +147,11 @@ namespace GameOfStocksHT16.Controllers
                     Id = s.Id,
                     Label = s.Label,
                     Name = s.Name,
-                    DateBought = s.DateBought,
                     Quantity = s.Quantity,
-                    Ask = s.Ask,
+                    Gav = s.Gav,
+                    TotalSum = s.TotalSum,
+                    LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
                     User = s.User,
-                    LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly
                 });
             }
             return ownerships;

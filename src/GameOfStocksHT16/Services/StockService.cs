@@ -32,44 +32,65 @@ namespace GameOfStocksHT16.Services
             var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
             if (!await pendingStockTransactions.AnyAsync()) { return; }
             var newOwnerships = new List<StockOwnership>();
-            var newSoldStocks = new List<StockSold>();
 
             foreach (var transaction in pendingStockTransactions)
             {
                 var newTime = transaction.Date + TimeSpan.FromMinutes(15);
                 if (DateTime.Now < newTime) continue;
+                var stock = GetStockByLabel(transaction.Label); //Most recent values
 
                 if (transaction.IsBuying)
                 {
-                    newOwnerships.Add(new StockOwnership()
+                    transaction.User.Money += transaction.TotalMoney;
+                    transaction.User.PendingMoney -= transaction.TotalMoney;
+
+                    //Get recent value
+                    transaction.Bid = stock.LastTradePriceOnly;
+                    transaction.TotalMoney = transaction.Bid * transaction.Quantity;
+
+                    var existingStock = _dbContext.StockOwnership.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
+                    var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
+
+                    if (existingStock != null)
                     {
-                        Name = transaction.Name,
-                        Label = transaction.Label,
-                        DateBought = DateTime.Now,
-                        Quantity = transaction.Quantity,
-                        Ask = GetStockByLabel(transaction.Label).LastTradePriceOnly,
-                        User = transaction.User
-                    });
+                        existingStock.Quantity += transaction.Quantity;
+                        existingStock.TotalSum += transaction.TotalMoney;
+                        existingStock.Gav = existingStock.TotalSum / existingStock.Quantity;
+                    }
+                    else if (stockToModify != null)
+                    {
+                        newOwnerships.Remove(stockToModify);
+                        stockToModify.Quantity += transaction.Quantity;
+                        stockToModify.TotalSum += transaction.TotalMoney;
+                        stockToModify.Gav = stockToModify.TotalSum / stockToModify.Quantity;
+                        newOwnerships.Add(stockToModify);
+                    }
+                    else
+                        newOwnerships.Add(new StockOwnership()
+                        {
+                            Name = transaction.Name,
+                            Label = transaction.Label,
+                            Quantity = transaction.Quantity,
+                            Gav = transaction.TotalMoney / transaction.Quantity,
+                            TotalSum = transaction.TotalMoney,
+                            User = transaction.User
+                        });
+                    if (transaction.TotalMoney <= transaction.User.Money)
+                        transaction.User.Money -= transaction.TotalMoney;
+                    else
+                    {
+                        throw new Exception("User no money");
+                    }
                 }
                 else if (transaction.IsSelling)
                 {
                     var lastTradePrice = GetStockByLabel(transaction.Label).LastTradePriceOnly;
-                    newSoldStocks.Add(new StockSold()
-                    {
-                        Name = transaction.Name,
-                        Label = transaction.Label,
-                        DateSold = DateTime.Now,
-                        Quantity = transaction.Quantity,
-                        LastTradePrice = lastTradePrice,
-                        User = transaction.User
-                    });
-                    var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == transaction.User.Id);
-                    user.Money += lastTradePrice * transaction.Quantity;
+                    transaction.User.Money += lastTradePrice * transaction.Quantity;
                 }
-                _dbContext.StockTransaction.FirstOrDefault(x => x.Id == transaction.Id).IsCompleted = true;
+                transaction.IsCompleted = true;
             }
+
             _dbContext.StockOwnership.AddRange(newOwnerships);
-            _dbContext.StockSold.AddRange(newSoldStocks);
 
             try
             {
@@ -123,9 +144,10 @@ namespace GameOfStocksHT16.Services
                                 cap = "MidCap";
                             else if (rowNumber > 225)
                                 cap = "SmallCap";
-                            
+
 
                             var fields = csvReader.CurrentRecord;
+                            Stock stock;
 
                             var lastTradeDate = fields[0];
                             var daysLow = fields[1];
@@ -150,20 +172,40 @@ namespace GameOfStocksHT16.Services
                             if (daysHigh.Equals("N/A"))
                                 daysHigh = open;
 
-                            var stock = new Stock()
+                            if (name.Equals("N/A"))
                             {
-                                Label = symbol,
-                                Name = name,
-                                Volume = int.Parse(volume),
-                                Change = change,
-                                Open = decimal.Parse(open, CultureInfo.InvariantCulture),
-                                DaysLow = decimal.Parse(daysLow, CultureInfo.InvariantCulture),
-                                DaysHigh = decimal.Parse(daysHigh, CultureInfo.InvariantCulture),
-                                LastTradeTime = lastTradeTime,
-                                LastTradePriceOnly = decimal.Parse(lastTradePriceOnly, CultureInfo.InvariantCulture),
-                                LastTradeDate = lastTradeDate,
-                                Cap = cap
-                            };
+                                stock = new Stock()
+                                {
+                                    Label = symbol,
+                                    Name = "",
+                                    Volume = 0,
+                                    Change = change,
+                                    Open = 0,
+                                    DaysLow = 0,
+                                    DaysHigh = 0,
+                                    LastTradeTime = lastTradeTime,
+                                    LastTradePriceOnly = 0,
+                                    LastTradeDate = lastTradeDate,
+                                    Cap = cap
+                                };
+                            }
+                            else
+                            {
+                                stock = new Stock()
+                                {
+                                    Label = symbol,
+                                    Name = name,
+                                    Volume = int.Parse(volume),
+                                    Change = change,
+                                    Open = decimal.Parse(open, CultureInfo.InvariantCulture),
+                                    DaysLow = decimal.Parse(daysLow, CultureInfo.InvariantCulture),
+                                    DaysHigh = decimal.Parse(daysHigh, CultureInfo.InvariantCulture),
+                                    LastTradeTime = lastTradeTime,
+                                    LastTradePriceOnly = decimal.Parse(lastTradePriceOnly, CultureInfo.InvariantCulture),
+                                    LastTradeDate = lastTradeDate,
+                                    Cap = cap
+                                };
+                            }
                             stockList.Add(stock);
                         }
                     }
