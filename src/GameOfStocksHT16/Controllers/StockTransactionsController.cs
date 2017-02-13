@@ -99,6 +99,8 @@ namespace GameOfStocksHT16.Controllers
             {
                 return BadRequest(ModelState);
             }
+            if (quantity <= 0)
+                return BadRequest("Quantity can't be 0 or negative.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _context.Users.FirstOrDefault(u => u.Id == userId);
