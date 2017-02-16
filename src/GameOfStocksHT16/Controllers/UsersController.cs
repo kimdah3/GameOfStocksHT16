@@ -140,6 +140,7 @@ namespace GameOfStocksHT16.Controllers
             var ownerships = new List<StockOwnerShipViewModel>();
             foreach (var s in _dbContext.StockOwnership.Where(x => x.User.Id == user.Id).ToList())
             {
+                var lastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly;
                 ownerships.Add(new StockOwnerShipViewModel()
                 {
                     Id = s.Id,
@@ -148,8 +149,9 @@ namespace GameOfStocksHT16.Controllers
                     Quantity = s.Quantity,
                     Gav = s.Gav,
                     TotalSum = s.TotalSum,
-                    LastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly,
-                    User = s.User,
+                    LastTradePrice = lastTradePrice,
+                    Growth = (lastTradePrice/s.Gav -1)*100,
+                    User = s.User
                 });
             }
             return ownerships;

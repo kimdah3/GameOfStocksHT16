@@ -64,18 +64,11 @@ namespace GameOfStocksHT16
             services.AddTransient<ISmsSender, AuthMessageSender>();
             services.AddSingleton<IStockService, StockService>();
 
-            var serviceProvider = services.BuildServiceProvider();
-            var stockService = serviceProvider.GetService<IStockService>();
-
-            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20*1000, Timeout.Infinite);
-            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30*1000, 30*1000);
-            _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
-
         }
 
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory, IStockService stockService)
         {
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
@@ -94,6 +87,16 @@ namespace GameOfStocksHT16
             app.UseStaticFiles();
 
             app.UseIdentity();
+
+            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, Timeout.Infinite);
+            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, 30 * 1000);
+            _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
+
+            if (env.IsDevelopment())
+            {
+                if (!stockService.DailyUsersTotalWorthExists())
+                    stockService.SaveUsersTotalWorthPerDay(this);
+            }
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 

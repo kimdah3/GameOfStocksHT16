@@ -298,12 +298,26 @@ namespace GameOfStocksHT16.Services
             }
             catch (Exception ex)
             {
-                WriteToDebug(DateTime.Now, "something went wrong while reading daily UsersTotalWorth, " + ex.Message);
+                WriteToDebug(DateTime.Now, "something went wrong reading daily UsersTotalWorth, " + ex.Message);
             }
 
             return usersTotalWorth;
         }
 
+        public bool DailyUsersTotalWorthExists()
+        {
+            try
+            {
+                using (var r = new StreamReader(new FileStream(_hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json", FileMode.Open)))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
         private void SerializeToJson(string path, List<Stock> stockList)
         {
             using (var file = File.CreateText(path))

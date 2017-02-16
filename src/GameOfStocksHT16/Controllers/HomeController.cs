@@ -54,17 +54,14 @@ namespace GameOfStocksHT16.Controllers
                 allUsers.Add(userWithTotalWorth);
             }
 
-            model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).ToList();
-
-            if (allUsers.Count > 5)
-                model.CurrentLeaderBoard = model.CurrentLeaderBoard.GetRange(0, 5);
+            model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).Take(5).ToList();
 
             var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
             var usersWithPercentPerDay = new List<UserInfoModel>();
 
             foreach (var userWithTotal in usersTotalWorthPerDay)
             {
-                if (!allUsers.Any(u => u.Email == userWithTotal.Email)) continue;
+                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
 
                 usersWithPercentPerDay.Add(new UserInfoModel()
                 {
@@ -73,8 +70,8 @@ namespace GameOfStocksHT16.Controllers
                 });
             }
 
-            model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).ToList();
-            model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).ToList();
+            model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).Take(5).ToList();
+            model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).Take(5).ToList();
 
             return View(model);
         }

@@ -7,9 +7,9 @@
     height: 40px;
     width: auto;
 }
-#logoutForm button
-{
-   display: block;
+
+#logoutForm button {
+    display: block;
     padding: 3px 20px;
     clear: both;
     font-weight: normal;
@@ -18,23 +18,23 @@
     white-space: nowrap;
     background-color: white;
     border: none;
-    outline:none;
+    outline: none;
 }
-#logoutForm:hover,#logoutForm button:hover
-{
-    text-decoration: none;
-  color: #141414;
-  background-color: #eeeeee;
-}
+
+    #logoutForm:hover, #logoutForm button:hover {
+        text-decoration: none;
+        color: #141414;
+        background-color: #eeeeee;
+    }
 
 /*Welcome*/
 
-    #section-welcome-header .jumbotron {
-        background-image: url("../images/stocks.png");
-        background-repeat: no-repeat;
-        background-size: cover;
-        background-color: darkblue;
-    }
+#section-welcome-header .jumbotron {
+    background-image: url("../images/stocks.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: darkblue;
+}
 /*Stock-List*/
 #custom-search-form {
     margin: 0;
@@ -83,4 +83,15 @@
 
 .search-query:focus {
     width: 260px;
+}
+
+.font-color-green {
+    color: green;
+}
+
+.font-color-red {
+    color: red;
+}
+.font-percent {
+    font-weight: bold;
 }

@@ -19,5 +19,7 @@ namespace GameOfStocksHT16.Services
         void SaveUsersTotalWorthPerDay(object state);
 
         List<UserTotalWorth> GetUsersTotalWorthPerDay();
+
+        bool DailyUsersTotalWorthExists();
     }
 }

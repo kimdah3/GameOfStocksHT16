@@ -19,7 +19,7 @@
                     @Html.DisplayNameFor(model => model.Money)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.PendingMoney)
+                    Reserved
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.TotalWorth)
@@ -35,7 +35,7 @@
                     @Model.UserName
                 </td>
                 <td>
-                    @Model.Money
+                    @Html.DisplayFor(m => m.Money)
                 </td>
                 <td>
                     @Model.PendingMoney
@@ -155,12 +155,14 @@
                     Quantity
                 </th>
                 <th>
-                    GAV
-                </th>
-                <th>
                     Total sum
                 </th>
+                <th>
+                    GAV
+                </th>
                 <th>LastTradePrice</th>
+
+                <th>Growth</th>
                 <th>Sell</th>
             </tr>
         </thead>
@@ -181,14 +183,18 @@
                         @Html.DisplayFor(modelItem => item.Quantity)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Gav)
+                        @Html.DisplayFor(modelItem => item.TotalSum)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TotalSum)
+                        @Html.DisplayFor(modelItem => item.Gav)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.LastTradePrice)
                     </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Growth)%
+                    </td>
+                    
                     <td></td>
                 </tr>
             }
