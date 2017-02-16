@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
+using System.Globalization;
 using System.Threading.Tasks;
 
 namespace GameOfStocksHT16.Models.UsersViewModels
@@ -11,11 +12,11 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     {
         public string Email { get; set; }
         public string UserName { get; set; }
-        [DisplayFormat(DataFormatString = "{0:N2}")]
-        public decimal Money { get; set; }     
-        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
+        public decimal Money { get; set; }
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal PendingMoney { get; set;}
-        [DisplayFormat(DataFormatString = "{0:N2}")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal TotalWorth { get; set; }
 
 

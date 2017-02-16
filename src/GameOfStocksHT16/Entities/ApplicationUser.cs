@@ -10,7 +10,7 @@ namespace GameOfStocksHT16.Entities
     public class ApplicationUser : IdentityUser
     {
         public decimal Money { get; set; }
-        public decimal PendingMoney { get; set; }
+        public decimal ReservedMoney { get; set; }
 
         public virtual List<StockTransaction> StockTransactions { get; set; }
         public virtual List<StockOwnership> StockOwnerships { get; set; }

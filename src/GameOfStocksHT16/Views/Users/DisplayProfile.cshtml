@@ -16,7 +16,7 @@
                     @Html.DisplayNameFor(model => model.UserName)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Money)
+                    Balance
                 </th>
                 <th>
                     Reserved
@@ -38,10 +38,10 @@
                     @Html.DisplayFor(m => m.Money)
                 </td>
                 <td>
-                    @Model.PendingMoney
+                    @Html.DisplayFor(m => m.PendingMoney)
                 </td>
                 <td>
-                    @Model.TotalWorth
+                    @Html.DisplayFor(m => m.TotalWorth)
                 </td>
             </tr>
         </tbody>
@@ -103,10 +103,10 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                        <i class="fa fa-hourglass-half"></i>
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Bid)
+                        <i class="fa fa-hourglass-half"></i>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.IsBuying)
@@ -142,9 +142,6 @@
     <table class="table">
         <thead>
             <tr>
-                @*<th>
-                        Id
-                    </th>*@
                 <th>
                     Name
                 </th>
@@ -161,7 +158,6 @@
                     GAV
                 </th>
                 <th>LastTradePrice</th>
-
                 <th>Growth</th>
                 <th>Sell</th>
             </tr>
@@ -170,9 +166,6 @@
             @foreach (var item in Model.StockOwnerships)
             {
                 <tr>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.Id)
-                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
@@ -194,8 +187,22 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Growth)%
                     </td>
-                    
-                    <td></td>
+
+                    <td>
+                        <form asp-controller="api/StockTransactions"
+                              asp-action="PostSellingStockTransaction"
+                              asp-route-label="@item.Label"
+                              asp-anti-forgery="true"
+                              data-ajax-success="ajaxSuccess();"
+                              data-ajax="true" data-ajax-method="POST">
+                            <div class="input-group">
+                                <input name="quantity" id="quantity" type="number" class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-primary" type="submit">Sell</button>
+                                </span>
+                            </div>
+                        </form>
+                    </td>
                 </tr>
             }
         </tbody>
@@ -328,19 +335,7 @@
                             @Html.DisplayFor(modelItem => item.LastTradePrice)
                         </td>
                         <td>
-                            <form asp-controller="api/StockTransactions"
-                                  asp-action="PostSellingStockTransaction"
-                                  asp-route-label="@item.Label"
-                                  asp-anti-forgery="true"
-                                  data-ajax-success="ajaxSuccess();"
-                                  data-ajax="true" data-ajax-method="POST">
-                                <div class="input-group">
-                                    <input name="quantity" id="quantity" type="number" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button class="btn btn-primary" type="submit">Sell</button>
-                                    </span>
-                                </div>
-                            </form>
+
                         </td>
                     </tr>
                 }

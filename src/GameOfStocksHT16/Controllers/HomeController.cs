@@ -42,7 +42,7 @@ namespace GameOfStocksHT16.Controllers
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money + user.PendingMoney
+                    TotalWorth = user.Money + user.ReservedMoney
                 };
 
                 foreach (var stockOwnership in user.StockOwnerships)

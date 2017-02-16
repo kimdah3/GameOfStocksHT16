@@ -130,7 +130,7 @@ namespace GameOfStocksHT16.Controllers
             };
 
             user.Money -= stockTransaction.TotalMoney;
-            user.PendingMoney += stockTransaction.TotalMoney;
+            user.ReservedMoney += stockTransaction.TotalMoney;
             _context.StockTransaction.Add(stockTransaction);
 
             try
@@ -163,7 +163,7 @@ namespace GameOfStocksHT16.Controllers
             }
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
-            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Id == 1 && s.User == user);
+            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Label == label && s.User == user);
 
             if (user == null || stockOwnership.User != user)
             {
@@ -180,14 +180,20 @@ namespace GameOfStocksHT16.Controllers
                 IsSelling = true,
                 Label = stock.Label,
                 Name = stock.Name,
-                Quantity = stockOwnership.Quantity,
-                TotalMoney = stockOwnership.Quantity * stock.LastTradePriceOnly,
+                Quantity = quantity,
+                TotalMoney = quantity * stock.LastTradePriceOnly,
                 IsCompleted = false,
                 User = user
             };
 
             _context.StockTransaction.Add(stockTransaction);
-            _context.StockOwnership.Remove(stockOwnership);
+
+            if (stockOwnership.Quantity == quantity)
+                _context.StockOwnership.Remove(stockOwnership);
+            else
+            {
+                stockOwnership.Quantity -= quantity;
+            }
 
             try
             {

@@ -53,7 +53,7 @@ namespace GameOfStocksHT16.Controllers
                 Money = user.Money,
                 StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                 StockTransactions = GetStockTransWithTimeLeft(user),
-                TotalWorth = user.Money + user.PendingMoney
+                TotalWorth = user.Money + user.ReservedMoney
             };
 
             foreach (var s in model.StockOwnerships)
@@ -79,8 +79,8 @@ namespace GameOfStocksHT16.Controllers
                     UserName = user.UserName,
                     Email = user.Email,
                     Money = user.Money,
-                    PendingMoney = user.PendingMoney,
-                    TotalWorth = user.Money + user.PendingMoney,
+                    PendingMoney = user.ReservedMoney,
+                    TotalWorth = user.Money + user.ReservedMoney,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                 };

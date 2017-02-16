@@ -9,7 +9,7 @@ namespace GameOfStocksHT16.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
     [Migration("20170206174816_PendingMoney")]
-    partial class PendingMoney
+    partial class ReservedMoney
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

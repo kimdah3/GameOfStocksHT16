@@ -4,12 +4,12 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace GameOfStocksHT16.Data.Migrations
 {
-    public partial class PendingMoney : Migration
+    public partial class ReservedMoney : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<decimal>(
-                name: "PendingMoney",
+                name: "ReservedMoney",
                 table: "AspNetUsers",
                 nullable: false,
                 defaultValue: 0m);
@@ -18,7 +18,7 @@ namespace GameOfStocksHT16.Data.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PendingMoney",
+                name: "ReservedMoney",
                 table: "AspNetUsers");
         }
     }

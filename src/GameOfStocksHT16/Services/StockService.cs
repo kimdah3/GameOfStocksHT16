@@ -40,15 +40,15 @@ namespace GameOfStocksHT16.Services
             {
                 var newTime = transaction.Date + TimeSpan.FromMinutes(15);
                 if (DateTime.Now < newTime) continue;
-                var stock = GetStockByLabel(transaction.Label); //Most recent values
+                var stockRecentValue = GetStockByLabel(transaction.Label); //Most recent values
 
                 if (transaction.IsBuying)
                 {
                     transaction.User.Money += transaction.TotalMoney;
-                    transaction.User.PendingMoney -= transaction.TotalMoney;
+                    transaction.User.ReservedMoney -= transaction.TotalMoney;
 
                     //Get recent value
-                    transaction.Bid = stock.LastTradePriceOnly;
+                    transaction.Bid = stockRecentValue.LastTradePriceOnly;
                     transaction.TotalMoney = transaction.Bid * transaction.Quantity;
 
                     var existingStock = _dbContext.StockOwnership.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
@@ -87,8 +87,8 @@ namespace GameOfStocksHT16.Services
                 }
                 else if (transaction.IsSelling)
                 {
-                    var lastTradePrice = GetStockByLabel(transaction.Label).LastTradePriceOnly;
-                    transaction.User.Money += lastTradePrice * transaction.Quantity;
+                    transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
+                    transaction.Bid = stockRecentValue.LastTradePriceOnly;
                 }
                 transaction.IsCompleted = true;
             }
@@ -265,7 +265,7 @@ namespace GameOfStocksHT16.Services
                 var usersTotalWorth = new UserTotalWorth()
                 {
                     Email = user.Email,
-                    TotalWorth = user.Money + user.PendingMoney
+                    TotalWorth = user.Money + user.ReservedMoney
                 };
 
                 foreach (var stockOwnership in user.StockOwnerships)
