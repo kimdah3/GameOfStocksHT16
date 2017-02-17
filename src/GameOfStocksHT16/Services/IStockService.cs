@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameOfStocksHT16.Services
 {
@@ -21,5 +22,7 @@ namespace GameOfStocksHT16.Services
         List<UserTotalWorth> GetUsersTotalWorthPerDay();
 
         bool DailyUsersTotalWorthExists();
+
+        JsonResult GetUserTotalWorthProgress(string email);
     }
 }

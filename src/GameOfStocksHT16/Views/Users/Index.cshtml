@@ -9,6 +9,7 @@
         <table class="table table-bordered table-condensed table-striped">
             <thead>
                 <tr>
+                    <th class="text-center">#</th>
                     <th>Email</th>
                     <th>Totala tillgångar</th>
                     <th>Ökning</th>
@@ -19,8 +20,8 @@
                 {
                     int i = Model.LeaderBoard.IndexOf(item);
                     <tr>
+                        <td class="text-center">@(i + 1)</td>
                         <td>
-                            @(i + 1).
                             <a asp-action="VisitProfile" asp-route-email="@item.Email">
                                 @item.Email
                             </a>
@@ -28,12 +29,12 @@
                         <td>@item.TotalWorth kr</td>
                         @if (item.GrowthPercent > 0)
                         {
-                            <td>@item.GrowthPercent% <i class="fa fa-arrow-up text-success pull-right"></i></td>
+                            <td class="text-success"><b>@item.GrowthPercent%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
                         }
                         else if (item.GrowthPercent < 0)
                         {
 
-                            <td>@item.GrowthPercent% <i class="fa fa-arrow-down text-danger pull-right"></i></td>
+                            <td class="text-danger"><b>@item.GrowthPercent%</b> <i class="fa fa-arrow-down fa-2x pull-right"></i></td>
                         }
                         else
                         {

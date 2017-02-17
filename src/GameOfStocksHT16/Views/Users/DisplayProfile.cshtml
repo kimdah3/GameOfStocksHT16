@@ -1,5 +1,4 @@
 @model ProfileViewModel
-
 @{
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -88,7 +87,10 @@
         <tbody>
             @foreach (var item in Model.StockTransactions)
             {
-                if (item.IsCompleted) { continue; }
+                if (item.IsCompleted)
+                {
+                    continue;
+                }
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.Name)
@@ -122,7 +124,7 @@
                     </td>
                     <td>
                         @if (item.TimeLeftToCompletion.Minutes >= 10)
-                        {
+                {
                             <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
                         }
                         else
@@ -210,141 +212,138 @@
     <h4>
         Completed
     </h4>
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    Name
-                </th>
-                <th>
-                    Label
-                </th>
-                <th>
-                    Quantity
-                </th>
-                <th>
-                    Date
-                </th>
-                <th>
-                    TotalMoney
-                </th>
-                <th>
-                    Bid
-                </th>
-                <th>
-                    IsBuying
-                </th>
-                <th>
-                    IsSelling
-                </th>
-                <th>
-                    <i class="fa fa-clock-o"></i>
-                </th>
-                <th>
-                    IsCompleted
-                </th>
-                <th></th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.StockTransactions)
-            {
-                if (!item.IsCompleted) { continue; }
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Label)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Quantity)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TotalMoney)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Bid)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsBuying)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsSelling)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsCompleted)
-                    </td>
-                    <td>
-                        @if (item.TimeLeftToCompletion.Minutes >= 10)
-                        {
-                            <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
-                        }
-                        else
-                        {
-
-                        }
-
-                    </td>
-                </tr>
-            }
-
-        </tbody>
-    </table>
-
-
-    @*<h4>
-            @Html.DisplayNameFor(model => model.FullstockOwnerships)
-        </h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Name
-                    </th>
-                    <th>
-                        Label
-                    </th>
-                    <th>
-                        Quantity
-                    </th>
-                    <th>LastTradePrice</th>
-                    <th>Sell</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.FullstockOwnerships)
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Name
+        </th>
+        <th>
+            Label
+        </th>
+        <th>
+            Quantity
+        </th>
+        <th>
+            Date
+        </th>
+        <th>
+            TotalMoney
+        </th>
+        <th>
+            Bid
+        </th>
+        <th>
+            IsBuying
+        </th>
+        <th>
+            IsSelling
+        </th>
+        <th>
+            <i class="fa fa-clock-o"></i>
+        </th>
+        <th>
+            IsCompleted
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.StockTransactions)
+    {
+        if (!item.IsCompleted)
+        {
+            continue;
+        }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Label)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Bid)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsBuying)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsSelling)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsCompleted)
+            </td>
+            <td>
+                @if (item.TimeLeftToCompletion.Minutes >= 10)
                 {
-                    <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Name)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Label)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Quantity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LastTradePrice)
-                        </td>
-                        <td>
-
-                        </td>
-                    </tr>
+                    <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
                 }
-            </tbody>
-        </table>*@
+                else
+                {
 
+                }
+
+            </td>
+        </tr>
+    }
+
+    </tbody>
+</table>
+
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    </div>
 </div>
-<script>
-    function ajaxSuccess() {
-        location.reload();
-    };
-</script>
+  
+</div>
+@section scripts{
+    <script>
+        function ajaxSuccess() {
+            location.reload();
+        };
+
+
+        $(function () {
+            var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
+            var progressToChart = [];
+            $.each(progressAllDays.value, function(index, element) {
+                progressToChart.push({ x: index, y: element});
+            });
+
+            //Better to construct options first and then pass it as a parameter
+            var options = {
+                title: {
+                    text: "Utveckling (%)"
+                },
+                animationEnabled: true,
+                axisX: {
+                    minimum: 0,
+                    maximum: 30
+                },
+                data: [
+                {
+                    type: "line", //change it to line, area, column, pie, etc
+                    dataPoints: progressToChart
+                }
+                ]
+            };
+            var chart = new CanvasJS.Chart("chartContainer", options);
+            chart.render();
+        });
+    </script>
+}
+

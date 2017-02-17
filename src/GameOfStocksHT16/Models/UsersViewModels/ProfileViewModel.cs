@@ -1,10 +1,15 @@
 ﻿using GameOfStocksHT16.Entities;
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
 using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Formatters;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Newtonsoft.Json;
 
 namespace GameOfStocksHT16.Models.UsersViewModels
 {
@@ -19,12 +24,13 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal TotalWorth { get; set; }
         public decimal GrowthPercent { get; set; }
-
+        public JsonResult ProgressAllDays { get; set; }
 
         public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }
         public List<StockOwnerShipViewModel> StockOwnerships { get; set; }
 
-    }
+
+}
 
     public class StockOwnerShipViewModel : StockOwnership
     {

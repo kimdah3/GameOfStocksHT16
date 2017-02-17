@@ -116,6 +116,7 @@ namespace GameOfStocksHT16.Controllers
                     TotalWorth = user.Money + user.ReservedMoney,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
+                    ProgressAllDays = _stockService.GetUserTotalWorthProgress(user.Email)
                 };
 
                 foreach (var s in model.StockOwnerships)

@@ -32,7 +32,7 @@ namespace GameOfStocksHT16.Services
 
         public async void CompleteStockTransactions(object state)
         {
-            if (!IsTradingTime()) return; 
+            if (!IsTradingTime()) return;
             var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
 
             if (!await pendingStockTransactions.AnyAsync()) { return; }
@@ -324,6 +324,41 @@ namespace GameOfStocksHT16.Services
                 return false;
             }
         }
+
+        public JsonResult GetUserTotalWorthProgress(string email)
+        {
+            var usersTotalWorthProgress = new List<decimal>();
+
+            var path = _hostingEnvironment.WebRootPath + @"\userdata\";
+            var files = Directory.GetFiles(path);
+
+            try
+            {
+                foreach (string f in Directory.GetFiles(path))
+                {
+                    using (var r = new StreamReader(new FileStream(f, FileMode.Open)))
+                    {
+                        var json = r.ReadToEnd();
+                        var usersTotalWorth = JsonConvert.DeserializeObject<List<UserTotalWorth>>(json);
+                        foreach (var userTotalWorth in usersTotalWorth)
+                        {
+                            if (userTotalWorth.Email == email)
+                            {
+                                usersTotalWorthProgress.Add(Math.Round(((userTotalWorth.TotalWorth / 100000 - 1) * 100), 2));
+                            }
+                        }
+                    }
+                }
+
+                return new JsonResult(usersTotalWorthProgress);
+            }
+            catch (Exception)
+            {
+                return new JsonResult(usersTotalWorthProgress); //empty if failure.
+            }
+        }
+
+
         private void SerializeToJson(string path, List<Stock> stockList)
         {
             using (var file = File.CreateText(path))
