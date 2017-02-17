@@ -18,6 +18,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public decimal PendingMoney { get; set;}
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal TotalWorth { get; set; }
+        public decimal GrowthPercent { get; set; }
 
 
         public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }

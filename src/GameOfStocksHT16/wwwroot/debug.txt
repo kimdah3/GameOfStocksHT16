@@ -117,3 +117,4 @@ den 16 februari 2017 08:55:58 sucess, stockList.Count = 334
 den 16 februari 2017 08:58:25 sucess, stockList.Count = 334
 den 16 februari 2017 09:15:39 sucess, stockList.Count = 334
 den 16 februari 2017 09:21:47 sucess, stockList.Count = 334
+den 17 februari 2017 14:00:39 sucess, stockList.Count = 334

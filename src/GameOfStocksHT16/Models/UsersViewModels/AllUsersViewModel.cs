@@ -8,6 +8,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     public class AllUsersViewModel
     {
         public List<User> AllUsers { get; set; }
+        public List<ProfileViewModel> LeaderBoard { get; set; }
     }
 
     public class User

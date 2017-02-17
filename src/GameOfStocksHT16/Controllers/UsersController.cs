@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using GameOfStocksHT16.Services;
 using GameOfStocksHT16.Entities;
+using Microsoft.EntityFrameworkCore;
 
 namespace GameOfStocksHT16.Controllers
 {
@@ -31,8 +32,40 @@ namespace GameOfStocksHT16.Controllers
         // GET: Users
         public ActionResult Index()
         {
-            var users = _dbContext.Users.OrderByDescending(x => x.Money).ToList();
-            var model = new AllUsersViewModel() { AllUsers = new List<User>() };
+            var users = _dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
+
+            var stockUsers = new List<ProfileViewModel>();
+
+            var model = new AllUsersViewModel()
+            {
+                AllUsers = new List<User>(),
+                LeaderBoard = new List<ProfileViewModel>()
+            };
+
+
+            if (users == null) return View(model);
+
+            foreach (var user in users)
+            {
+
+                var usersWithTotalWorth = new ProfileViewModel()
+                {
+                    Email = user.Email,
+                    Money = user.Money,
+                    TotalWorth = user.Money + user.ReservedMoney
+                };
+
+                foreach (var ownership in user.StockOwnerships)
+                {
+                    usersWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(ownership.Label).LastTradePriceOnly * ownership.Quantity;
+                }
+                usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+
+                stockUsers.Add(usersWithTotalWorth);
+
+            }
+            model.LeaderBoard = stockUsers.OrderByDescending(x => x.TotalWorth).ToList();
+
             users.ForEach(x => model.AllUsers.Add(new User() { Email = x.Email, Money = x.Money }));
             return View(model);
         }
