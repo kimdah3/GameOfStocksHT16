@@ -32,7 +32,9 @@ namespace GameOfStocksHT16.Services
 
         public async void CompleteStockTransactions(object state)
         {
+            if (!IsTradingTime()) return; 
             var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
+
             if (!await pendingStockTransactions.AnyAsync()) { return; }
             var newOwnerships = new List<StockOwnership>();
 
@@ -105,23 +107,27 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        private bool IsTradingTime()
+        {
+            //Tid för börsstängning, ska vara 1800
+            var currentTime = DateTime.Now.TimeOfDay;
+            var morningOpen = new TimeSpan(09, 10, 0);
+            var eveningClose = new TimeSpan(18, 00, 0);
+            return currentTime >= morningOpen && currentTime <= eveningClose;
+        }
+
         public async void SaveStocksOnStartup(object state)
         {
             var stockPath = Path.Combine(_hostingEnvironment.WebRootPath, "stocks.json");
 
             try
             {
-                //Tid för börsstängning, ska vara 1800
-                var currentTime = DateTime.Now.TimeOfDay;
-                var morningOpen = new TimeSpan(09, 10, 0);
-                var eveningClose = new TimeSpan(18, 00, 0);
-                var isTradingTime = currentTime <= morningOpen || currentTime >= eveningClose;
                 var url = Startup.Configuration["StockQueries:HT16LargeMidSmall"];
                 //LARGE 0 - 105 
                 //MID 106 - 225 (120 st)
                 //SMALL 226 - 334 (109 st)
 
-                //if (currentTime <= morningOpen || currentTime >= eveningClose) return;
+                if (!IsTradingTime()) return;
 
                 var stockList = new List<Stock>();
 

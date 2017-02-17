@@ -252,3 +252,5 @@ paket-files/
 *.sln.iml
 *.ps1
 src/GameOfStocksHT16/Properties/PublishProfiles/publish-module.psm1
+src/GameOfStocksHT16/wwwroot/userdata/*
+src/GameOfStocksHT16/wwwroot/debug.txt

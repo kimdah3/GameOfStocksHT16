@@ -1,29 +1,33 @@
 ﻿@{
     ViewData["Title"] = "About";
 }
-<div class="container">
-    <h2>Info </h2>
-    <h3></h3>
+<div class="section-padding-medium">
+    <div class="container text-center">
+        <div class="jumbotron">
+            <h3>How does it work? Does it blend?</h3>
 
-    <p>You start with 100 000 kr in balance, buy and sell stocks. There is a 15 min delay. (Mer info)</p>
-    <h4>Was this page helpful?</h4>
-    <a class="btn btn-success">Yes</a>
-    <a id="btn-no" class="btn btn-danger" data-toggle="modal" data-target="#myModal">No</a>
-    <p>(100% think this was helpful.)</p>
+            <p>You start with 100 000 kr in balance, buy and sell stocks. There is a 15 min delay. (Mer info)</p>
+            <hr/>
+            <h5>Was this page helpful? <br/><small>(95% said yes)</small></h5>
+            <a class="btn btn-success">Yes</a>
+            <a id="btn-no" class="btn btn-danger" data-toggle="modal" data-target="#myModal">No</a>
+        </div>
+    </div>
 </div>
 
 <!-- Modal -->
 <div id="myModal" class="modal fade" role="dialog">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-sm">
 
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title">Thank you for voting YES!</h4>
+                <h4 class="modal-title">Yes</h4>
+
             </div>
             <div class="modal-body">
-                <p>Game Of Stocks Developer Team</p>
+                <p class=""><i>Mvh Game Of Stocks Developer Team</i></p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>

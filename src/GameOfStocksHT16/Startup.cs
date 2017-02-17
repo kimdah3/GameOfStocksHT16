@@ -95,7 +95,6 @@ namespace GameOfStocksHT16
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, Timeout.Infinite);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, 30 * 1000);
             _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
