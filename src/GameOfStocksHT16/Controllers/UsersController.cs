@@ -121,7 +121,7 @@ namespace GameOfStocksHT16.Controllers
 
                 foreach (var s in model.StockOwnerships)
                 {
-                    model.TotalWorth += (s.Quantity * s.LastTradePrice);
+                    model.TotalWorth = model.TotalWorth+ (s.Quantity * s.LastTradePrice);
                 }
 
                 return View(model);

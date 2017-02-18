@@ -32,7 +32,7 @@ namespace GameOfStocksHT16.Services
 
         public async void CompleteStockTransactions(object state)
         {
-            if (!IsTradingTime()) return;
+            //if (!IsTradingTime()) return;
             var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
 
             if (!await pendingStockTransactions.AnyAsync()) { return; }
@@ -41,7 +41,7 @@ namespace GameOfStocksHT16.Services
             foreach (var transaction in pendingStockTransactions)
             {
                 var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                if (DateTime.Now < newTime) continue;
+                //if (DateTime.Now < newTime) continue;
                 var stockRecentValue = GetStockByLabel(transaction.Label); //Most recent values
 
                 if (transaction.IsBuying)

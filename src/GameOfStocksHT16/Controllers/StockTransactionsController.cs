@@ -95,7 +95,7 @@ namespace GameOfStocksHT16.Controllers
         [HttpPost]
         public IActionResult PostBuyingStockTransaction(string label, int quantity)
         {
-            if (!ModelState.IsValid)
+             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
@@ -165,10 +165,13 @@ namespace GameOfStocksHT16.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Label == label && s.User == user);
 
-            if (user == null || stockOwnership.User != user)
+            if (user == null || stockOwnership.User != user || quantity <= 0 )
             {
                 return BadRequest();
             }
+
+            if (quantity > stockOwnership.Quantity)
+                return BadRequest();
 
             var stock = _stockService.GetStockByLabel(label);
 
