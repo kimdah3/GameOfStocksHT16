@@ -2,10 +2,6 @@
   "userSecretsId": "aspnet-GameOfStocksHT16-f0f6e4d9-ac45-46a9-ad05-1749806d8283",
 
   "dependencies": {
-    "Microsoft.NETCore.App": {
-      "version": "1.0.1",
-      "type": "platform"
-    },
     "Microsoft.AspNetCore.Authentication.Cookies": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics": "1.0.0",
     "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore": "1.0.0",
@@ -45,7 +41,8 @@
       "type": "build"
     },
     "CsvHelper": "2.16.3",
-    "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1"
+    "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1",
+    "Facebook": "7.0.6"
   },
 
   "tools": {
@@ -63,12 +60,7 @@
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
-      "imports": [
-        "dotnet5.6",
-        "portable-net45+win8"
-      ]
-    }
+    "net452": {}
   },
 
   "buildOptions": {
