@@ -42,7 +42,8 @@
     },
     "CsvHelper": "2.16.3",
     "Microsoft.AspNetCore.Mvc.WebApiCompatShim": "1.0.1",
-    "Facebook": "7.0.6"
+    "Facebook": "7.0.6",
+    "AutoMapper": "5.2.0"
   },
 
   "tools": {

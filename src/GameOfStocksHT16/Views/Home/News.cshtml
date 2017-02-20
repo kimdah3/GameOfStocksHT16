@@ -13,17 +13,16 @@
     <div class="container">
         <div class="col-lg-8">
 
-            <h3>Title</h3>
-
+            <h3>Nyhetssvep v. 8</h3>
             <!-- Author -->
             <p class="lead">
-                av <a href="#">Sven Svensson</a>
+                av <a href="#">Sesams Finansutskott</a>
             </p>
-
             <hr>
 
             <!-- Date/Time -->
-            <p><span class="fa fa-clock-o"></span> Postat den Augusti 24, 2013 at 9:00 PM
+            <p>
+                <span class="fa fa-clock-o"></span> Postat den Augusti 24, 2013 at 9:00 PM
             </p>
 
 
@@ -31,12 +30,33 @@
 
             <hr>
 
-            <!-- Post Content -->
-            <p class="lead">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ducimus, vero, obcaecati, aut, error quam sapiente nemo saepe quibusdam sit excepturi nam quia corporis eligendi eos magni recusandae laborum minus inventore?</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ut, tenetur natus doloremque laborum quos iste ipsum rerum obcaecati impedit odit illo dolorum ab tempora nihil dicta earum fugiat. Temporibus, voluptatibus.</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Eos, doloribus, dolorem iusto blanditiis unde eius illum consequuntur neque dicta incidunt ullam ea hic porro optio ratione repellat perspiciatis. Enim, iure!</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Error, nostrum, aliquid, animi, ut quas placeat totam sunt tempora commodi nihil ullam alias modi dicta saepe minima ab quo voluptatem obcaecati?</p>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Harum, dolor quis. Sunt, ut, explicabo, aliquam tenetur ratione tempore quidem voluptates cupiditate voluptas illo saepe quaerat numquam recusandae? Qui, necessitatibus, est!</p>
+            <p class="lead">
+                Årets sjunde vecka är nu förbi och veckan som gick bjöd även på en uppgång, vilket är otroligt kul då börsen har stigit 7 veckor i rad och börsåret 2017 har hittills gett en uppgång på 3.52%
+            </p>
+            <p>
+                Under Nytt från och med denna vecka är vi introducerar en ny tävling, veckans fråga. Veckans fråga kan ni svara på i kommentarsfältet fram tills kl 18.00 idag och den lyder: Hur många punkter kommer OMXS30 att sluta på under v. 8? Vinnaren kommer att presenteras i slutet av varje månad. veckans gång har utveckling på aktiemarknaden fortsatt i positiv riktning och flera av världens börser har avkastat mer än 1 %. OMXS30 har följt med i uppgången och under onsdagen nådde det Amerikanska indexet S&P 500 ny rekordnotering. Onsdagen bjöd också på penningpolitiska beslut ifrån riksbanken som fastställde att behålla reporäntan på -0.50 % samt att köpen av statsobligationer som bestämdes i december fortsätter under första halvåret 2017. Den svenska kronan har även haft en bra vecka och stigit i värde mot flertalet valutor tillskillnad från den amerikanska dollarn som har handlats oförändrad mot euron.
+            </p>
+            <p>Veckans snackis har varit spelbolag, detta då de var pressade på börsen under hela fjolåret, men när rapporterna släpptes i veckan rusade flera av bolagen. Leovegas överraskade mest med en nettovinst som var 70 % högre än förväntat och på en vecka har aktien stigit runt 6 %. Kindred överraskade också positivt vilket gjorde att marknadsaktörerna handlade upp aktien kring 6 %. Bättre än förväntat gick det även för Betsson och frågetecknen kring den turkiska liran reddes ut, detta räckte dock inte hela vägen och aktien har tappat runt 2 % under veckan. Strabreeze har även varit på tapeten under veckan och efter en lyckad försäljning av dataspelet Dead by Daylight steg aktien runt 5 % under veckans gång.</p>
+            <dl class="dl-horizontal">
+                <dt>OMXS30:</dt>
+                <dd> 0.84%</dd>
+                <dt>DAX:</dt>
+                <dd> 0.84%</dd>
+                <dt>S&P500:</dt>
+                <dd>0.98%</dd>
+                <dt>Vinnare på Large Cap:</dt>
+                <dd>Sagax B 8.71%</dd>
+                <dt>Förlorare på Large Cap:</dt>
+                <dd>Ratos B -9.16%</dd>
+
+            </dl>
+            <h4>Kommande vecka</h4>
+            <p>
+                Rapportsäsongen går mot sitt slut. Bland de större bolagen som rapporterar denna vecka finns investmentbolag som Melker Schörling på tisdag, Lundbergs på torsdag samt fastighetsbolag som Balder och Wallenstam på onsdag. Makroagendan innehåller bland annat ett tal av Riksbankschefen Stefan Ingves på tisdag. Tysklands Ifo-index, som mäter näringslivets förtroende, kommer på onsdag. På fredag släpps USA:s Michigan-index, som mäter det amerikanska konsumentförtroendet. Veckan kommer förmodligen även att få en lugn start då USA håller helstängt på måndagen för firandet av George Washingtons födelsedag, även känt som presidenternas dag.
+            </p>
+            <h4>Kuriosa</h4>
+           <p>I fjol kickades MTG ur OMXS30 och Fingerprint valdes in. Sedan dess har MTG rusat och Fingerprint rasat, frågan är om finns det chans till ett ytterligare index byte.</p>
+
 
             <hr>
 
@@ -45,101 +65,101 @@
 
         </div>
         <div class="col-lg-4 ">
-            
 
-                    <h4>Topp 5</h4>
-                    <table class="table table-bordered table-condensed table-striped">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th>Utveckling</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.CurrentLeaderBoard)
-                            {
-                                <tr>
-                                    <td>@item.Email</td>
-                                    <td>
-                                        @item.TotalWorth kr
-                                        @if (item.GrowthPercent > 0)
-                                        {
-                                            <span class="font-percent text-success">(@item.GrowthPercent%)</span>
-                                        }
-                                        else if (item.GrowthPercent < 0)
-                                        {
-                                            <span class="font-percent text-danger">(@item.GrowthPercent%)</span>
-                                        }
-                                        else
-                                        {
-                                            <span class="font-percent">(@item.GrowthPercent%)</span>
-                                        }
-                                    </td>
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
 
-                    <h4>Dagens vinnare</h4>
-                    <table class="table table-bordered table-condensed table-striped">
-                        <thead>
-                            <tr>
-                                <th>Email</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach (var item in Model.TodaysWinners)
-                            {
-                                <tr>
-                                    <td>@item.Email</td>
-                                    @if (item.PercentPerDay > 0)
-                                    {
-                                        <td class="font-percent font-color-green">@item.PercentPerDay%</td>
-                                    }
-                                    else if (item.PercentPerDay < 0)
-                                    {
-                                        <td class="font-percent font-color-red">@item.PercentPerDay%</td>
-                                    }
-                                    else
-                                    {
-                                        <td class="font-percent">@item.PercentPerDay%</td>
-                                    }
-                                </tr>
-                            }
-                        </tbody>
-                    </table>
-
-                        <h4>Dagens förlorare</h4>
-                        <table class="table table-bordered table-condensed table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Email</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.TodaysLoosers)
+            <h4>Topp 5</h4>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Utveckling</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.CurrentLeaderBoard)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            <td>
+                                @item.TotalWorth kr
+                                @if (item.GrowthPercent > 0)
                                 {
-                                    <tr>
-                                        <td>@item.Email</td>
-                                        @if (item.PercentPerDay > 0)
-                                        {
-                                            <td class="font-percent font-color-green">@item.PercentPerDay%</td>
-                                        }
-                                        else if (item.PercentPerDay < 0)
-                                        {
-                                            <td class="font-percent font-color-red">@item.PercentPerDay%</td>
-                                        }
-                                        else
-                                        {
-                                            <td class="font-percent">@item.PercentPerDay%</td>
-                                        }
-                                    </tr>
+                                    <span class="font-percent text-success">(@item.GrowthPercent%)</span>
                                 }
-                            </tbody>
-                        </table>
-            </div>
+                                else if (item.GrowthPercent < 0)
+                                {
+                                    <span class="font-percent text-danger">(@item.GrowthPercent%)</span>
+                                }
+                                else
+                                {
+                                    <span class="font-percent">(@item.GrowthPercent%)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h4>Dagens vinnare</h4>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TodaysWinners)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            @if (item.PercentPerDay > 0)
+                            {
+                                <td class="font-percent font-color-green">@item.PercentPerDay%</td>
+                            }
+                            else if (item.PercentPerDay < 0)
+                            {
+                                <td class="font-percent font-color-red">@item.PercentPerDay%</td>
+                            }
+                            else
+                            {
+                                <td class="font-percent">@item.PercentPerDay%</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+            <h4>Dagens förlorare</h4>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.TodaysLoosers)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            @if (item.PercentPerDay > 0)
+                            {
+                                <td class="font-percent font-color-green">@item.PercentPerDay%</td>
+                            }
+                            else if (item.PercentPerDay < 0)
+                            {
+                                <td class="font-percent font-color-red">@item.PercentPerDay%</td>
+                            }
+                            else
+                            {
+                                <td class="font-percent">@item.PercentPerDay%</td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
 
     </div>
 </section>

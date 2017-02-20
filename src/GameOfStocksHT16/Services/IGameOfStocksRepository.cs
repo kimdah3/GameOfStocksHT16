@@ -10,14 +10,17 @@ namespace GameOfStocksHT16.Services
     public interface IGameOfStocksRepository
     {
         void AddStockTransactions(StockTransaction stockTransaction);
-        void UpdateUser(ApplicationUser user);
         ApplicationUser GetUserById(string userId);
         IEnumerable<StockTransaction> GetUncompletedStockTransactions();
         void AddStockOwnerships(List<StockOwnership> newOwnerships);
 
         bool Save();
 
-        StockOwnership GetExistingStockByUserAndLabel(ApplicationUser user, string label);
+        StockOwnership GetStockOwnershipByUserAndLabel(ApplicationUser user, string label);
         IEnumerable<ApplicationUser> GetAllUsers();
+        void RemoveStockOwnership(StockOwnership stockOwnership);
+
+        bool StockTransactionExists(StockTransaction stockTransaction);
+        StockTransaction GetStockTransactionById(int id);
     }
 }
