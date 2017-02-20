@@ -17,12 +17,16 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     {
         public string Email { get; set; }
         public string UserName { get; set; }
+        [Display(Name = "Saldo")]
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Money { get; set; }
+        [Display(Name = "Reserverat")]
         [DisplayFormat(DataFormatString = "{0:c}")]
-        public decimal PendingMoney { get; set;}
+        public decimal ReservedMoney { get; set;}
+        [Display(Name = "Totalt")]
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal TotalWorth { get; set; }
+        [Display(Name = "Utveckling")]
         public decimal GrowthPercent { get; set; }
         public JsonResult ProgressAllDays { get; set; }
 
@@ -34,12 +38,15 @@ namespace GameOfStocksHT16.Models.UsersViewModels
 
     public class StockOwnerShipViewModel : StockOwnership
     {
+        [Display(Name = "Senaste handlingsvärde")]
         public decimal LastTradePrice { get; set; }
+        [Display(Name = "Utveckling")]
         public decimal Growth { get; set; }
     }
 
     public class StockTransWithTimeLeftViewModel : StockTransaction
     {
+        [Display(Name = "Tid kvar")]
         public TimeSpan TimeLeftToCompletion { get; set; }
     }
 }

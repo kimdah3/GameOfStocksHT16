@@ -13,10 +13,11 @@ namespace GameOfStocksHT16.Models.AccountViewModels
         public string Email { get; set; }
 
         [Required]
+        [Display(Name = "Lösenord")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
-        [Display(Name = "Remember me?")]
+        [Display(Name = "Kom ihåg mig?")]
         public bool RememberMe { get; set; }
     }
 }

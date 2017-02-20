@@ -132,14 +132,15 @@
                                 var query = "http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" + label + "&quantity=" + quantity;
 
                                 $.ajax({
-                                    type: "POST",
+                                    type: "POST",   
                                     url: query,
                                     async: false,
                                     success: function (data, textStatus, jqXHR) {
                                         alert(data.quantity + " of the stock: " + data.label + " has been placed in your pending stocks!");
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
-                                        alert("Something went wrong." + textStatus);
+                                        alert(jqXHR.responseText);
+
                                     }
                                 });
                             });

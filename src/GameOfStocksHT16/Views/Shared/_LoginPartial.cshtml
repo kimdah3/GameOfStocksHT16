@@ -7,16 +7,16 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li>
-        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Settings</a>
+        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Inställningar</a>
     </li>
     <li class="dropdown-button">
         <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="">
-            <button type="submit" class="">Log off</button>
+            <button type="submit" class="">Logga ut</button>
         </form>
     </li>   
 }
 else
 {
-    <li><a asp-area="" asp-controller="Account" asp-action="Register">Register</a></li>
-    <li><a asp-area="" asp-controller="Account" asp-action="Login">Log in</a></li>
+    <li><a asp-area="" asp-controller="Account" asp-action="Login">Logga in</a></li>
+    <li><a asp-area="" asp-controller="Account" asp-action="Register">Registrera</a></li>
 }

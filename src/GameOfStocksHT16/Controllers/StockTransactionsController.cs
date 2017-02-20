@@ -22,12 +22,19 @@ namespace GameOfStocksHT16.Controllers
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
+        private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
-        public StockTransactionsController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IHostingEnvironment hostingEnvironment, IStockService stockService)
+        public StockTransactionsController(
+            ApplicationDbContext context, 
+            UserManager<ApplicationUser> userManager, 
+            IHostingEnvironment hostingEnvironment, 
+            IStockService stockService,
+            IGameOfStocksRepository gameOfStocksRepository)
         {
             _context = context;
             _userManager = userManager;
             _stockService = stockService;
+            _gameOfStocksRepository = gameOfStocksRepository;
         }
 
         // GET: api/StockTransactions
@@ -95,24 +102,34 @@ namespace GameOfStocksHT16.Controllers
         [HttpPost]
         public IActionResult PostBuyingStockTransaction(string label, int quantity)
         {
-             if (!ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            //if (!_stockService.IsTradingTime())
+            //    return BadRequest("Börsen är stängd.");
+
             if (quantity <= 0)
-                return BadRequest("Quantity can't be 0 or negative.");
+                return BadRequest("Du kan inte handla 0 eller mindre.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
-            var user = _context.Users.FirstOrDefault(u => u.Id == userId);
+            var user = _gameOfStocksRepository.GetUserById(userId);
 
             if (user == null)
-                return BadRequest();
+                return BadRequest("Logga in först.");
 
             var stock = _stockService.GetStockByLabel(label);
 
             if (user.Money <= stock.LastTradePriceOnly * quantity)
             {
-                return BadRequest();
+                return BadRequest("Slut på pengar");
+            }
+
+            //If quantity is over 20%
+            if ((stock.Volume * 1 / 5) <= quantity)
+            {
+                return BadRequest("Du kan inte handla mer än 20% av en akties totala volym.");
             }
 
             var stockTransaction = new StockTransaction()
@@ -131,23 +148,11 @@ namespace GameOfStocksHT16.Controllers
 
             user.Money -= stockTransaction.TotalMoney;
             user.ReservedMoney += stockTransaction.TotalMoney;
-            _context.StockTransaction.Add(stockTransaction);
 
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                if (StockTransactionExists(stockTransaction.Id))
-                {
-                    return new StatusCodeResult(StatusCodes.Status409Conflict);
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            _gameOfStocksRepository.AddStockTransactions(stockTransaction);
+
+            if (!_gameOfStocksRepository.Save())
+                return StatusCode(500, "A problem happend while handeling your request.");
 
             return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, stockTransaction);
         }
@@ -165,7 +170,7 @@ namespace GameOfStocksHT16.Controllers
             var user = await _userManager.GetUserAsync(HttpContext.User);
             var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Label == label && s.User == user);
 
-            if (user == null || stockOwnership.User != user || quantity <= 0 )
+            if (user == null || stockOwnership.User != user || quantity <= 0)
             {
                 return BadRequest();
             }

@@ -21,39 +21,49 @@ namespace GameOfStocksHT16.Services
 {
     public class StockService : IStockService
     {
-        private readonly ApplicationDbContext _dbContext;
         private readonly IHostingEnvironment _hostingEnvironment;
+        private IGameOfStocksRepository _gameOfStocksRepository;
 
-        public StockService(ApplicationDbContext dbContext, IHostingEnvironment hostingEnvironment)
+        public StockService(ApplicationDbContext dbContext, IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository)
         {
-            _dbContext = dbContext;
             _hostingEnvironment = hostingEnvironment;
+            _gameOfStocksRepository = gameOfStocksRepository;
         }
 
-        public async void CompleteStockTransactions(object state)
+        public void CompleteStockTransactions(object state)
         {
-            if (!IsTradingTime()) return;
-            var pendingStockTransactions = _dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
-
-            if (!await pendingStockTransactions.AnyAsync()) { return; }
+            //if (!IsTradingTime() || !IsWeekDay()) return;
+            var pendingStockTransactions = _gameOfStocksRepository.GetUncompletedStockTransactions().ToList();
+            var allUsers = _gameOfStocksRepository.GetAllUsers();
+                //_dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
+            
+            if (!pendingStockTransactions.Any()) { return; }
             var newOwnerships = new List<StockOwnership>();
 
             foreach (var transaction in pendingStockTransactions)
             {
                 var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                if (DateTime.Now < newTime) continue;
+                //if (DateTime.Now < newTime) continue;
                 var stockRecentValue = GetStockByLabel(transaction.Label); //Most recent values
+                //if (!StockHasBuyer(stockRecentValue, transaction.Date)) continue; //If no recent buyer
+
+                var user = _gameOfStocksRepository.GetUserById(transaction.User.Id);
+                if (user == null) throw new Exception("Internal error");
 
                 if (transaction.IsBuying)
                 {
-                    transaction.User.Money += transaction.TotalMoney;
-                    transaction.User.ReservedMoney -= transaction.TotalMoney;
+                    Debug.WriteLine("BEFORE USER RESERVED: " + user.ReservedMoney);
+                    user.Money += transaction.TotalMoney;
+                    user.ReservedMoney -= transaction.TotalMoney;
+                    
 
+                    Debug.WriteLine("AFTER USER RESERVED: " + user.ReservedMoney);
                     //Get recent value
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                     transaction.TotalMoney = transaction.Bid * transaction.Quantity;
 
-                    var existingStock = _dbContext.StockOwnership.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
+                    var existingStock = _gameOfStocksRepository.GetExistingStockByUserAndLabel(transaction.User, transaction.Label);
+
                     var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
 
                     if (existingStock != null)
@@ -64,11 +74,10 @@ namespace GameOfStocksHT16.Services
                     }
                     else if (stockToModify != null)
                     {
-                        newOwnerships.Remove(stockToModify);
                         stockToModify.Quantity += transaction.Quantity;
                         stockToModify.TotalSum += transaction.TotalMoney;
                         stockToModify.Gav = stockToModify.TotalSum / stockToModify.Quantity;
-                        newOwnerships.Add(stockToModify);
+                        stockToModify.Quantity += transaction.Quantity;
                     }
                     else
                         newOwnerships.Add(new StockOwnership()
@@ -93,13 +102,15 @@ namespace GameOfStocksHT16.Services
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                 }
                 transaction.IsCompleted = true;
+                Debug.WriteLine("AFTER EVERYTHING RESERVED VALUE: " + transaction.TotalMoney);
+                Debug.WriteLine("AFTER EVERYTHING USER RESERVED: " + user.ReservedMoney);
             }
 
-            _dbContext.StockOwnership.AddRange(newOwnerships);
+            _gameOfStocksRepository.AddStockOwnerships(newOwnerships);
 
             try
             {
-                await _dbContext.SaveChangesAsync();
+                _gameOfStocksRepository.Save();
             }
             catch (DbUpdateException ex)
             {
@@ -107,13 +118,11 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        private bool IsTradingTime()
+        private bool StockHasBuyer(Stock stockRecentValue, DateTime transactionTime)
         {
-            //Tid för börsstängning, ska vara 1800
-            var currentTime = DateTime.Now.TimeOfDay;
-            var morningOpen = new TimeSpan(09, 10, 0);
-            var eveningClose = new TimeSpan(18, 00, 0);
-            return currentTime >= morningOpen && currentTime <= eveningClose;
+            var date = DateTime.ParseExact(stockRecentValue.LastTradeDate, "M/d/yyyy", CultureInfo.InvariantCulture);
+            var time = DateTime.Parse(stockRecentValue.LastTradeTime);
+            return date.Add(time.TimeOfDay) > transactionTime;
         }
 
         public async void SaveStocksOnStartup(object state)
@@ -263,7 +272,7 @@ namespace GameOfStocksHT16.Services
         {
             var today = DateTime.Today;
             var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + today.ToString("M", CultureInfo.InvariantCulture) + ".json";
-            var users = _dbContext.Users.Include(u => u.StockOwnerships).ToList();
+            var users = _gameOfStocksRepository.GetAllUsers();
             var allUsersTotalWorth = new List<UserTotalWorth>();
 
             foreach (var user in users)
@@ -358,6 +367,22 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        //Tid för börsstängning, ska vara 1800.
+        //Och inte helgdag, därav !IsWeekDay()
+        public bool IsTradingTime()
+        {
+            var currentTime = DateTime.Now.TimeOfDay;
+            var morningOpen = new TimeSpan(09, 10, 0);
+            var eveningClose = new TimeSpan(18, 00, 0);
+            return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
+        }
+
+        private bool IsWeekDay()
+        {
+            var today = DateTime.Now;
+            var day = (int)today.DayOfWeek;
+            return day > 0 && day < 6;
+        }
 
         private void SerializeToJson(string path, List<Stock> stockList)
         {

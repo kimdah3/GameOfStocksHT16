@@ -63,7 +63,7 @@ namespace GameOfStocksHT16.Controllers
                 if (result.Succeeded)
                 {
                     _logger.LogInformation(1, "User logged in.");
-                    return RedirectToLocal(returnUrl);
+                    return RedirectToAction("News", "Home");
                 }
                 if (result.RequiresTwoFactor)
                 {

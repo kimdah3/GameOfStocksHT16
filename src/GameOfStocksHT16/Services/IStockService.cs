@@ -21,8 +21,10 @@ namespace GameOfStocksHT16.Services
 
         List<UserTotalWorth> GetUsersTotalWorthPerDay();
 
-        bool DailyUsersTotalWorthExists();
-
         JsonResult GetUserTotalWorthProgress(string email);
+
+        bool IsTradingTime();
+
+        bool DailyUsersTotalWorthExists();
     }
 }

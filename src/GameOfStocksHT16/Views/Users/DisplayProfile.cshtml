@@ -1,4 +1,4 @@
-@model ProfileViewModel
+﻿@model ProfileViewModel
 @{
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -15,10 +15,11 @@
                     @Html.DisplayNameFor(model => model.UserName)
                 </th>
                 <th>
+                    @Html.DisplayNameFor(model => model.Money)
                     Balance
                 </th>
                 <th>
-                    Reserved
+                    @Html.DisplayNameFor(model => model.ReservedMoney)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.TotalWorth)
@@ -37,7 +38,7 @@
                     @Html.DisplayFor(m => m.Money)
                 </td>
                 <td>
-                    @Html.DisplayFor(m => m.PendingMoney)
+                    @Html.DisplayFor(m => m.ReservedMoney)
                 </td>
                 <td>
                     @Html.DisplayFor(m => m.TotalWorth)
@@ -45,35 +46,34 @@
             </tr>
         </tbody>
     </table>
-    <h4>
-        Pending
-    </h4>
+<h4>
+    Vänteläge
+</h4>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    Name
+                    @*@Html.DisplayFor(m => m.StockTransactions)*@
+                    Datum
+                </th>
+                <th>
+                    Namn
                 </th>
                 <th>
                     Label
                 </th>
                 <th>
-                    Quantity
+                    Antal
+                </th>
+
+                <th>
+                    Uppskattat
                 </th>
                 <th>
-                    Date
+                    Köp
                 </th>
                 <th>
-                    TotalMoney
-                </th>
-                <th>
-                    Bid
-                </th>
-                <th>
-                    IsBuying
-                </th>
-                <th>
-                    IsSelling
+                    Sälj
                 </th>
                 <th>
                     <i class="fa fa-clock-o"></i>
@@ -93,6 +93,9 @@
                 }
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Name)
                     </td>
                     <td>
@@ -102,14 +105,9 @@
                         @Html.DisplayFor(modelItem => item.Quantity)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Date)
+                        @Html.DisplayFor(modelItem => item.TotalMoney)
                     </td>
-                    <td>
-                        <i class="fa fa-hourglass-half"></i>
-                    </td>
-                    <td>
-                        <i class="fa fa-hourglass-half"></i>
-                    </td>
+
                     <td>
                         @Html.DisplayFor(modelItem => item.IsBuying)
                     </td>
@@ -124,7 +122,7 @@
                     </td>
                     <td>
                         @if (item.TimeLeftToCompletion.Minutes >= 10)
-                {
+                        {
                             <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
                         }
                         else
@@ -139,29 +137,29 @@
         </tbody>
     </table>
     <h4>
-        Stocks
+        Aktier
     </h4>
     <table class="table">
         <thead>
             <tr>
                 <th>
-                    Name
+                    Namn
                 </th>
                 <th>
                     Label
                 </th>
                 <th>
-                    Quantity
+                    Antal
                 </th>
                 <th>
-                    Total sum
+                    Totalt värde
                 </th>
                 <th>
                     GAV
                 </th>
-                <th>LastTradePrice</th>
-                <th>Growth</th>
-                <th>Sell</th>
+                <th>Aktuell kurs</th>
+                <th>Utveckling</th>
+                <th></th>
             </tr>
         </thead>
         <tbody>
@@ -210,105 +208,95 @@
         </tbody>
     </table>
     <h4>
-        Completed
+        Historik
     </h4>
-<table class="table">
-    <thead>
-    <tr>
-        <th>
-            Name
-        </th>
-        <th>
-            Label
-        </th>
-        <th>
-            Quantity
-        </th>
-        <th>
-            Date
-        </th>
-        <th>
-            TotalMoney
-        </th>
-        <th>
-            Bid
-        </th>
-        <th>
-            IsBuying
-        </th>
-        <th>
-            IsSelling
-        </th>
-        <th>
-            <i class="fa fa-clock-o"></i>
-        </th>
-        <th>
-            IsCompleted
-        </th>
-        <th></th>
-    </tr>
-    </thead>
-    <tbody>
-    @foreach (var item in Model.StockTransactions)
-    {
-        if (!item.IsCompleted)
-        {
-            continue;
-        }
+    <table class="table">
+        <thead>
         <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Label)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Quantity)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TotalMoney)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Bid)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsBuying)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsSelling)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IsCompleted)
-            </td>
-            <td>
-                @if (item.TimeLeftToCompletion.Minutes >= 10)
-                {
-                    <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
-                }
-                else
-                {
+            <th>
+                Datum
+            </th>
+            <th>
+                Namn
+            </th>
+            <th>
+                Label
+            </th>
+            <th>
+                Antal
+            </th>
 
-                }
-
-            </td>
+            <th>
+                Totalt värde
+            </th>
+            <th>
+                Köp/Sälj-kurs
+            </th>
+            <th>
+                Köp
+            </th>
+            <th>
+                Sälj
+            </th>
+            @*<th>
+                <i class="fa fa-clock-o"></i>
+            </th>*@
+            @*<th>
+                IsCompleted
+            </th>
+            <th></th>*@
         </tr>
-    }
+        </thead>
+        <tbody>
+            @foreach (var item in Model.StockTransactions)
+            {
+                if (!item.IsCompleted)
+                {
+                    continue;
+                }
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Label)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TotalMoney)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Bid)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsBuying)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IsSelling)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+                    </td>*@
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.IsCompleted)
+                    </td>*@
+                </tr>
+            }
 
-    </tbody>
-</table>
+        </tbody>
+    </table>
 
-<div class="panel panel-default">
-    <div class="panel-body">
-        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        </div>
     </div>
-</div>
-  
+
 </div>
 @section scripts{
     <script>

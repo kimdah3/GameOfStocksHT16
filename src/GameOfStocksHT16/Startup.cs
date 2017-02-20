@@ -63,8 +63,8 @@ namespace GameOfStocksHT16
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddSingleton<IStockService, StockService>();
-
+            services.AddScoped<IStockService, StockService>();
+            services.AddSingleton<IGameOfStocksRepository, GameOfStocksRepository>();
         }
 
 
@@ -95,8 +95,8 @@ namespace GameOfStocksHT16
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60*10*1000);
-            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, Timeout.Infinite/*30 * 1000*/);
+            //_downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60*10*1000);
+            _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
             _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
             if (env.IsDevelopment())
