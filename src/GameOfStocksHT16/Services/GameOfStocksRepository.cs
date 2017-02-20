@@ -22,22 +22,6 @@ namespace GameOfStocksHT16.Services
         public void AddStockTransactions(StockTransaction stockTransaction)
         {
             _context.Add(stockTransaction);
-
-
-
-        }
-
-        public void UpdateUser(ApplicationUser user)
-        {
-            _context.Users.Update(user);
-            try
-            {
-                _context.SaveChanges();
-            }
-            catch (DbUpdateException)
-            {
-                throw;
-            }
         }
 
         public ApplicationUser GetUserById(string userId)
@@ -60,12 +44,7 @@ namespace GameOfStocksHT16.Services
             return _context.StockTransaction.Any(e => e.Id == id);
         }
 
-        public bool Save()
-        {
-            return (_context.SaveChanges() >= 0);
-        }
-
-        public StockOwnership GetExistingStockByUserAndLabel(ApplicationUser user, string label)
+        public StockOwnership GetStockOwnershipByUserAndLabel(ApplicationUser user, string label)
         {
             return _context.StockOwnership.FirstOrDefault(s => s.User == user && s.Label == label);
         }
@@ -74,5 +53,26 @@ namespace GameOfStocksHT16.Services
         {
             return _context.Users.Include(u => u.StockOwnerships).ToList();
         }
+
+        public bool Save()
+        {
+            return (_context.SaveChanges() >= 0);
+        }
+
+        public void RemoveStockOwnership(StockOwnership stockOwnership)
+        {
+            _context.StockOwnership.Remove(stockOwnership);
+        }
+
+        public bool StockTransactionExists(StockTransaction stockTransaction)
+        {
+            return _context.StockTransaction.Any(e => e.Id == stockTransaction.Id);
+        }
+
+        public StockTransaction GetStockTransactionById(int id)
+        {
+            return _context.StockTransaction.SingleOrDefault(m => m.Id == id);
+        }
+
     }
 }

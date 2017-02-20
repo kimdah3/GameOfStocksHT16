@@ -96,6 +96,7 @@ namespace GameOfStocksHT16
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60 * 2 * 1000);
+            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60 * 10 * 1000);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
             _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
@@ -104,6 +105,12 @@ namespace GameOfStocksHT16
                 if (!stockService.DailyUsersTotalWorthExists())
                     stockService.SaveUsersTotalWorthPerDay(this);
             }
+
+
+            AutoMapper.Mapper.Initialize(cfg =>
+            {
+                cfg.CreateMap<Entities.StockTransaction, Models.StockTransationDto>();
+            });
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 

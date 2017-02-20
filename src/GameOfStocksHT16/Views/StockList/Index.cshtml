@@ -40,7 +40,7 @@
 @section scripts
 {
     <script type="text/javascript">
-        $.get("http://localhost:49275/api/stocks",
+        $.get("../api/stocks",
             function (data) {
                 var i = 0;
                 $.each(data,
@@ -120,21 +120,27 @@
                         var quantity = $('#buy-amount').val();
 
                         var label = $(table.row(this).data()[0]).attr('id');
-                        console.log(label);
-                        console.log(quantity);
                         if (btnBuyEvent == null) {
                             $('#btn-buy-stock').on('click', function () {
                                 quantity = $('#buy-amount').val();
-                                var query = "http://localhost:49275/api/StockTransactions/PostBuyingStockTransaction/?label=" + label + "&quantity=" + quantity;
+                                var query = "../api/StockTransactions/PostBuyingStockTransaction/?label=" + label + "&quantity=" + quantity;
 
                                 $.ajax({
                                     type: "POST",   
                                     url: query,
-                                    async: false,
+                                    async: true,
+                                    dataType: "json",
                                     success: function (data, textStatus, jqXHR) {
+                                        console.log(data);
+                                        console.log(textStatus);
+                                        console.log(jqXHR);
+
                                         alert(data.quantity + " of the stock: " + data.label + " has been placed in your pending stocks!");
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
+                                        console.log(data);
+                                        console.log(textStatus);
+                                        console.log(errorThrown);
                                         alert(jqXHR.responseText);
 
                                     }

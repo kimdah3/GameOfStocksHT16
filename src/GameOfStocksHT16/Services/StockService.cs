@@ -58,7 +58,7 @@ namespace GameOfStocksHT16.Services
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                     transaction.TotalMoney = transaction.Bid * transaction.Quantity;
 
-                    var existingStock = _gameOfStocksRepository.GetExistingStockByUserAndLabel(transaction.User, transaction.Label);
+                    var existingStock = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(transaction.User, transaction.Label);
 
                     var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
 

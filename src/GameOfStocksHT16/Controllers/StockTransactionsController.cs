@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity;
 using GameOfStocksHT16.Entities;
+using AutoMapper;
 
 namespace GameOfStocksHT16.Controllers
 {
@@ -19,86 +20,50 @@ namespace GameOfStocksHT16.Controllers
     [Route("api/[controller]/[action]")]
     public class StockTransactionsController : Controller
     {
-        private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
         public StockTransactionsController(
-            ApplicationDbContext context, 
-            UserManager<ApplicationUser> userManager, 
-            IHostingEnvironment hostingEnvironment, 
+            UserManager<ApplicationUser> userManager,
             IStockService stockService,
             IGameOfStocksRepository gameOfStocksRepository)
         {
-            _context = context;
             _userManager = userManager;
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
         }
 
         // GET: api/StockTransactions
-        [HttpGet]
-        public IEnumerable<StockTransaction> GetStockTransaction()
-        {
-            return _context.StockTransaction;
-        }
+        //[HttpGet]
+        //public IEnumerable<StockTransaction> GetStockTransaction()
+        //{
+        //    return _context.StockTransaction;
+        //}
 
         // GET: api/StockTransactions/5
         [HttpGet("{id}", Name = "GetStockTransaction")]
-        public async Task<IActionResult> GetStockTransaction([FromRoute] int id)
+        public IActionResult GetStockTransaction([FromRoute] int id)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            StockTransaction stockTransaction = await _context.StockTransaction.SingleOrDefaultAsync(m => m.Id == id);
+            var stockTransaction = _gameOfStocksRepository.GetStockTransactionById(id);
 
             if (stockTransaction == null)
             {
                 return NotFound();
             }
 
-            return Ok(stockTransaction);
-        }
+            var stockTransactionResult = Mapper.Map<StockTransationDto>(stockTransaction);
 
-        // PUT: api/StockTransactions/5
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutStockTransaction([FromRoute] int id, [FromBody] StockTransaction stockTransaction)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
-
-            if (id != stockTransaction.Id)
-            {
-                return BadRequest();
-            }
-
-            _context.Entry(stockTransaction).State = EntityState.Modified;
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!StockTransactionExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
+            return Ok(stockTransactionResult);
         }
 
         // POST: api/StockTransactions
+        [Authorize]
         [HttpPost]
         public IActionResult PostBuyingStockTransaction(string label, int quantity)
         {
@@ -117,13 +82,16 @@ namespace GameOfStocksHT16.Controllers
             var user = _gameOfStocksRepository.GetUserById(userId);
 
             if (user == null)
+            {
+                ModelState.AddModelError("Description", "Logga in först.");
                 return BadRequest("Logga in först.");
+            }
 
             var stock = _stockService.GetStockByLabel(label);
 
             if (user.Money <= stock.LastTradePriceOnly * quantity)
             {
-                return BadRequest("Slut på pengar");
+                return BadRequest("Inte tillräckligt med pengar.");
             }
 
             //If quantity is over 20%
@@ -154,29 +122,37 @@ namespace GameOfStocksHT16.Controllers
             if (!_gameOfStocksRepository.Save())
                 return StatusCode(500, "A problem happend while handeling your request.");
 
-            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, stockTransaction);
+            var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
+
+            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, createdStockTransaction);
         }
 
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PostSellingStockTransaction(string label, int quantity)
+        public IActionResult PostSellingStockTransaction(string label, int quantity)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
-            var stockOwnership = await _context.StockOwnership.Include(s => s.User).FirstOrDefaultAsync(s => s.Label == label && s.User == user);
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _gameOfStocksRepository.GetUserById(userId);
+
+            var stockOwnership = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(user, label);
 
             if (user == null || stockOwnership.User != user || quantity <= 0)
             {
+                ModelState.AddModelError("Description", "Något gick åt skogen.");
                 return BadRequest();
             }
 
             if (quantity > stockOwnership.Quantity)
+            {
+                ModelState.AddModelError("Description", "Du försöker sälja mer än vad du har.");
                 return BadRequest();
+            }
 
             var stock = _stockService.GetStockByLabel(label);
 
@@ -194,58 +170,48 @@ namespace GameOfStocksHT16.Controllers
                 User = user
             };
 
-            _context.StockTransaction.Add(stockTransaction);
+            _gameOfStocksRepository.AddStockTransactions(stockTransaction);
 
             if (stockOwnership.Quantity == quantity)
-                _context.StockOwnership.Remove(stockOwnership);
+                _gameOfStocksRepository.RemoveStockOwnership(stockOwnership);
             else
             {
                 stockOwnership.Quantity -= quantity;
             }
 
-            try
+            // Saves db
+            if (!_gameOfStocksRepository.Save())
             {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (StockTransactionExists(stockTransaction.Id))
-                {
+                if (_gameOfStocksRepository.StockTransactionExists(stockTransaction))
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
-                }
-                else
-                {
-                    throw;
-                }
+
+                return StatusCode(500, "A problem happend while handeling your request.");
             }
 
             return Ok();
         }
 
-        // DELETE: api/StockTransactions/5
-        [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteStockTransaction([FromRoute] int id)
-        {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+        //// DELETE: api/StockTransactions/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteStockTransaction([FromRoute] int id)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return BadRequest(ModelState);
+        //    }
 
-            StockTransaction stockTransaction = await _context.StockTransaction.SingleOrDefaultAsync(m => m.Id == id);
-            if (stockTransaction == null)
-            {
-                return NotFound();
-            }
+        //    StockTransaction stockTransaction = await _context.StockTransaction.SingleOrDefaultAsync(m => m.Id == id);
+        //    if (stockTransaction == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            _context.StockTransaction.Remove(stockTransaction);
-            await _context.SaveChangesAsync();
+        //    _context.StockTransaction.Remove(stockTransaction);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(stockTransaction);
-        }
+        //    return Ok(stockTransaction);
+        //}
 
-        private bool StockTransactionExists(int id)
-        {
-            return _context.StockTransaction.Any(e => e.Id == id);
-        }
+
     }
 }

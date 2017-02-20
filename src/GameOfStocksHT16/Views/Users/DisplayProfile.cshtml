@@ -194,7 +194,9 @@
                               asp-route-label="@item.Label"
                               asp-anti-forgery="true"
                               data-ajax-success="ajaxSuccess();"
-                              data-ajax="true" data-ajax-method="POST">
+                              data-ajax="true" 
+                              data-ajax-method="POST"
+                              data-ajax-failure="ajaxError()">
                             <div class="input-group">
                                 <input name="quantity" id="quantity" type="number" min="1" class="form-control">
                                 <span class="input-group-btn">
@@ -304,6 +306,10 @@
             location.reload();
         };
 
+        function ajaxError(XMLHttpRequest, textStatus, errorThrown){
+            alert("Felaktigt värde.")
+        };
+        
 
         $(function () {
             var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
