@@ -34,7 +34,6 @@ namespace GameOfStocksHT16.Services
         {
             if (!IsTradingTime() || !IsWeekDay()) return;
             var pendingStockTransactions = _gameOfStocksRepository.GetUncompletedStockTransactions().ToList();
-            var allUsers = _gameOfStocksRepository.GetAllUsers();
             
             if (!pendingStockTransactions.Any()) { return; }
             var newOwnerships = new List<StockOwnership>();
@@ -247,19 +246,27 @@ namespace GameOfStocksHT16.Services
 
         public Stock GetStockByLabel(string label)
         {
-            var stocks = new List<Stock>();
             Stock stock;
+            var stocks = new List<Stock>();
             var webRootPath = _hostingEnvironment.WebRootPath;
             var path = Path.Combine(webRootPath, "stocks.json");
-            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+            try
             {
-                var json = r.ReadToEnd();
-                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
-            }
-            stock = stocks.Find(x => x.Label.ToLower() == label.ToLower());
+                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+                {
+                    var json = r.ReadToEnd();
+                    stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                }
+                stock = stocks.Find(x => x.Label.ToLower() == label.ToLower());
 
-            if (stock == null) throw new NullReferenceException("Stock not found in stocks.json");
-            return stock;
+                if (stock == null) throw new NullReferenceException("Stock not found in stocks.json");
+                return stock;
+            }
+            catch (Exception)
+            {
+                return new Stock();
+            }
+            
         }
 
         public void SaveUsersTotalWorthPerDay(object state)
@@ -366,8 +373,8 @@ namespace GameOfStocksHT16.Services
         public bool IsTradingTime()
         {
             var currentTime = DateTime.Now.TimeOfDay;
-            var morningOpen = new TimeSpan(09, 10, 0);
-            var eveningClose = new TimeSpan(18, 00, 0);
+            var morningOpen = new TimeSpan(09, 15, 0);
+            var eveningClose = new TimeSpan(17, 15, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 

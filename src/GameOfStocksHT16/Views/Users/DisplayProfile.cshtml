@@ -81,7 +81,7 @@
                 <th>
                     IsCompleted
                 </th>
-                <th></th>
+                @*<th></th>*@
             </tr>
         </thead>
         <tbody>
@@ -120,7 +120,7 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.IsCompleted)
                     </td>
-                    <td>
+                    @*<td>
                         @if (item.TimeLeftToCompletion.Minutes >= 10)
                         {
                             <button class="btn btn-primary" type="submit"><i class="fa fa-close"></i></button>
@@ -130,7 +130,7 @@
 
                         }
 
-                    </td>
+                    </td>*@
                 </tr>
             }
 
@@ -306,8 +306,8 @@
             location.reload();
         };
 
-        function ajaxError(XMLHttpRequest, textStatus, errorThrown){
-            alert("Felaktigt värde.")
+        function ajaxError(XMLHttpRequest, textStatus, errorThrown) {
+            alert("Felaktigt värde eller börsen stängd.");
         };
         
 

@@ -137,6 +137,9 @@ namespace GameOfStocksHT16.Controllers
                 return BadRequest(ModelState);
             }
 
+            if (!_stockService.IsTradingTime())
+                return BadRequest("Börsen är stängd.");
+
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);
 
