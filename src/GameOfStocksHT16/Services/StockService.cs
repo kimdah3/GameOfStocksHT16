@@ -32,10 +32,9 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactions(object state)
         {
-            //if (!IsTradingTime() || !IsWeekDay()) return;
+            if (!IsTradingTime() || !IsWeekDay()) return;
             var pendingStockTransactions = _gameOfStocksRepository.GetUncompletedStockTransactions().ToList();
             var allUsers = _gameOfStocksRepository.GetAllUsers();
-                //_dbContext.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
             
             if (!pendingStockTransactions.Any()) { return; }
             var newOwnerships = new List<StockOwnership>();
@@ -43,21 +42,18 @@ namespace GameOfStocksHT16.Services
             foreach (var transaction in pendingStockTransactions)
             {
                 var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                //if (DateTime.Now < newTime) continue;
+                if (DateTime.Now < newTime) continue;
                 var stockRecentValue = GetStockByLabel(transaction.Label); //Most recent values
-                //if (!StockHasBuyer(stockRecentValue, transaction.Date)) continue; //If no recent buyer
+                if (!StockHasBuyer(stockRecentValue, transaction.Date)) continue; //If no recent buyer
 
                 var user = _gameOfStocksRepository.GetUserById(transaction.User.Id);
                 if (user == null) throw new Exception("Internal error");
 
                 if (transaction.IsBuying)
                 {
-                    Debug.WriteLine("BEFORE USER RESERVED: " + user.ReservedMoney);
                     user.Money += transaction.TotalMoney;
                     user.ReservedMoney -= transaction.TotalMoney;
                     
-
-                    Debug.WriteLine("AFTER USER RESERVED: " + user.ReservedMoney);
                     //Get recent value
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                     transaction.TotalMoney = transaction.Bid * transaction.Quantity;
@@ -102,8 +98,6 @@ namespace GameOfStocksHT16.Services
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                 }
                 transaction.IsCompleted = true;
-                Debug.WriteLine("AFTER EVERYTHING RESERVED VALUE: " + transaction.TotalMoney);
-                Debug.WriteLine("AFTER EVERYTHING USER RESERVED: " + user.ReservedMoney);
             }
 
             _gameOfStocksRepository.AddStockOwnerships(newOwnerships);

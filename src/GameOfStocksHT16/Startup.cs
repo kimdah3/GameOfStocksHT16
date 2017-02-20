@@ -89,13 +89,13 @@ namespace GameOfStocksHT16
 
             app.UseIdentity();
 
-            var cultureInfo = new CultureInfo("sv-SE") {NumberFormat = {CurrencySymbol = "kr"}};
+            var cultureInfo = new CultureInfo("sv-SE") { NumberFormat = { CurrencySymbol = "kr" } };
 
 
             CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
             CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
-            //_downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60*10*1000);
+            _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60 * 2 * 1000);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
             _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
