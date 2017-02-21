@@ -91,7 +91,7 @@ namespace GameOfStocksHT16.Services
 
         public List<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user)
         {
-            return _context.StockTransaction.Where(x => x.User == user && x.IsSelling).ToList();
+            return _context.StockTransaction.Where(x => x.User == user && x.IsSelling && !x.IsCompleted).ToList();
         }
     }
 }

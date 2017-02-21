@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using Microsoft.AspNetCore.Builder;
@@ -86,18 +87,23 @@ namespace GameOfStocksHT16
                 app.UseExceptionHandler("/Home/Error");
             }
 
+            var supportedCultures = new List<CultureInfo>()
+            {
+                new CultureInfo("sv-SE") {NumberFormat = {CurrencySymbol = "kr"}}
+            };
+            
+            app.UseRequestLocalization(new RequestLocalizationOptions
+            {
+                DefaultRequestCulture = new RequestCulture("sv-SE"),
+                // Formatting numbers, dates, etc.
+                SupportedCultures = supportedCultures,
+                // UI strings that we have localized.
+                SupportedUICultures = supportedCultures
+            });
+
             app.UseStaticFiles();
 
             app.UseIdentity();
-
-            app.UseRequestLocalization(new RequestLocalizationOptions
-            {
-                DefaultRequestCulture = new RequestCulture("sv-SE")
-            });
-
-            var cultureInfo = new CultureInfo("sv-SE") { NumberFormat = { CurrencySymbol = "kr" }};
-            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
-            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
 
             _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60 * 2 * 1000);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
