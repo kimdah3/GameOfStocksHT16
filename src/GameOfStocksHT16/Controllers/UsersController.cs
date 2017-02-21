@@ -195,7 +195,7 @@ namespace GameOfStocksHT16.Controllers
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);
-            return user.Money.ToString(CultureInfo.CurrentCulture);
+            return $"{user.Money:c}";
         }
 
         private List<StockTransWithTimeLeftViewModel> GetStockTransWithTimeLeft(ApplicationUser user)

@@ -2,7 +2,7 @@
 $(function () {
     if ($('#user-money').length) {
         $.get("../api/users/getmoney", function (data) {
-            $('#user-money').append(data + " kr");
+            $('#user-money').append(data);
         });
     }
 });

@@ -12,7 +12,7 @@
                     <th class="text-center">#</th>
                     <th>Email</th>
                     <th>Totala tillgångar</th>
-                    <th>Ökning</th>
+                    <th>Utveckling</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,19 +26,21 @@
                                 @item.Email
                             </a>
                         </td>
-                        <td>@item.TotalWorth kr</td>
+                        <td>
+                            @Html.DisplayFor(m => item.TotalWorth)
+                        </td>
                         @if (item.GrowthPercent > 0)
                         {
-                            <td class="text-success"><b>@item.GrowthPercent%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
+                            <td class="text-success"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
                         }
                         else if (item.GrowthPercent < 0)
                         {
 
-                            <td class="text-danger"><b>@item.GrowthPercent%</b> <i class="fa fa-arrow-down fa-2x pull-right"></i></td>
+                            <td class="text-danger"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-down fa-2x pull-right"></i></td>
                         }
                         else
                         {
-                            <td>@item.GrowthPercent%</td>
+                            <td>@Html.DisplayFor(m => item.GrowthPercent)%</td>
                         }
                     </tr>
                 }

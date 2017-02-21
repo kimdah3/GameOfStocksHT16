@@ -9,9 +9,9 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     public class UserModel
     {
         public string Email { get; set; }
-        [DisplayFormat(DataFormatString = "{0:n0}")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Money { get; set; }
-        [DisplayFormat(DataFormatString = "{0:n0}")]
+        [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal TotalWorth { get; set; }
 
         public decimal GrowthPercent { get; set; }

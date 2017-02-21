@@ -14,18 +14,19 @@ namespace GameOfStocksHT16.Controllers
 {
     public class HomeController : Controller
     {
-        private ApplicationDbContext _dbContext { get; set; }
         private readonly IStockService _stockService;
+        private IGameOfStocksRepository _gameOfStocksRepository;
 
-        public HomeController(ApplicationDbContext dbContext, IStockService stockService)
+        public HomeController(ApplicationDbContext dbContext, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
-            _dbContext = dbContext;
             _stockService = stockService;
+            _gameOfStocksRepository = gameOfStocksRepository;
         }
 
         public IActionResult Index()
         {
-            var users = _dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
+            var users = _gameOfStocksRepository.GetAllUsers().OrderByDescending(u => u.Money).ToList();
+                //_dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
             var allUsers = new List<UserModel>();
 
             var model = new HomeViewModel()
@@ -35,7 +36,7 @@ namespace GameOfStocksHT16.Controllers
                 TodaysWinners = new List<UserModel>()
             };
 
-            if (users == null) return View(model);
+            if (!users.Any()) return View(model);
 
             foreach (var user in users)
             {
@@ -80,7 +81,8 @@ namespace GameOfStocksHT16.Controllers
         [Authorize]
         public IActionResult News()
         {
-            var users = _dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
+            var users = _gameOfStocksRepository.GetAllUsers().OrderByDescending(u => u.Money);
+                //_dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
             var allUsers = new List<UserModel>();
 
             var model = new HomeViewModel()
@@ -90,7 +92,7 @@ namespace GameOfStocksHT16.Controllers
                 TodaysWinners = new List<UserModel>()
             };
 
-            if (users == null) return View(model);
+            if (!users.Any()) return View(model);
 
             foreach (var user in users)
             {
