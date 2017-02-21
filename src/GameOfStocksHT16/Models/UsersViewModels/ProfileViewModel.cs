@@ -32,8 +32,6 @@ namespace GameOfStocksHT16.Models.UsersViewModels
 
         public List<StockTransWithTimeLeftViewModel> StockTransactions { get; set; }
         public List<StockOwnerShipViewModel> StockOwnerships { get; set; }
-
-
 }
 
     public class StockOwnerShipViewModel : StockOwnership

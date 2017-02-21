@@ -34,7 +34,7 @@ namespace GameOfStocksHT16.Services
         {
             if (!IsTradingTime() || !IsWeekDay()) return;
             var pendingStockTransactions = _gameOfStocksRepository.GetUncompletedStockTransactions().ToList();
-            
+
             if (!pendingStockTransactions.Any()) { return; }
             var newOwnerships = new List<StockOwnership>();
 
@@ -52,10 +52,12 @@ namespace GameOfStocksHT16.Services
                 {
                     user.Money += transaction.TotalMoney;
                     user.ReservedMoney -= transaction.TotalMoney;
-                    
+
+
                     //Get recent value
                     transaction.Bid = stockRecentValue.LastTradePriceOnly;
                     transaction.TotalMoney = transaction.Bid * transaction.Quantity;
+
 
                     var existingStock = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(transaction.User, transaction.Label);
 
@@ -72,7 +74,6 @@ namespace GameOfStocksHT16.Services
                         stockToModify.Quantity += transaction.Quantity;
                         stockToModify.TotalSum += transaction.TotalMoney;
                         stockToModify.Gav = stockToModify.TotalSum / stockToModify.Quantity;
-                        stockToModify.Quantity += transaction.Quantity;
                     }
                     else
                         newOwnerships.Add(new StockOwnership()
@@ -113,9 +114,16 @@ namespace GameOfStocksHT16.Services
 
         private bool StockHasBuyer(Stock stockRecentValue, DateTime transactionTime)
         {
-            var date = DateTime.ParseExact(stockRecentValue.LastTradeDate, "M/d/yyyy", CultureInfo.InvariantCulture);
-            var time = DateTime.Parse(stockRecentValue.LastTradeTime);
-            return date.Add(time.TimeOfDay) > transactionTime;
+            try
+            {
+                var date = DateTime.ParseExact(stockRecentValue.LastTradeDate, "M/d/yyyy", CultureInfo.InvariantCulture);
+                var time = DateTime.Parse(stockRecentValue.LastTradeTime);
+                return date.Add(time.TimeOfDay) > transactionTime;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
         }
 
         public async void SaveStocksOnStartup(object state)
@@ -266,7 +274,7 @@ namespace GameOfStocksHT16.Services
             {
                 return new Stock();
             }
-            
+
         }
 
         public void SaveUsersTotalWorthPerDay(object state)

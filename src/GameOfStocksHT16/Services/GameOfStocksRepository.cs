@@ -19,6 +19,11 @@ namespace GameOfStocksHT16.Services
             _context = context;
         }
 
+        public IEnumerable<StockOwnership> GetStockOwnershipsByUser(ApplicationUser user)
+        {
+            return _context.StockOwnership.Where(x => x.User.Id == user.Id).ToList();
+        }
+
         public void AddStockTransactions(StockTransaction stockTransaction)
         {
             _context.Add(stockTransaction);
@@ -27,6 +32,16 @@ namespace GameOfStocksHT16.Services
         public ApplicationUser GetUserById(string userId)
         {
             return _context.Users.FirstOrDefault(u => u.Id == userId);
+        }
+
+        public ApplicationUser GetUserByEmail(string email)
+        {
+            return _context.Users.FirstOrDefault(u => u.Email == email);
+        }
+
+        public IEnumerable<StockTransaction> GetStockTransactionsByUser(ApplicationUser user)
+        {
+            return _context.StockTransaction.Where(x => x.User.Id == user.Id).ToList();
         }
 
         public IEnumerable<StockTransaction> GetUncompletedStockTransactions()
@@ -74,5 +89,9 @@ namespace GameOfStocksHT16.Services
             return _context.StockTransaction.SingleOrDefault(m => m.Id == id);
         }
 
+        public List<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user)
+        {
+            return _context.StockTransaction.Where(x => x.User == user && x.IsSelling).ToList();
+        }
     }
 }

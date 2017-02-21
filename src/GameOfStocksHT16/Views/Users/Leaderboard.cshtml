@@ -1,4 +1,4 @@
-﻿@model AllUsersViewModel
+﻿@model LeaderBoardViewModel
 @{
     ViewData["Title"] = "Stock List";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -16,9 +16,9 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.LeaderBoard)
+                @foreach (var item in Model.AllUsers)
                 {
-                    int i = Model.LeaderBoard.IndexOf(item);
+                    int i = Model.AllUsers.IndexOf(item);
                     <tr>
                         <td class="text-center">@(i + 1)</td>
                         <td>
