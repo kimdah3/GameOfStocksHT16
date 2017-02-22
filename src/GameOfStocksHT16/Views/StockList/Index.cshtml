@@ -1,4 +1,4 @@
-@using GameOfStocksHT16.Models.UsersViewModels
+﻿@using GameOfStocksHT16.Models.UsersViewModels
 @using Microsoft.AspNetCore.Identity
 
 
@@ -13,28 +13,29 @@
 
 <section class="section-padding-medium">
     <div class="container">
-                <div class="table-responsive">
-                    <table id="stock-table" class="table table-bordered table-hover table-striped table-condensed">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Change</th>
-                                <th>Volume</th>
-                                <th>Open</th>
-                                <th>Days Low</th>
-                                <th>Days High</th>
-                                <th>Last Trade Price Only</th>
-                                <th>Last Trade Time</th>
-                                <th>Last Trade Date</th>
-                                <th>Cap</th>
-                            </tr>
-                        </thead>
-                        <tbody id="stock-table-body">
-                            @* ROWS ARE FILLED WITH JS *@
-                        </tbody>
-                    </table>
-                </div>
-            </div>
+        <label for="Name" class="myLabel"></label>
+        <div class="table-responsive">
+            <table id="stock-table" class="table table-bordered table-hover table-striped table-condensed">
+                <thead>
+                <tr>
+                    <th>Namn</th>
+                    <th>Utveckling</th>
+                    <th>Antal</th>
+                    <th>Öppningspris</th>
+                    <th>Lägst</th>
+                    <th>Högst</th>
+                    <th>Senast</th>
+                    <th>Senaste köptid</th>
+                    <th>Senaste köpdatum</th>
+                    <th>Cap</th>
+                </tr>
+                </thead>
+                <tbody id="stock-table-body">
+                @* ROWS ARE FILLED WITH JS *@
+                </tbody>
+            </table>
+        </div>
+    </div>
 </section>
 
 @section scripts
@@ -80,8 +81,12 @@
 
                 var table = $('#stock-table')
                     .DataTable({
-                        "iDisplayLength": 50
-                    });
+                        "iDisplayLength": 50,
+                        "language": {
+                            "sSearch": "Sök:",
+                            "sLengthMenu": "Visa _MENU_ rader"
+                        }
+            });
                 table.rows().every(function () {
                     var label = $(table.row(this).data()[0]).attr('id');
                     var buttonId = "btn-buy-" + label;
@@ -89,9 +94,9 @@
                     this.child(
                         "<form>" +
                             "<div class='form-group'>" +
-                                "<label for='model-buy-amount'>Amount:</label>" +
+                                "<label for='model-buy-amount'>Antal:</label>" +
                                 "<input type='number' min='0' class='form-control' id='buy-amount'>" +
-                                "<button id='btn-buy-stock' type='submit' class='btn btn-default'>Buy</button>" +
+                                "<button id='btn-buy-stock' type='submit' class='btn btn-default'>Köp</button>" +
                             "</div>" +
                         "</form>" +
                         "<div id='show-total-cost'>" +
@@ -130,24 +135,29 @@
                                     url: query,
                                     async: true,
                                     dataType: "json",
-                                    success: function (data, textStatus, jqXHR) {
+                                    success: function (data, textStatus, jqXHR) 
+                                    {
                                         console.log(data);
                                         console.log(textStatus);
                                         console.log(jqXHR);
 
-                                        alert(data.quantity + " of the stock: " + data.label + " has been placed in your pending stocks!");
+                                        //var newlabel = document.createElement("Label");
+                                        //newlabel.setAttribute("for", id_from_input);
+                                        //newlabel.innerHTML = "Here goes the text";
+                                        $("#myLabel").append(label);
+                                        //alert(data.quantity + " av aktien: " + data.label + " har lagts till i dina pågående köp!");
                                     },
                                     error: function (jqXHR, textStatus, errorThrown) {
                                         console.log(data);
                                         console.log(textStatus);
                                         console.log(errorThrown);
-                                        alert(jqXHR.responseText);
-
+                                        $("#myLabel").append(label);
+                                        //alert(jqXHR.responseText);
                                     }
                                 });
                             });
                         }
-
+                         
                         var buyAmountEvent = $._data($('#buy-amount').get(0), "events");
                         if (buyAmountEvent == null) {
                             $('#buy-amount')
@@ -159,6 +169,6 @@
                         }
                     }
                 });
-            });
+            })
     </script>
 }

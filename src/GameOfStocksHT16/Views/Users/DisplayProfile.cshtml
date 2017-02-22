@@ -4,7 +4,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container">
-    <h2>Info</h2>
+    <h2>Information</h2>
     <table class="table">
         <thead>
             <tr>
@@ -64,7 +64,7 @@
                     Namn
                 </th>
                 <th>
-                    Label
+                    Ticker
                 </th>
                 <th>
                     Antal
@@ -74,16 +74,16 @@
                     Uppskattat
                 </th>
                 <th>
-                    Köp
+                    Köper
                 </th>
                 <th>
-                    Sälj
+                    Säljer
                 </th>
                 <th>
                     <i class="fa fa-clock-o"></i>
                 </th>
                 <th>
-                    IsCompleted
+                    Genomförd
                 </th>
                 @*<th></th>*@
             </tr>
@@ -150,7 +150,7 @@
                     Namn
                 </th>
                 <th>
-                    Label
+                    Ticker
                 </th>
                 <th>
                     Antal
@@ -204,7 +204,7 @@
                             <div class="input-group">
                                 <input name="quantity" id="quantity" type="number" min="1" class="form-control">
                                 <span class="input-group-btn">
-                                    <button class="btn btn-primary" type="submit">Sell</button>
+                                    <button class="btn btn-primary" type="submit">Sälj</button>
                                 </span>
                             </div>
                         </form>
@@ -226,7 +226,7 @@
                 Namn
             </th>
             <th>
-                Label
+                Ticker
             </th>
             <th>
                 Antal
@@ -239,10 +239,10 @@
                 Köp/Sälj-kurs
             </th>
             <th>
-                Köp
+                Köpte
             </th>
             <th>
-                Sälj
+                Sålde
             </th>
             @*<th>
                 <i class="fa fa-clock-o"></i>
@@ -297,11 +297,29 @@
         </tbody>
     </table>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
-        </div>
+<div class="panel panel-default">
+    <div class="panel-body">
+        <div id="chartContainer" style="height: 300px; width: 100%;"></div>
     </div>
+</div>
+    <dt>Ändra ditt lösenord:</dt>
+<dd>
+
+    @{
+        IndexViewModel indexModel = new IndexViewModel();
+    }
+
+    @if (indexModel.HasPassword)
+    {
+        <a asp-controller="Manage" asp-action="ChangePassword" class="btn-bracketed">Ändra</a>
+    }
+    else
+    {
+        <a asp-controller="Manage" asp-action="SetPassword" class="btn-bracketed">Ändra</a>
+    }
+</dd>
+
+
 
 </div>
 @section scripts{

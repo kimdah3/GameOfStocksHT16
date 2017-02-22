@@ -16,8 +16,9 @@ namespace GameOfStocksHT16.Models.UsersViewModels
     public class ProfileViewModel
     {
         public string Email { get; set; }
+        [Display(Name = "Användarnamn")]
         public string UserName { get; set; }
-        [Display(Name = "Saldo")]
+        [Display(Name = "Tillgångar")]
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Money { get; set; }
         [Display(Name = "Reserverat")]
