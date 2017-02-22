@@ -16,7 +16,6 @@
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Money)
-                    Balance
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.ReservedMoney)
@@ -35,13 +34,18 @@
                     @Model.UserName
                 </td>
                 <td>
-                    @Html.DisplayFor(m => m.Money)
+@*                    @Html.DisplayFor(m => Model.Money)*@
+                     @Model.TotalWorth
                 </td>
                 <td>
-                    @Html.DisplayFor(m => m.ReservedMoney)
+                    @*@Html.DisplayFor(m => m.ReservedMoney)*@
+                    @Model.ReservedMoney
+
+
                 </td>
                 <td>
-                    @Html.DisplayFor(m => m.TotalWorth)
+                    @*@Html.DisplayFor(m => m.TotalWorth)*@
+                    @Model.TotalWorth
                 </td>
             </tr>
         </tbody>
