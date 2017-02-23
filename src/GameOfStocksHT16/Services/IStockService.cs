@@ -25,6 +25,8 @@ namespace GameOfStocksHT16.Services
 
         bool IsTradingTime();
 
+        bool IsTradingOpenForStockTransactions();
+
         bool DailyUsersTotalWorthExists();
     }
 }

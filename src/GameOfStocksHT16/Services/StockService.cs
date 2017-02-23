@@ -376,12 +376,19 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        //Tid för börsstängning, ska vara 1800.
+        //Tid för börsstängning, ska vara 1730.
         //Och inte helgdag, därav !IsWeekDay()
         public bool IsTradingTime()
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 15, 0);
+            return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
+        }
+
+        public bool IsTradingOpenForStockTransactions()
+        {
+            var currentTime = DateTime.Now.TimeOfDay;
+            var morningOpen = new TimeSpan(09, 00, 0);
             var eveningClose = new TimeSpan(17, 15, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
