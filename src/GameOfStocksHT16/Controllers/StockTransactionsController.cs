@@ -72,7 +72,7 @@ namespace GameOfStocksHT16.Controllers
                 return BadRequest(ModelState);
             }
 
-            if (!_stockService.IsTradingTime())
+            if (!_stockService.IsTradingOpenForStockTransactions())
                 return BadRequest("Börsen är stängd.");
 
             if (quantity <= 0)
