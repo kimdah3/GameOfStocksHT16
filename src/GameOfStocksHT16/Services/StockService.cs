@@ -24,7 +24,7 @@ namespace GameOfStocksHT16.Services
         private readonly IHostingEnvironment _hostingEnvironment;
         private IGameOfStocksRepository _gameOfStocksRepository;
 
-        public StockService(ApplicationDbContext dbContext, IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository)
+        public StockService(IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository)
         {
             _hostingEnvironment = hostingEnvironment;
             _gameOfStocksRepository = gameOfStocksRepository;
@@ -114,27 +114,92 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactionsSimplified(object state)
         {
-            if (!IsTradingTime()) return;
+            //if (!IsTradingTime()) return;
 
             var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
+            var newOwnerships = new List<StockOwnership>();
+
             foreach (var user in users)
             {
-                var moneyToWithdrawl = 0;
-
-                foreach (var transaction in user.StockTransactions)
+                foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted))
                 {
-                    user.ReservedMoney -= transaction.TotalMoney;
+                    // Wait 15 min before completing transaction.
+                    //var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                    //if (DateTime.Now < newTime) continue;
 
                     if (transaction.IsBuying)
                     {
-                        
+                        BuyStock(transaction, ref newOwnerships);
                     }
                     else if (transaction.IsSelling)
                     {
-                        
+                        SellStock(transaction);
                     }
+                    transaction.IsCompleted = true;
                 }
+                _gameOfStocksRepository.AddStockOwnerships(newOwnerships);
             }
+
+            _gameOfStocksRepository.Save();
+
+        }
+
+        private void SellStock(StockTransaction transaction)
+        {
+            var stockRecentValue = GetStockByLabel(transaction.Label);
+            transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
+            transaction.Bid = stockRecentValue.LastTradePriceOnly;
+            _gameOfStocksRepository.Save();
+        }
+
+        private void BuyStock(StockTransaction transaction, ref List<StockOwnership> newOwnerships)
+        {
+            //Most recent values
+            var stockRecentValue = GetStockByLabel(transaction.Label);
+
+            //If no recent buyer of stock, skip transaction
+            //if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+
+            //If no money, skip transaction for now
+            if ((stockRecentValue.LastTradePriceOnly * transaction.Quantity) > transaction.User.Money) return;
+
+            //Restore reserved money
+            transaction.User.Money += transaction.TotalMoney;
+            transaction.User.ReservedMoney -= transaction.TotalMoney;
+
+            //Update transaction with in time values
+            transaction.Bid = stockRecentValue.LastTradePriceOnly;
+            transaction.TotalMoney = stockRecentValue.LastTradePriceOnly * transaction.Quantity;
+
+            var existingOwnership = transaction.User.StockOwnerships.FirstOrDefault(s => s.Label == transaction.Label);
+            var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
+
+            if (existingOwnership != null)
+            {
+                existingOwnership.Quantity += transaction.Quantity;
+                existingOwnership.TotalSum += transaction.TotalMoney;
+                existingOwnership.Gav = existingOwnership.TotalSum / existingOwnership.Quantity;
+            }
+            else if (stockToModify != null)
+            {
+                stockToModify.Quantity += transaction.Quantity;
+                stockToModify.TotalSum += transaction.TotalMoney;
+                stockToModify.Gav = stockToModify.TotalSum / stockToModify.Quantity;
+            }
+            else
+            {
+                newOwnerships.Add(new StockOwnership()
+                {
+                    Name = transaction.Name,
+                    Label = transaction.Label,
+                    Quantity = transaction.Quantity,
+                    Gav = transaction.TotalMoney / transaction.Quantity,
+                    TotalSum = transaction.TotalMoney,
+                    User = transaction.User
+                });
+            }
+
+            transaction.User.Money -= transaction.TotalMoney;
         }
 
 
@@ -412,7 +477,7 @@ namespace GameOfStocksHT16.Services
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 
-        public bool IsTradingOpenForStockTransactions()
+        public bool IsMarketOpenForStockTransactions()
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 00, 0);

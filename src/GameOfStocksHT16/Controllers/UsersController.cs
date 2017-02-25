@@ -20,7 +20,7 @@ namespace GameOfStocksHT16.Controllers
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
-        public UsersController(ApplicationDbContext dbContext, UserManager<ApplicationUser> userManager, IStockService stockService,  IGameOfStocksRepository gameOfStocksRepository)
+        public UsersController(UserManager<ApplicationUser> userManager, IStockService stockService,  IGameOfStocksRepository gameOfStocksRepository)
         {
             _userManager = userManager;
             _stockService = stockService;
@@ -159,9 +159,10 @@ namespace GameOfStocksHT16.Controllers
 
 
         [HttpGet]
-        public async Task<ActionResult> DisplayProfile()
+        public ActionResult DisplayProfile()
         {
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var user = _gameOfStocksRepository.GetUserById(userId);
             if (user != null)
             {
 

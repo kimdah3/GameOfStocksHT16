@@ -10,7 +10,8 @@ namespace GameOfStocksHT16.Services
     public interface IStockService
     {
         void CompleteStockTransactions(object o);
-
+        void CompleteStockTransactionsSimplified(object o);
+        
         void SaveStocksOnStartup(object o);
 
         Stock GetStockByLabel(string label);
@@ -25,7 +26,7 @@ namespace GameOfStocksHT16.Services
 
         bool IsTradingTime();
 
-        bool IsTradingOpenForStockTransactions();
+        bool IsMarketOpenForStockTransactions();
 
         bool DailyUsersTotalWorthExists();
     }
