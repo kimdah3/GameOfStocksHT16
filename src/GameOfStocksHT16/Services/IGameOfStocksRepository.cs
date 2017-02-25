@@ -12,6 +12,7 @@ namespace GameOfStocksHT16.Services
         ApplicationUser GetUserById(string userId);
         ApplicationUser GetUserByEmail(string email);
         IEnumerable<ApplicationUser> GetAllUsers();
+        List<ApplicationUser> GetUsersWithPendingStockTransactions();
 
         StockTransaction GetStockTransactionById(int id);
         IEnumerable<StockTransaction> GetStockTransactionsByUser(ApplicationUser user);

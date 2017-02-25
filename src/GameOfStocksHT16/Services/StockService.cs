@@ -112,6 +112,32 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        public void CompleteStockTransactionsSimplified(object state)
+        {
+            if (!IsTradingTime()) return;
+
+            var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
+            foreach (var user in users)
+            {
+                var moneyToWithdrawl = 0;
+
+                foreach (var transaction in user.StockTransactions)
+                {
+                    user.ReservedMoney -= transaction.TotalMoney;
+
+                    if (transaction.IsBuying)
+                    {
+                        
+                    }
+                    else if (transaction.IsSelling)
+                    {
+                        
+                    }
+                }
+            }
+        }
+
+
         private bool StockHasBuyer(Stock stockRecentValue, DateTime transactionTime)
         {
             try

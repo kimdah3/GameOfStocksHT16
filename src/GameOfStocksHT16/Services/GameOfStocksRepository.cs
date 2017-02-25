@@ -69,6 +69,26 @@ namespace GameOfStocksHT16.Services
             return _context.Users.Include(u => u.StockOwnerships).ToList();
         }
 
+        public List<ApplicationUser> GetUsersWithPendingStockTransactions()
+        {
+            //var users = _context.Users.Include(u => u.StockTransactions);
+            //var usersWithPendingStockTransactions = new List<ApplicationUser>();
+            //foreach (var user in users)
+            //{
+            //    var hasPending = false;
+            //    foreach (var transaction in user.StockTransactions)
+            //    {
+            //        if (transaction.IsBuying || transaction.IsSelling)
+            //        {
+            //            hasPending = true;
+            //        }
+            //    }
+            //    if(hasPending)
+            //        usersWithPendingStockTransactions.Add(user);
+            //}
+            return _context.Users.Where(u => u.StockTransactions.TrueForAll(s => s.IsBuying || s.IsSelling)).ToList();
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
