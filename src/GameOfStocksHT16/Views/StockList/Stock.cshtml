@@ -1,6 +1,149 @@
-﻿    @*
-    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
-*@
+﻿@model StockViewModel
 @{
+    ViewData["Title"] = Model.Stock.Name;
 }
-<h1>A stock</h1>
+
+<section class="section-padding-medium">
+    <div class="container">
+        <div class="col-md-10 col-md-offset-2">
+            <h3>@Model.Stock.Name</h3>
+            <div class="row">
+                <div class="col-md-4">
+                    <dl class="dl-horizontal">
+                        <dt>Utveckling</dt>
+                        <dd>
+                            <span class="">
+                                <b>@Model.Stock.Change</b>
+                            </span>
+                        </dd>
+                        <dt>Antal</dt>
+                        <dd>@Model.Stock.Volume</dd>
+                        <dt>Senast</dt>
+                        <dd>@Model.Stock.LastTradePriceOnly</dd>
+                        <dt>Öppningspris</dt>
+                        <dd>@Model.Stock.Open</dd>
+                        <dt>Lägst</dt>
+                        <dd>@Model.Stock.DaysLow</dd>
+                        <dt>Högst</dt>
+                        <dd>@Model.Stock.DaysHigh</dd>
+
+                        <dt>Senaste köptid</dt>
+                        <dd>@Model.Stock.LastTradeTime</dd>
+                        <dt>Senaste köpdatum</dt>
+                        <dd>@Model.Stock.LastTradeDate</dd>
+                        <dt>Cap</dt>
+                        <dd>@Model.Stock.Cap</dd>
+                    </dl>
+                </div>
+                <div class="col-md-4">
+                    <dl class="dl-horizontal">
+                        <dt>Ditt innehav</dt>
+                        <dd>@Model.UsersQuantity</dd>
+                        <dt>Totalt värde</dt>
+                        <dd>@Model.UsersStockTotalSum</dd>
+                        <dt>GAV</dt>
+                        <dd>@Model.UsersGav</dd>
+                    </dl>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4  ">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <div class="text-center text-danger" id="error-box-buy"></div>
+                            <h4>Skapa köp</h4>
+                            <form asp-controller="api/StockTransactions"
+                                  asp-action="PostBuyingStockTransaction"
+                                  asp-route-label="@Model.Stock.Label"
+                                  asp-anti-forgery="true"
+                                  data-ajax-success="ajaxSuccess();"
+                                  data-ajax="true"
+                                  method="POST"
+                                  data-ajax-failure="ajaxError"
+                                  data-ajax-update="#content"
+                                  class="form-horizontal">
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Antal</label>
+                                    <div class="col-md-10">
+                                        <input name="quantity" id="buy-amount" type="number" min="1" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <p class="control-label pull-left" id="buy-form-validation">
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-stock-group">
+                                    <button class="btn btn-primary btn-block " type="submit">Genomför</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4 ">
+                    <div class="panel">
+                        <div class="panel-body">
+                            <h4 class="disabled">Skapa sälj</h4>
+                            <form method="post" class="form-horizontal ">
+                                <div asp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <label class="col-md-2 control-label">Antal</label>
+                                    <div class="col-md-10">
+                                        <input name="quantity" id="quantity" type="number" min="1" class="form-control disabled">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <p id="buy-form-validation" class="control-label pull-left"></p>
+                                    </div>
+                                </div>
+                                <div class="form-group form-stock-group">
+                                    <button class="btn btn-danger btn-block disabled" type="submit">Genomför</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <a asp-action="StockListNew" class="btn btn-default">Tillbaka</a>
+        </div>
+    </div>
+</section>
+
+@section scripts{
+    <script>
+        function ajaxSuccess() {
+            location.href = '@Url.Action("DisplayProfile","Users")'
+        };
+
+        function ajaxError(XMLHttpRequest) {
+            var errorText = XMLHttpRequest.responseText;
+            $('#error-box-buy').html(errorText);
+        };
+        $('#buy-amount').on('input',
+            function () {
+                var amount = $('#buy-amount').val();
+
+                if (amount == 0 || amount == '') {
+                    $('#buy-form-validation').html('');
+                } else {
+                    var lastTradePrice = parseFloat('@Model.Stock.LastTradePriceOnly'.replace(',', '.').replace(' ', ''));  // Replace , with .
+                    var usersMoney = parseFloat('@Model.UsersMoney'.replace(',', '.').replace(' ', ''));  // Replace , with .
+                    var total = (amount * lastTradePrice).toFixed(2);
+                    if (total > usersMoney) {
+                        //$('#buy-form-validation-money-left').html('Saldo kvar: ' + (usersMoney - total) + ' kr');
+                        $('#buy-form-validation').attr('class', 'text-danger');
+                        $('#buy-form-validation').html('Totalt: ' + total + ' kr');
+                    } else {
+                        //$('#buy-form-validation-money-left').html('Saldo kvar: ' + (usersMoney - total) + ' kr');
+                        $('#buy-form-validation').attr('class', 'text-success');
+                        $('#buy-form-validation').html('Totalt: ' + total + ' kr');
+                    }
+
+                }
+                //var lastTradePrice = $(this).closest('tr').prev().find('.last-trade-price').text();
+            });
+    </script>
+}
+

@@ -114,7 +114,7 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactionsSimplified(object state)
         {
-            //if (!IsTradingTime()) return;
+            if (!IsTradingTime()) return;
 
             var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
             var newOwnerships = new List<StockOwnership>();
@@ -123,9 +123,9 @@ namespace GameOfStocksHT16.Services
             {
                 foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted))
                 {
-                    // Wait 15 min before completing transaction.
-                    //var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                    //if (DateTime.Now < newTime) continue;
+                    //Wait 15 min before completing transaction.
+                    var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                    if (DateTime.Now < newTime) continue;
 
                     if (transaction.IsBuying)
                     {
@@ -158,7 +158,7 @@ namespace GameOfStocksHT16.Services
             var stockRecentValue = GetStockByLabel(transaction.Label);
 
             //If no recent buyer of stock, skip transaction
-            //if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+            if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
 
             //If no money, skip transaction for now
             if ((stockRecentValue.LastTradePriceOnly * transaction.Quantity) > transaction.User.Money) return;
@@ -334,11 +334,19 @@ namespace GameOfStocksHT16.Services
             var stocks = new List<Stock>();
             var webRootPath = _hostingEnvironment.WebRootPath;
             var path = Path.Combine(webRootPath, "stocks.json");
-            using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+            try
             {
-                var json = r.ReadToEnd();
-                stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+                {
+                    var json = r.ReadToEnd();
+                    stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                }
             }
+            catch (Exception)
+            {
+                return stocks;
+            }
+           
             return stocks;
         }
 

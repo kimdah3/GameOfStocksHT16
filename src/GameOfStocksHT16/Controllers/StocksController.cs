@@ -16,13 +16,10 @@ namespace GameOfStocksHT16.Controllers
     [Route("api/Stocks")]
     public class StocksController : Controller
     {
-        private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IStockService _stockService;
 
-
-        public StocksController(IHostingEnvironment hostingEnvironment, IStockService stockService)
+        public StocksController(IStockService stockService)
         {
-            _hostingEnvironment = hostingEnvironment;
             _stockService = stockService;
         }
 
