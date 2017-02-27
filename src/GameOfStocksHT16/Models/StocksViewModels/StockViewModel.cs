@@ -20,5 +20,5 @@ namespace GameOfStocksHT16.Models.StocksViewModels
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal UsersStockTotalSum { get; set; }
 
-    }c
+    }
 }
