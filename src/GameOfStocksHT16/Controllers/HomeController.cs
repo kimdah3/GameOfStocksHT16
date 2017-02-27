@@ -148,6 +148,11 @@ namespace GameOfStocksHT16.Controllers
             return View();
         }
 
+        public IActionResult Rules()
+        {
+            return View();
+        }
+
         public IActionResult Error()
         {
             return View();
