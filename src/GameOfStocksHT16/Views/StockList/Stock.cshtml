@@ -50,7 +50,11 @@
                 <div class="col-md-6  ">
                     <div class="panel">
                         <div class="panel-body">
-                            <div class="text-center text-danger" id="error-box-buy"></div>
+                            <div id="buy-error-box" class="alert alert-warning text-center" style="display:none">
+                                <span class="fa fa-exclamation" aria-hidden="true"></span>
+                                <span class="sr-only">Error:</span>
+                                <span id="buy-error-box-text"></span>
+                            </div>
                             <h4>Köp</h4>
                             <form asp-controller="api/StockTransactions"
                                   asp-action="CreateBuyingStockTransaction"
@@ -87,7 +91,11 @@
                         <div class="panel-body">
                             @if (Model.UserHasStock)
                             {
-                                <div class="text-center text-danger" id="error-box-sell"></div>
+                                <div id="sell-error-box" class="alert alert-warning text-center" style="display:none">
+                                    <span class="fa fa-exclamation" aria-hidden="true"></span>
+                                    <span class="sr-only">Error:</span>
+                                    <span id="sell-error-box-text"></span>
+                                </div>
                                 <h4 class="">Sälj</h4>
                                 <form asp-controller="api/StockTransactions"
                                       asp-action="CreateSellingStockTransaction"
@@ -112,7 +120,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button data-loading-text="Laddar..."  class="btn btn-warning btn-block" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..."  class="btn btn-danger btn-block" type="submit">Genomför</button>
                                     </div>
                                 </form>
                             }
@@ -131,7 +139,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button data-loading-text="Laddar..."  class="btn btn-warning btn-block disabled" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..."  class="btn btn-danger btn-block disabled" type="submit">Genomför</button>
                                     </div>
                                 </div>
                             }
@@ -153,13 +161,18 @@
 
         function ajaxErrorBuy(XMLHttpRequest) {
             var errorText = XMLHttpRequest.responseText;
-            $('#error-box-buy').html(errorText);
+            if (!$('#buy-error-box').is(":visible")) {
+                $('#buy-error-box').toggle();
+            }
+            $('#buy-error-box-text').html(errorText);
         };
 
         function ajaxErrorSell(XMLHttpRequest) {
             var errorText = XMLHttpRequest.responseText;
-            console.log(errorText);
-            $('#error-box-sell').html(errorText);
+            if (!$('#sell-error-box').is(":visible")) {
+                $('#sell-error-box').toggle();
+            }
+            $('#sell-error-box-text').html(errorText);
         };
 
         function OnBegin() {
