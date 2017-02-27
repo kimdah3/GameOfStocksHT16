@@ -319,25 +319,6 @@
             <div id="chartContainer" style="height: 300px; width: 100%;"></div>
         </div>
     </div>
-    <dt>Ändra ditt lösenord:</dt>
-    <dd>
-
-        @{
-            IndexViewModel indexModel = new IndexViewModel();
-        }
-
-        @if (indexModel.HasPassword)
-        {
-            <a asp-controller="Manage" asp-action="ChangePassword" class="btn-bracketed">Ändra</a>
-        }
-        else
-        {
-            <a asp-controller="Manage" asp-action="SetPassword" class="btn-bracketed">Ändra</a>
-        }
-    </dd>
-
-
-
 </div>
 @section scripts{
     <script>

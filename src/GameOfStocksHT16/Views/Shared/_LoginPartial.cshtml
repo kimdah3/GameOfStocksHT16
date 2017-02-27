@@ -7,7 +7,9 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <li>
-        <a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Inställningar</a>
+        @*<a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Inställningar</a>*@
+        <a asp-controller="Manage" asp-action="ChangePassword">Ändra lösenord</a>
+
     </li>
     <li class="dropdown-button">
         <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="">

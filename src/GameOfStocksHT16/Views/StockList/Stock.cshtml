@@ -59,6 +59,8 @@
                                   data-ajax-success="ajaxSuccess"
                                   data-ajax="true"
                                   method="POST"
+                                  data-ajax-begin="OnBegin"
+                                  data-ajax-complete="OnComplete"
                                   data-ajax-failure="ajaxErrorBuy"
                                   class="form-horizontal">
                                 <div class="form-group">
@@ -94,6 +96,8 @@
                                       data-ajax-success="ajaxSuccess"
                                       data-ajax="true"
                                       method="POST"
+                                      data-ajax-begin="OnBegin"
+                                      data-ajax-complete="OnComplete"
                                       data-ajax-failure="ajaxErrorSell"
                                       class="form-horizontal">
                                     <div class="form-group">
@@ -108,7 +112,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button class="btn btn-warning btn-block" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..."  class="btn btn-warning btn-block" type="submit">Genomför</button>
                                     </div>
                                 </form>
                             }
@@ -127,7 +131,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button class="btn btn-warning btn-block disabled" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..."  class="btn btn-warning btn-block disabled" type="submit">Genomför</button>
                                     </div>
                                 </div>
                             }
@@ -135,7 +139,7 @@
                     </div>
                 </div>
             </div>
-            <br/>
+            <br />
             <a asp-action="Index" class="btn btn-default">Tillbaka</a>
         </div>
     </div>
@@ -157,6 +161,17 @@
             console.log(errorText);
             $('#error-box-sell').html(errorText);
         };
+
+        function OnBegin() {
+            var btn = $(this).find('button');
+            $(btn).button('loading');
+        };
+
+        function OnComplete() {
+            var btn = $(this).find('button');
+            $(btn).button('reset');
+        };
+
         $('#buy-amount').on('input',
             function () {
                 var amount = $('#buy-amount').val();
