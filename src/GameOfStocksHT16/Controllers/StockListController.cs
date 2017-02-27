@@ -27,7 +27,10 @@ namespace GameOfStocksHT16.Controllers
         [HttpGet]
         public IActionResult Index()
         {
-            return View();
+            return View(new StockListViewModel()
+            {
+                Stocks = _stockService.GetStocks()
+            });
         }
 
         [HttpGet]
@@ -63,10 +66,7 @@ namespace GameOfStocksHT16.Controllers
         [HttpGet]
         public IActionResult StockListNew()
         {
-            return View(new StockListViewModel()
-            {
-                Stocks = _stockService.GetStocks()
-            });
+            return View();
         }
     }
 }

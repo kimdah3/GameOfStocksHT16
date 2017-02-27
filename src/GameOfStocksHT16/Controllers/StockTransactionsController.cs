@@ -65,7 +65,7 @@ namespace GameOfStocksHT16.Controllers
         // POST: api/StockTransactions
         [Authorize]
         [HttpPost]
-        public IActionResult PostBuyingStockTransaction(string label, int quantity)
+        public IActionResult CreateBuyingStockTransaction(string label, int quantity)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +83,6 @@ namespace GameOfStocksHT16.Controllers
 
             if (user == null)
             {
-                ModelState.AddModelError("Description", "Logga in först.");
                 return BadRequest("Logga in först.");
             }
 
@@ -130,7 +129,7 @@ namespace GameOfStocksHT16.Controllers
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult PostSellingStockTransaction(string label, int quantity)
+        public IActionResult CreateSellingStockTransaction(string label, int quantity)
         {
             if (!ModelState.IsValid)
             {
@@ -153,8 +152,7 @@ namespace GameOfStocksHT16.Controllers
 
             if (quantity > stockOwnership.Quantity)
             {
-                ModelState.AddModelError("Description", "Du försöker sälja mer än vad du har.");
-                return BadRequest();
+                return BadRequest("Du försöker sälja mer än vad du har.");
             }
 
             var stock = _stockService.GetStockByLabel(label);
@@ -191,7 +189,9 @@ namespace GameOfStocksHT16.Controllers
                 return StatusCode(500, "A problem happend while handeling your request.");
             }
 
-            return Ok();
+            var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
+
+            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, createdStockTransaction);
         }
 
         //// DELETE: api/StockTransactions/5

@@ -5,10 +5,10 @@
 
 <section class="section-padding-medium">
     <div class="container">
-        <div class="col-md-10 col-md-offset-2">
+        <div class="col-md-8 col-md-offset-2">
             <h3>@Model.Stock.Name</h3>
             <div class="row">
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <dl class="dl-horizontal">
                         <dt>Utveckling</dt>
                         <dd>
@@ -35,7 +35,7 @@
                         <dd>@Model.Stock.Cap</dd>
                     </dl>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <dl class="dl-horizontal">
                         <dt>Ditt innehav</dt>
                         <dd>@Model.UsersQuantity</dd>
@@ -47,20 +47,19 @@
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-4  ">
+                <div class="col-md-6  ">
                     <div class="panel">
                         <div class="panel-body">
                             <div class="text-center text-danger" id="error-box-buy"></div>
-                            <h4>Skapa köp</h4>
+                            <h4>Köp</h4>
                             <form asp-controller="api/StockTransactions"
-                                  asp-action="PostBuyingStockTransaction"
+                                  asp-action="CreateBuyingStockTransaction"
                                   asp-route-label="@Model.Stock.Label"
                                   asp-anti-forgery="true"
-                                  data-ajax-success="ajaxSuccess();"
+                                  data-ajax-success="ajaxSuccess"
                                   data-ajax="true"
                                   method="POST"
-                                  data-ajax-failure="ajaxError"
-                                  data-ajax-update="#content"
+                                  data-ajax-failure="ajaxErrorBuy"
                                   class="form-horizontal">
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Antal</label>
@@ -81,32 +80,63 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4 ">
+                <div class="col-md-6 ">
                     <div class="panel">
                         <div class="panel-body">
-                            <h4 class="disabled">Skapa sälj</h4>
-                            <form method="post" class="form-horizontal ">
-                                <div asp-validation-summary="All" class="text-danger"></div>
-                                <div class="form-group">
-                                    <label class="col-md-2 control-label">Antal</label>
-                                    <div class="col-md-10">
-                                        <input name="quantity" id="quantity" type="number" min="1" class="form-control disabled">
+                            @if (Model.UserHasStock)
+                            {
+                                <div class="text-center text-danger" id="error-box-sell"></div>
+                                <h4 class="">Sälj</h4>
+                                <form asp-controller="api/StockTransactions"
+                                      asp-action="CreateSellingStockTransaction"
+                                      asp-route-label="@Model.Stock.Label"
+                                      asp-anti-forgery="true"
+                                      data-ajax-success="ajaxSuccess"
+                                      data-ajax="true"
+                                      method="POST"
+                                      data-ajax-failure="ajaxErrorSell"
+                                      class="form-horizontal">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label">Antal</label>
+                                        <div class="col-md-10">
+                                            <input name="quantity" id="quantity" type="number" min="1" class="form-control disabled">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                            <p id="sell-form-validation" class="control-label pull-left"></p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-stock-group">
+                                        <button class="btn btn-warning btn-block" type="submit">Genomför</button>
+                                    </div>
+                                </form>
+                            }
+                            else
+                            {
+                                <h4 class="disabled text-muted">Sälj</h4>
+                                <div class="form-horizontal ">
+                                    <div class="form-group">
+                                        <label class="col-md-2 control-label text-muted">Antal</label>
+                                        <div class="col-md-10">
+                                            <input name="quantity" id="quantity" type="number" min="1" class="form-control " placeholder="Du saknar denna aktie." disabled>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-12">
+                                        </div>
+                                    </div>
+                                    <div class="form-group form-stock-group">
+                                        <button class="btn btn-warning btn-block disabled" type="submit">Genomför</button>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <div class="col-md-12">
-                                        <p id="buy-form-validation" class="control-label pull-left"></p>
-                                    </div>
-                                </div>
-                                <div class="form-group form-stock-group">
-                                    <button class="btn btn-danger btn-block disabled" type="submit">Genomför</button>
-                                </div>
-                            </form>
+                            }
                         </div>
                     </div>
                 </div>
             </div>
-            <a asp-action="StockListNew" class="btn btn-default">Tillbaka</a>
+            <br/>
+            <a asp-action="Index" class="btn btn-default">Tillbaka</a>
         </div>
     </div>
 </section>
@@ -114,12 +144,18 @@
 @section scripts{
     <script>
         function ajaxSuccess() {
-            location.href = '@Url.Action("DisplayProfile","Users")'
+            location.href = '@Url.Action("DisplayProfile","Users")';
         };
 
-        function ajaxError(XMLHttpRequest) {
+        function ajaxErrorBuy(XMLHttpRequest) {
             var errorText = XMLHttpRequest.responseText;
             $('#error-box-buy').html(errorText);
+        };
+
+        function ajaxErrorSell(XMLHttpRequest) {
+            var errorText = XMLHttpRequest.responseText;
+            console.log(errorText);
+            $('#error-box-sell').html(errorText);
         };
         $('#buy-amount').on('input',
             function () {
