@@ -3,93 +3,76 @@
     ViewData["Title"] = "Profile";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<div class="container">
-    <div class="row">
-        <h2>Information</h2>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Email)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.UserName)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Money)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ReservedMoney)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TotalWorth)
-                    </th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
+<section class="section-padding-medium">
+    <div class="container">
+        <div class="row">
+
+            <div class="col-md-3">
+                <div class="well well-sm text-center">
+                    <h3>@Model.FullName</h3>
+                    <img src="@Model.PictureUrl" width="200" height="200" class="img-circle" />
+                </div>
+            </div>
+            <div class="col-md-3">
+                <br/>
+                <dl class="dl">
+                    <dt >@Html.DisplayNameFor(model => model.Email)</dt>
+                    <dd>
                         @Model.Email
-                    </td>
-                    <td>
-                        @Model.UserName
-                    </td>
-                    <td>
-                        @*                    @Html.DisplayFor(m => Model.Money)*@
-                        @Model.Money
-                    </td>
-                    <td>
-                        @*@Html.DisplayFor(m => m.ReservedMoney)*@
-                        @Model.ReservedMoney
-
-
-                    </td>
-                    <td>
-                        @*@Html.DisplayFor(m => m.TotalWorth)*@
+                    </dd>
+                    <dt>@Html.DisplayNameFor(model => model.Money)</dt>
+                    <dd>@Model.Money</dd>
+                    <dt>@Html.DisplayNameFor(model => model.ReservedMoney)</dt>
+                    <dd>@Model.ReservedMoney</dd>
+                    <dt>@Html.DisplayNameFor(model => model.TotalWorth)</dt>
+                    <dd>
                         @Model.TotalWorth
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <h4>
-            Vänteläge
-        </h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @*@Html.DisplayFor(m => m.StockTransactions)*@
-                        Datum
-                    </th>
-                    <th>
-                        Namn
-                    </th>
-                    <th>
-                        Ticker
-                    </th>
-                    <th>
-                        Antal
-                    </th>
+                    </dd>
+                </dl>
+            </div>
+            <hr/>
+            <div class="col-md-6 well well-sm">
+                <p>Plats för utvecklingskurva..</p>
+            </div>
+        </div>
+        <div class="row">
+            <h4>
+                Vänteläge
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            @*@Html.DisplayFor(m => m.StockTransactions)*@
+                            Datum
+                        </th>
+                        <th>
+                            Namn
+                        </th>
+                        <th>
+                            Ticker
+                        </th>
+                        <th>
+                            Antal
+                        </th>
 
-                    <th>
-                        Uppskattat
-                    </th>
-                    <th>
-                        Köper
-                    </th>
-                    <th>
-                        Säljer
-                    </th>
-                    <th>
-                        <i class="fa fa-clock-o"></i>
-                    </th>
-                    @*<th></th>*@
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.StockTransactions)
+                        <th>
+                            Uppskattat
+                        </th>
+                        <th>
+                            Köper
+                        </th>
+                        <th>
+                            Säljer
+                        </th>
+                        <th>
+                            <i class="fa fa-clock-o"></i>
+                        </th>
+                        @*<th></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockTransactions)
             {
                 if (item.IsCompleted)
                 {
@@ -122,155 +105,155 @@
                         @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
                     </td>
                 </tr>
-                }
+                    }
 
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <h4>
-            Aktier
-        </h4>
-        <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
-            <span id="buy-sell-error"></span>
+                </tbody>
+            </table>
         </div>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="col-lg-2">
-                        Namn
-                    </th>
-                    <th class="col-lg-1">
-                        Ticker
-                    </th>
-                    <th class="col-lg-1">
-                        Antal
-                    </th>
-                    <th class="col-lg-1">
-                        Totalt värde
-                    </th>
-                    <th class="col-lg-1">
-                        GAV
-                    </th>
-                    <th class="col-lg-1">Aktuell kurs</th>
-                    <th class="col-lg-1">Utveckling</th>
-                    <th class="col-lg-2"></th>
-                    <th class="col-lg-2"></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.StockOwnerships)
-            {
+        <div class="row">
+            <h4>
+                Aktier
+            </h4>
+            <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
+                <span id="buy-sell-error"></span>
+            </div>
+            <table class="table">
+                <thead>
                     <tr>
-                        <td>
-                            <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Label)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Quantity)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.TotalSum)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Gav)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.LastTradePrice)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => item.Growth)%
-                        </td>
-                        <td>
-                            <form asp-controller="api/StockTransactions"
-                                  asp-action="CreateSellingStockTransaction"
-                                  asp-route-label="@item.Label"
-                                  asp-anti-forgery="true"
-                                  data-ajax-success="ajaxSuccess"
-                                  data-ajax="true"
-                                  data-ajax-method="POST"
-                                  data-ajax-failure="ajaxError"
-                                  data-ajax-begin="OnBegin"
-                                  data-ajax-complete="OnComplete"
-                                  class="">
-                                <div class="input-group input-group-sm">
-                                    <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button  data-loading-text="Laddar..." class="btn btn-danger" type="submit">Sälj</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </td>
-                        <td>
-                            <form asp-controller="api/StockTransactions"
-                                  asp-action="CreateBuyingStockTransaction"
-                                  asp-route-label="@item.Label"
-                                  asp-anti-forgery="true"
-                                  data-ajax-success="ajaxSuccess"
-                                  data-ajax="true"
-                                  data-ajax-method="POST"
-                                  data-ajax-begin="OnBegin"
-                                  data-ajax-complete="OnComplete"
-                                  data-ajax-failure="ajaxError">
-                                <div class="input-group input-group-sm ">
-                                    <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
-                                    <span class="input-group-btn">
-                                        <button data-loading-text="Laddar..." class="btn btn-primary" type="submit">Köp</button>
-                                    </span>
-                                </div>
-                            </form>
-                        </td>
-
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-    <div class="row">
-        <h4>
-            Historik
-        </h4>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        Datum
-                    </th>
-                    <th>
-                        Namn
-                    </th>
-                    <th>
-                        Ticker
-                    </th>
-                    <th>
-                        Antal
-                    </th>
-
-                    <th>
-                        Totalt värde
-                    </th>
-                    <th>
-                        Köp/Sälj-kurs
-                    </th>
-                    <th>
-                        Köpte
-                    </th>
-                    <th>
-                        Sålde
-                    </th>
-                    @*<th>
-                            <i class="fa fa-clock-o"></i>
-                        </th>*@
-                    @*<th>
-                            IsCompleted
+                        <th class="col-lg-2">
+                            Namn
                         </th>
-                        <th></th>*@
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.StockTransactions)
+                        <th class="col-lg-1">
+                            Ticker
+                        </th>
+                        <th class="col-lg-1">
+                            Antal
+                        </th>
+                        <th class="col-lg-1">
+                            Totalt värde
+                        </th>
+                        <th class="col-lg-1">
+                            GAV
+                        </th>
+                        <th class="col-lg-1">Aktuell kurs</th>
+                        <th class="col-lg-1">Utveckling</th>
+                        <th class="col-lg-2"></th>
+                        <th class="col-lg-2"></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockOwnerships)
+            {
+                        <tr>
+                            <td>
+                                <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Label)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Quantity)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalSum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Gav)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.LastTradePrice)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Growth)%
+                            </td>
+                            <td>
+                                <form asp-controller="api/StockTransactions"
+                                      asp-action="CreateSellingStockTransaction"
+                                      asp-route-label="@item.Label"
+                                      asp-anti-forgery="true"
+                                      data-ajax-success="ajaxSuccess"
+                                      data-ajax="true"
+                                      data-ajax-method="POST"
+                                      data-ajax-failure="ajaxError"
+                                      data-ajax-begin="OnBegin"
+                                      data-ajax-complete="OnComplete"
+                                      class="">
+                                    <div class="input-group input-group-sm">
+                                        <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button data-loading-text="Laddar..." class="btn btn-danger" type="submit">Sälj</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </td>
+                            <td>
+                                <form asp-controller="api/StockTransactions"
+                                      asp-action="CreateBuyingStockTransaction"
+                                      asp-route-label="@item.Label"
+                                      asp-anti-forgery="true"
+                                      data-ajax-success="ajaxSuccess"
+                                      data-ajax="true"
+                                      data-ajax-method="POST"
+                                      data-ajax-begin="OnBegin"
+                                      data-ajax-complete="OnComplete"
+                                      data-ajax-failure="ajaxError">
+                                    <div class="input-group input-group-sm ">
+                                        <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
+                                        <span class="input-group-btn">
+                                            <button data-loading-text="Laddar..." class="btn btn-primary" type="submit">Köp</button>
+                                        </span>
+                                    </div>
+                                </form>
+                            </td>
+
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="row">
+            <h4>
+                Historik
+            </h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>
+                            Datum
+                        </th>
+                        <th>
+                            Namn
+                        </th>
+                        <th>
+                            Ticker
+                        </th>
+                        <th>
+                            Antal
+                        </th>
+
+                        <th>
+                            Totalt värde
+                        </th>
+                        <th>
+                            Köp/Sälj-kurs
+                        </th>
+                        <th>
+                            Köpte
+                        </th>
+                        <th>
+                            Sålde
+                        </th>
+                        @*<th>
+                                <i class="fa fa-clock-o"></i>
+                            </th>*@
+                        @*<th>
+                                IsCompleted
+                            </th>
+                            <th></th>*@
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.StockTransactions)
             {
                 if (!item.IsCompleted)
                 {
@@ -308,18 +291,19 @@
                             @Html.DisplayFor(modelItem => item.IsCompleted)
                         </td>*@
                 </tr>
-                }
+                    }
 
-            </tbody>
-        </table>
-    </div>
+                </tbody>
+            </table>
+        </div>
 
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div id="chartContainer" style="height: 300px; width: 100%;"></div>
+            </div>
         </div>
     </div>
-</div>
+</section>
 @section scripts{
     <script>
         function ajaxSuccess() {

@@ -105,7 +105,7 @@ namespace GameOfStocksHT16.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Money = 100000};
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Money = 100000 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -173,7 +173,7 @@ namespace GameOfStocksHT16.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(5, "User logged in with {Name} provider.", info.LoginProvider);
-                return RedirectToLocal(returnUrl);
+                return RedirectToAction("News", "Home");
             }
             if (result.RequiresTwoFactor)
             {
@@ -189,7 +189,9 @@ namespace GameOfStocksHT16.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.Principal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                var name = info.Principal.FindFirstValue(ClaimTypes.Name);
+                var pictureUrl = info.Principal.FindFirstValue("pictureUrl");
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email, FullName = name, PictureUrl = pictureUrl });
             }
         }
 
@@ -208,7 +210,7 @@ namespace GameOfStocksHT16.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, PictureUrl = model.PictureUrl, Money = 100000 };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -217,7 +219,7 @@ namespace GameOfStocksHT16.Controllers
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
-                        return RedirectToLocal(returnUrl);
+                        return RedirectToAction("About", "Home");
                     }
                 }
                 AddErrors(result);

@@ -48,7 +48,9 @@ namespace GameOfStocksHT16.Controllers
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money + user.ReservedMoney
+                    TotalWorth = user.Money + user.ReservedMoney,
+                    FullName = user.FullName,
+                    PictureUrl = user.PictureUrl
                 };
 
                 var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
@@ -91,7 +93,9 @@ namespace GameOfStocksHT16.Controllers
                 Money = user.Money,
                 StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
                 StockTransactions = GetStockTransWithTimeLeft(user),
-                TotalWorth = user.Money + user.ReservedMoney
+                TotalWorth = user.Money + user.ReservedMoney,
+                FullName = user.FullName,
+                PictureUrl = user.PictureUrl
             };
 
             foreach (var s in model.StockOwnerships)
@@ -121,7 +125,9 @@ namespace GameOfStocksHT16.Controllers
                     TotalWorth = user.Money + user.ReservedMoney,
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                    ProgressAllDays = _stockService.GetUserTotalWorthProgress(user.Email)
+                    ProgressAllDays = _stockService.GetUserTotalWorthProgress(user.Email),
+                    FullName = user.FullName,
+                    PictureUrl = user.PictureUrl
                 };
 
                 foreach (var s in model.StockOwnerships)

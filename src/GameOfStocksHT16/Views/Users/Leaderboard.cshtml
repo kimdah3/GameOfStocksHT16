@@ -9,7 +9,8 @@
         <table class="table table-bordered table-condensed table-striped">
             <thead>
                 <tr>
-                    <th class="text-center">#</th>
+                    <th class="text-center col-md-1">#</th>
+                    <th class="col-md-1"></th>
                     <th>Email</th>
                     <th>Totala tillgångar</th>
                     <th>Utveckling</th>
@@ -21,9 +22,17 @@
                     int i = Model.AllUsers.IndexOf(item);
                     <tr>
                         <td class="text-center">@(i + 1)</td>
+                        <td class="text-center"><img src="@item.PictureUrl" width="50" height="50" class="img-circle" /></td>
                         <td>
-                            <a asp-action="VisitProfile" asp-route-email="@item.Email">
-                                @item.Email
+                            <a class="" asp-action="VisitProfile" asp-route-email="@item.Email">
+                                @if (item.FullName == null)
+                                {
+                                    @item.Email
+                                }
+                                else
+                                {
+                                    @item.FullName
+                                }
                             </a>
                         </td>
                         <td>

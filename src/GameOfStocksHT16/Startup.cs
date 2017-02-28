@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Security.Claims;
 using System.Threading;
+using System.Threading.Tasks;
+using Facebook;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
@@ -12,6 +15,7 @@ using Microsoft.Extensions.Logging;
 using GameOfStocksHT16.Data;
 using GameOfStocksHT16.Entities;
 using GameOfStocksHT16.Services;
+using Microsoft.AspNetCore.Authentication.OAuth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 
@@ -76,11 +80,20 @@ namespace GameOfStocksHT16
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
+            var sslPort = 0;
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
                 app.UseBrowserLink();
+
+                var builder = new ConfigurationBuilder()
+                    .SetBasePath(env.ContentRootPath)
+                    .AddJsonFile(@"Properties/launchSettings.json", optional: false, reloadOnChange: true);
+                var launchConfig = builder.Build();
+                sslPort = launchConfig.GetValue<int>("iisSettings:iisExpress:sslPort");
+
             }
             else
             {
@@ -120,7 +133,42 @@ namespace GameOfStocksHT16
                 cfg.CreateMap<Entities.StockTransaction, Models.StockTransationDto>();
             });
 
+            // FACEBOOK
+            var facebookAuthenticatonOptions = new FacebookOptions
+            {
+                AppId = Configuration["Authentication:Facebook:AppId"],
+                AppSecret = Configuration["Authentication:Facebook:AppSecret"],
+                Events = new OAuthEvents
+                {
+                    OnCreatingTicket = context =>
+                    {
+                        var client = new FacebookClient(context.AccessToken);
+                        dynamic info = client.Get("me", new { fields = "name,id,email,picture.width(300).height(300)" });
+                        context.Identity.AddClaim(new Claim("pictureUrl", (string)info["picture"]["data"]["url"]));
+                        context.Identity.AddClaim(new Claim(ClaimTypes.Email, info.email));
+                        return Task.FromResult(0);
+                    }
+                }
+            };
+            facebookAuthenticatonOptions.Scope.Add("public_profile");
+            facebookAuthenticatonOptions.Scope.Add("email");
+            app.UseFacebookAuthentication(facebookAuthenticatonOptions);
+
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+
+            app.Use(async (context, next) =>
+            {
+                if (context.Request.IsHttps)
+                {
+                    await next();
+                }
+                else
+                {
+                    var sslPortStr = sslPort == 0 || sslPort == 443 ? string.Empty : $":{sslPort}";
+                    var httpsUrl = $"https://{context.Request.Host.Host}{sslPortStr}{context.Request.Path}";
+                    context.Response.Redirect(httpsUrl);
+                }
+            });
 
             app.UseMvc(routes =>
             {

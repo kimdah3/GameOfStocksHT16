@@ -135,7 +135,6 @@ namespace GameOfStocksHT16.Services
                     {
                         SellStock(transaction);
                     }
-                    transaction.IsCompleted = true;
                 }
                 _gameOfStocksRepository.AddStockOwnerships(newOwnerships);
             }
@@ -149,6 +148,7 @@ namespace GameOfStocksHT16.Services
             var stockRecentValue = GetStockByLabel(transaction.Label);
             transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
             transaction.Bid = stockRecentValue.LastTradePriceOnly;
+            transaction.IsCompleted = true;
             _gameOfStocksRepository.Save();
         }
 
@@ -200,6 +200,7 @@ namespace GameOfStocksHT16.Services
             }
 
             transaction.User.Money -= transaction.TotalMoney;
+            transaction.IsCompleted = true;
         }
 
 

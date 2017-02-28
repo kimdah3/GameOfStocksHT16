@@ -11,6 +11,8 @@ namespace GameOfStocksHT16.Entities
     {
         public decimal Money { get; set; }
         public decimal ReservedMoney { get; set; }
+        public string FullName { get; set; }
+        public string PictureUrl { get; set; }
 
         public virtual List<StockTransaction> StockTransactions { get; set; }
         public virtual List<StockOwnership> StockOwnerships { get; set; }
