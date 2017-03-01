@@ -79,32 +79,40 @@ namespace GameOfStocksHT16.Controllers
         [HttpGet]
         public ActionResult VisitProfile(string email)
         {
-            var user = _gameOfStocksRepository.GetUserByEmail(email);
-                //_dbContext.Users.FirstOrDefault(u => u.Email == email);
-            if (user == null)
+            var userId = _userManager.GetUserId(HttpContext.User);
+            var userToCheck = _gameOfStocksRepository.GetUserById(userId);
+            var userToDisplay = _gameOfStocksRepository.GetUserByEmail(email);
+
+            if (userToDisplay == null)
             {
                 ModelState.AddModelError("email", "No user with that email");
                 return View();
             }
-
-            var model = new ProfileViewModel
+            else if (userToCheck.Email == email)
             {
-                Email = user.Email,
-                Money = user.Money,
-                StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                StockTransactions = GetStockTransWithTimeLeft(user),
-                TotalWorth = user.Money + user.ReservedMoney,
-                FullName = user.FullName,
-                PictureUrl = user.PictureUrl
-            };
-
-            foreach (var s in model.StockOwnerships)
-            {
-                model.TotalWorth += (s.Quantity * s.LastTradePrice);
+                return RedirectToAction("DisplayProfile");
             }
+            else
+            {
+                var model = new ProfileViewModel
+                {
+                    Email = userToDisplay.Email,
+                    Money = userToDisplay.Money,
+                    StockOwnerships = GetOwnershipsWithLastTradePriceByUser(userToDisplay),
+                    StockTransactions = GetStockTransWithTimeLeft(userToDisplay),
+                    TotalWorth = userToDisplay.Money + userToDisplay.ReservedMoney,
+                    FullName = userToDisplay.FullName,
+                    PictureUrl = userToDisplay.PictureUrl
+                };
 
-           
-            return View(model);
+                foreach (var s in model.StockOwnerships)
+                {
+                    model.TotalWorth += (s.Quantity * s.LastTradePrice);
+                }
+
+
+                return View(model);
+            }
         }
 
 
