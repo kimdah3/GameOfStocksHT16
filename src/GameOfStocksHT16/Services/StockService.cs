@@ -160,9 +160,6 @@ namespace GameOfStocksHT16.Services
             //If no recent buyer of stock, skip transaction
             if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
 
-            //If no money, skip transaction for now
-            if ((stockRecentValue.LastTradePriceOnly * transaction.Quantity) > transaction.User.Money) return;
-
             //Restore reserved money
             transaction.User.Money += transaction.TotalMoney;
             transaction.User.ReservedMoney -= transaction.TotalMoney;
@@ -170,6 +167,9 @@ namespace GameOfStocksHT16.Services
             //Update transaction with in time values
             transaction.Bid = stockRecentValue.LastTradePriceOnly;
             transaction.TotalMoney = stockRecentValue.LastTradePriceOnly * transaction.Quantity;
+
+            //If no money, skip transaction for now
+            if (transaction.TotalMoney > transaction.User.Money) return;
 
             var existingOwnership = transaction.User.StockOwnerships.FirstOrDefault(s => s.Label == transaction.Label);
             var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
@@ -347,7 +347,7 @@ namespace GameOfStocksHT16.Services
             {
                 return stocks;
             }
-           
+
             return stocks;
         }
 
