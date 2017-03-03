@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -97,6 +98,14 @@ namespace GameOfStocksHT16.Controllers
             if ((stock.Volume * 1 / 5) <= quantity)
             {
                 return BadRequest("Du kan inte handla mer än 20% av en akties totala volym.");
+            }
+
+            var ownership = user.StockOwnerships.FirstOrDefault(s => s.Label == label);
+            if (ownership != null && (stock.Volume * 1 / 5) <= ownership.Quantity + quantity)
+            {
+                var currentOwnerShipPercent = Math.Round((double)(ownership.Quantity) / stock.Volume * 100, 2);
+                var requestedQuantityPercent = Math.Round((double)(ownership.Quantity + quantity) / stock.Volume * 100, 2);
+                return BadRequest("Antalet du äger kan inte överstiga mer än 20% av dagsvolymen, du äger just nu " + currentOwnerShipPercent + "% och försöker köpa totalt " + requestedQuantityPercent + "%.");
             }
 
             var stockTransaction = new StockTransaction()

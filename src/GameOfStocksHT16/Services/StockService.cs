@@ -201,6 +201,9 @@ namespace GameOfStocksHT16.Services
 
             transaction.User.Money -= transaction.TotalMoney;
             transaction.IsCompleted = true;
+            _gameOfStocksRepository.Save();
+
+            // MÅSTE SPARA CONTEXTEN?? ANNARS FÖRSVINNER DE NYA VÄRDERNA.
         }
 
 
@@ -225,9 +228,9 @@ namespace GameOfStocksHT16.Services
             try
             {
                 var url = Startup.Configuration["StockQueries:HT16LargeMidSmall"];
-                //LARGE 0 - 105 
-                //MID 106 - 225 (120 st)
-                //SMALL 226 - 334 (109 st)
+                //LARGE 0 - 104 
+                //MID 105 - 223 (120 st)
+                //SMALL 224 - 332 (109 st)
 
                 if (!IsTradingTime()) return;
 
@@ -249,10 +252,12 @@ namespace GameOfStocksHT16.Services
                             var cap = "LargeCap";
 
                             // Kollar om aktien är large - mid - small cap
-                            if (rowNumber > 105 && rowNumber < 226)
+                            if (rowNumber > 104 && rowNumber < 224)
                                 cap = "MidCap";
-                            else if (rowNumber > 225)
+                            else if (rowNumber >= 224 && rowNumber < 332)
                                 cap = "SmallCap";
+                            else if(rowNumber >= 333)
+                                cap = "FirstNorth";
 
 
                             var fields = csvReader.CurrentRecord;
