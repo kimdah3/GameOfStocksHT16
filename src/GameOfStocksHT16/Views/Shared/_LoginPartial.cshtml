@@ -8,7 +8,9 @@
 {
     <li>
         @*<a asp-area="" asp-controller="Manage" asp-action="Index" title="Manage">Inställningar</a>*@
-        <a asp-controller="Home" asp-action="Rules">Tävlingsregler</a>
+        <a asp-area="" asp-controller="Home" asp-action="About">Om tävlingen</a>
+        <a asp-controller="Home" asp-action="Rules">Regler</a>
+
         <a asp-controller="Manage" asp-action="ChangePassword">Ändra lösenord</a>
 
     </li>
@@ -16,7 +18,7 @@
         <form asp-area="" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="">
             <button type="submit" class="">Logga ut</button>
         </form>
-    </li>   
+    </li>
 }
 else
 {

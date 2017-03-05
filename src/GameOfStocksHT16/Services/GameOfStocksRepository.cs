@@ -71,7 +71,7 @@ namespace GameOfStocksHT16.Services
 
         public List<ApplicationUser> GetUsersWithPendingStockTransactions()
         {
-            return _context.Users.Include(u => u.StockTransactions).Where(u => u.StockTransactions.Any(s => (s.IsBuying || s.IsSelling) && !s.IsCompleted)).ToList();
+            return _context.Users.Include(u => u.StockTransactions).Where(u => u.StockTransactions.Any(s => (s.IsBuying || s.IsSelling) && !s.IsCompleted && !s.IsFailed)).ToList();
         }
 
         public bool Save()
