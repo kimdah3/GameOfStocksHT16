@@ -18,7 +18,7 @@
                         </dd>
                         <dt>Antal</dt>
                         <dd>@Model.Stock.Volume</dd>
-                        <dt>Senast</dt>
+                        <dt>Pris</dt>
                         <dd>@Model.Stock.LastTradePriceOnly</dd>
                         <dt>Öppningspris</dt>
                         <dd>@Model.Stock.Open</dd>
@@ -176,6 +176,12 @@
         };
 
         function OnBegin() {
+            if ($('#sell-error-box').is(":visible")) {
+                $('#sell-error-box').toggle();
+            }
+            if ($('#buy-error-box').is(":visible")) {
+                $('#buy-error-box').toggle();
+            }
             var btn = $(this).find('button');
             $(btn).button('loading');
         };

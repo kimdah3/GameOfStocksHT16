@@ -31,7 +31,7 @@ namespace GameOfStocksHT16.Services
 
         public ApplicationUser GetUserById(string userId)
         {
-            return _context.Users.FirstOrDefault(u => u.Id == userId);
+            return _context.Users.Include(x => x.StockTransactions).Include(x => x.StockOwnerships).FirstOrDefault(u => u.Id == userId);
         }
 
         public ApplicationUser GetUserByEmail(string email)
@@ -66,7 +66,7 @@ namespace GameOfStocksHT16.Services
 
         public IEnumerable<ApplicationUser> GetAllUsers()
         {
-            return _context.Users.Include(u => u.StockOwnerships).ToList();
+            return _context.Users.Include(u => u.StockOwnerships).Include(u => u.StockTransactions).ToList();
         }
 
         public List<ApplicationUser> GetUsersWithPendingStockTransactions()

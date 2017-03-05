@@ -9,6 +9,8 @@ using GameOfStocksHT16.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
+using GameOfStocksHT16.Entities;
 
 namespace GameOfStocksHT16.Controllers
 {
@@ -16,17 +18,20 @@ namespace GameOfStocksHT16.Controllers
     {
         private readonly IStockService _stockService;
         private IGameOfStocksRepository _gameOfStocksRepository;
+        private SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(ApplicationDbContext dbContext, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
+        public HomeController(ApplicationDbContext dbContext, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository, SignInManager<ApplicationUser> signInManager)
         {
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
+            _signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
+            if (_signInManager.IsSignedIn(User)) return RedirectToAction("News");
+
             var users = _gameOfStocksRepository.GetAllUsers().OrderByDescending(u => u.Money).ToList();
-                //_dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
             var allUsers = new List<UserModel>();
 
             var model = new HomeViewModel()
@@ -44,45 +49,33 @@ namespace GameOfStocksHT16.Controllers
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money + user.ReservedMoney
+                    TotalWorth = user.Money + user.ReservedMoney,
+                    FullName = user.FullName,
+                    GrowthPercent = 0
                 };
 
-                foreach (var stockOwnership in user.StockOwnerships)
-                {
-                    userWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(stockOwnership.Label).LastTradePriceOnly * stockOwnership.Quantity;
-                    userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
-                }
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromStockTransactionsByUser(user);
+                userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
 
                 allUsers.Add(userWithTotalWorth);
             }
 
             model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).Take(5).ToList();
 
-            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
-            var usersWithPercentPerDay = new List<UserModel>();
-
-            foreach (var userWithTotal in usersTotalWorthPerDay)
-            {
-                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
-
-                usersWithPercentPerDay.Add(new UserModel()
-                {
-                    Email = userWithTotal.Email,
-                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
-                });
-            }
-
+            var usersWithPercentPerDay = GetUsersPercentPerDay(allUsers);
             model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).Take(5).ToList();
             model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).Take(5).ToList();
 
             return View(model);
         }
 
+       
+
         [Authorize]
         public IActionResult News()
         {
             var users = _gameOfStocksRepository.GetAllUsers().OrderByDescending(u => u.Money);
-                //_dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
             var allUsers = new List<UserModel>();
 
             var model = new HomeViewModel()
@@ -100,34 +93,21 @@ namespace GameOfStocksHT16.Controllers
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money + user.ReservedMoney
+                    TotalWorth = user.Money + user.ReservedMoney,
+                    FullName = user.FullName,
+                    GrowthPercent = 0
                 };
 
-                foreach (var stockOwnership in user.StockOwnerships)
-                {
-                    userWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(stockOwnership.Label).LastTradePriceOnly * stockOwnership.Quantity;
-                    userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
-                }
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromStockTransactionsByUser(user);
+                userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
 
                 allUsers.Add(userWithTotalWorth);
             }
 
             model.CurrentLeaderBoard = allUsers.OrderByDescending(u => u.TotalWorth).Take(5).ToList();
 
-            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
-            var usersWithPercentPerDay = new List<UserModel>();
-
-            foreach (var userWithTotal in usersTotalWorthPerDay)
-            {
-                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
-
-                usersWithPercentPerDay.Add(new UserModel()
-                {
-                    Email = userWithTotal.Email,
-                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
-                });
-            }
-
+            var usersWithPercentPerDay = GetUsersPercentPerDay(allUsers);
             model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).Take(5).ToList();
             model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).Take(5).ToList();
 
@@ -156,6 +136,57 @@ namespace GameOfStocksHT16.Controllers
         public IActionResult Error()
         {
             return View();
+        }
+
+        private List<UserModel> GetUsersPercentPerDay(List<UserModel> allUsers)
+        {
+            var usersWithPercentPerDay = new List<UserModel>();
+            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
+
+            foreach (var userWithTotal in usersTotalWorthPerDay)
+            {
+                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
+
+                usersWithPercentPerDay.Add(new UserModel()
+                {
+                    Email = userWithTotal.Email,
+                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
+                });
+            }
+
+            return usersWithPercentPerDay;
+        }
+
+        private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
+        {
+            var total = 0M;
+            var ownerships = user.StockOwnerships;
+
+            if (ownerships.Any())
+            {
+                foreach (var ownership in ownerships)
+                {
+                    total += _stockService.GetStockByLabel(ownership.Label).LastTradePriceOnly * ownership.Quantity;
+                }
+            }
+
+            return total;
+        }
+
+        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
+        {
+            var total = 0M;
+            var transactions = user.StockTransactions.Where(x => !x.IsCompleted);
+
+            if (transactions.Any())
+            {
+                foreach (var transaction in transactions)
+                {
+                    total += _stockService.GetStockByLabel(transaction.Label).LastTradePriceOnly * transaction.Quantity;
+                }
+            }
+
+            return total;
         }
     }
 }

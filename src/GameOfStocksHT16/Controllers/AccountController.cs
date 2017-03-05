@@ -105,7 +105,7 @@ namespace GameOfStocksHT16.Controllers
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, Money = 100000 };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, FullName = model.FullName, Money = 100000 };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {

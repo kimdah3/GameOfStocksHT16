@@ -53,14 +53,7 @@ namespace GameOfStocksHT16.Controllers
                     PictureUrl = user.PictureUrl
                 };
 
-                var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
-
-                if(sellingStocks.Any())
-                    foreach (var sellingStock in sellingStocks)
-                    {
-                        usersWithTotalWorth.TotalWorth +=
-                            _stockService.GetStockByLabel(sellingStock.Label).LastTradePriceOnly*sellingStock.Quantity;
-                    }
+                usersWithTotalWorth.TotalWorth += GetSellingStocksWorth(user);
 
                 foreach (var ownership in user.StockOwnerships)
                 {
@@ -74,6 +67,20 @@ namespace GameOfStocksHT16.Controllers
             }
             model.AllUsers = model.AllUsers.OrderByDescending(x => x.TotalWorth).ToList();
             return View(model);
+        }
+
+        private decimal GetSellingStocksWorth(ApplicationUser user)
+        {
+            var total = 0M;
+            var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
+            if (sellingStocks.Any())
+                foreach (var sellingStock in sellingStocks)
+                {
+                    total +=
+                        _stockService.GetStockByLabel(sellingStock.Label).LastTradePriceOnly * sellingStock.Quantity;
+                }
+
+            return total;
         }
 
         [HttpGet]
@@ -110,6 +117,7 @@ namespace GameOfStocksHT16.Controllers
                     model.TotalWorth += (s.Quantity * s.LastTradePrice);
                 }
 
+                model.TotalWorth += GetSellingStocksWorth(userToDisplay);
 
                 return View(model);
             }
@@ -143,12 +151,12 @@ namespace GameOfStocksHT16.Controllers
                     model.TotalWorth = model.TotalWorth+ (s.Quantity * s.LastTradePrice);
                 }
 
+                model.TotalWorth += GetSellingStocksWorth(user);
+
                 return View(model);
             }
             return RedirectToAction("Login", "Account");
         }
-
-
 
         [HttpGet]
         [Route("api/Users/[action]")]

@@ -74,7 +74,7 @@
                     @foreach (var item in Model.CurrentLeaderBoard)
                     {
                         <tr>
-                            <td>@item.Email</td>
+                            <td>@item.FullName</td>
                             <td>
                                 @item.TotalWorth kr
                                 @if (item.GrowthPercent > 0)
@@ -107,7 +107,7 @@
                     @foreach (var item in Model.TodaysWinners)
                     {
                         <tr>
-                            <td>@item.Email</td>
+                            <td>@item.FullName</td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
@@ -137,7 +137,7 @@
                     @foreach (var item in Model.TodaysLoosers)
                     {
                         <tr>
-                            <td>@item.Email</td>
+                            <td>@item.FullName</td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>

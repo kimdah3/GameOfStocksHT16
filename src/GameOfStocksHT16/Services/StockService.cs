@@ -114,7 +114,7 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactionsSimplified(object state)
         {
-            if (!IsTradingTime()) return;
+            //if (!IsTradingTime()) return;
 
             var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
             var newOwnerships = new List<StockOwnership>();
@@ -123,9 +123,9 @@ namespace GameOfStocksHT16.Services
             {
                 foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted))
                 {
-                    //Wait 15 min before completing transaction.
-                    var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                    if (DateTime.Now < newTime) continue;
+                    ////Wait 15 min before completing transaction.
+                    //var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                    //if (DateTime.Now < newTime) continue;
 
                     if (transaction.IsBuying)
                     {
@@ -149,7 +149,6 @@ namespace GameOfStocksHT16.Services
             transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
             transaction.Bid = stockRecentValue.LastTradePriceOnly;
             transaction.IsCompleted = true;
-            _gameOfStocksRepository.Save();
         }
 
         private void BuyStock(StockTransaction transaction, ref List<StockOwnership> newOwnerships)
@@ -158,7 +157,7 @@ namespace GameOfStocksHT16.Services
             var stockRecentValue = GetStockByLabel(transaction.Label);
 
             //If no recent buyer of stock, skip transaction
-            if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+            //if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
 
             //Restore reserved money
             transaction.User.Money += transaction.TotalMoney;
@@ -201,8 +200,6 @@ namespace GameOfStocksHT16.Services
 
             transaction.User.Money -= transaction.TotalMoney;
             transaction.IsCompleted = true;
-            _gameOfStocksRepository.Save();
-
             // MÅSTE SPARA CONTEXTEN?? ANNARS FÖRSVINNER DE NYA VÄRDERNA.
         }
 

@@ -66,46 +66,35 @@ namespace GameOfStocksHT16.Controllers
         // POST: api/StockTransactions
         [Authorize]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult CreateBuyingStockTransaction(string label, int quantity)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions())
-                return BadRequest("Börsen är stängd.");
-
-            if (quantity <= 0)
-                return BadRequest("Du kan inte handla 0 eller mindre.");
+            //if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);
 
-            if (user == null)
-            {
-                return BadRequest("Logga in först.");
-            }
+            if (user == null) return BadRequest("Logga in först.");
 
             var stock = _stockService.GetStockByLabel(label);
+            if (quantity <= 0 || stock.Volume < quantity) return BadRequest("Du kan inte handla mindre än 0 eller mer än aktiens volym.");
 
-            if (user.Money <= stock.LastTradePriceOnly * quantity)
-            {
-                return BadRequest("Inte tillräckligt med pengar.");
-            }
+            if (user.Money <= stock.LastTradePriceOnly * quantity) return BadRequest("Inte tillräckligt med pengar.");
 
             //If quantity is over 20%
-            if ((stock.Volume * 1 / 5) <= quantity)
-            {
-                return BadRequest("Du kan inte handla mer än 20% av en akties totala volym.");
-            }
+            var maxStockVolume = (double)stock.Volume * 1 / 5;
+            if (maxStockVolume <= quantity) return BadRequest("Du kan inte handla mer än 20% av en akties totala volym.");
 
-            var ownership = user.StockOwnerships.FirstOrDefault(s => s.Label == label);
-            if (ownership != null && (stock.Volume * 1 / 5) <= ownership.Quantity + quantity)
+            //If quantity in possesion and pending is over 20% in stock volume
+            var quantityInPossesion = GetUsersStockQuantityInPossesion(user, label) + GetUsersStockQuantityInPending(user, label);
+            if ((quantityInPossesion + quantity) > maxStockVolume)
             {
-                var currentOwnerShipPercent = Math.Round((double)(ownership.Quantity) / stock.Volume * 100, 2);
-                var requestedQuantityPercent = Math.Round((double)(ownership.Quantity + quantity) / stock.Volume * 100, 2);
-                return BadRequest("Antalet du äger kan inte överstiga mer än 20% av dagsvolymen, du äger just nu " + currentOwnerShipPercent + "% och försöker köpa totalt " + requestedQuantityPercent + "%.");
+                var currentOwnerShipPercent = Math.Round((double)(quantityInPossesion) / stock.Volume * 100, 2);
+                var requestedQuantityPercent = Math.Round((double)(quantityInPossesion + quantity) / stock.Volume * 100, 2);
+                return BadRequest("Antalet du äger kan inte överstiga mer än 20% av dagsvolymen, du äger just nu "
+                        + currentOwnerShipPercent + "% och försöker köpa totalt " + requestedQuantityPercent + "%.");
             }
 
             var stockTransaction = new StockTransaction()
@@ -122,6 +111,7 @@ namespace GameOfStocksHT16.Controllers
                 User = user
             };
 
+            //Reserve money
             user.Money -= stockTransaction.TotalMoney;
             user.ReservedMoney += stockTransaction.TotalMoney;
 
@@ -140,29 +130,18 @@ namespace GameOfStocksHT16.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult CreateSellingStockTransaction(string label, int quantity)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest(ModelState);
-            }
+            if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions())
-                return BadRequest("Börsen är stängd.");
+            //if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);
 
             var stockOwnership = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(user, label);
 
-            if (user == null || stockOwnership == null || quantity <= 0)
-            {
-                ModelState.AddModelError("Description", "Något gick åt skogen.");
-                return BadRequest();
-            }
+            if (user == null || stockOwnership == null || quantity <= 0) return BadRequest("Något gick åt skogen.");
 
-            if (quantity > stockOwnership.Quantity)
-            {
-                return BadRequest("Du försöker sälja mer än vad du har.");
-            }
+            if (quantity > stockOwnership.Quantity) return BadRequest("Du försöker sälja mer än vad du har.");
 
             var stock = _stockService.GetStockByLabel(label);
 
@@ -183,7 +162,9 @@ namespace GameOfStocksHT16.Controllers
             _gameOfStocksRepository.AddStockTransactions(stockTransaction);
 
             if (stockOwnership.Quantity == quantity)
+            {
                 _gameOfStocksRepository.RemoveStockOwnership(stockOwnership);
+            }
             else
             {
                 stockOwnership.Quantity -= quantity;
@@ -193,14 +174,38 @@ namespace GameOfStocksHT16.Controllers
             if (!_gameOfStocksRepository.Save())
             {
                 if (_gameOfStocksRepository.StockTransactionExists(stockTransaction))
+                {
                     return new StatusCodeResult(StatusCodes.Status409Conflict);
-
+                }
                 return StatusCode(500, "A problem happend while handeling your request.");
             }
 
             var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
 
             return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, createdStockTransaction);
+        }
+
+        private int GetUsersStockQuantityInPossesion(ApplicationUser user, string label)
+        {
+            var quantity = 0;
+
+            var ownership = user.StockOwnerships.FirstOrDefault(s => s.Label == label);
+            if (ownership != null) quantity = ownership.Quantity;
+
+            return quantity;
+        }
+
+        private int GetUsersStockQuantityInPending(ApplicationUser user, string label)
+        {
+            var quantity = 0;
+            var pendingTransactions = user.StockTransactions.Where(s => s.Label == label && s.IsBuying && !s.IsCompleted);
+            if (pendingTransactions.Any())
+            {
+                foreach (var transation in pendingTransactions)
+                    quantity += transation.Quantity;
+            }
+
+            return quantity;
         }
 
         //// DELETE: api/StockTransactions/5

@@ -92,14 +92,20 @@
 .font-color-red {
     color: red;
 }
+
 .font-percent {
     font-weight: bold;
 }
 
-.form-stock-group{
+.form-stock-group {
     margin-left: 0 !important;
     margin-right: 0 !important;
 }
-.fa-blue{
-    color:#3B469D;
+
+.fa-blue {
+    color: #3B469D;
+}
+
+.jumbotron-transparent {
+    background-color: transparent;
 }

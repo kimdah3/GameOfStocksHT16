@@ -10,7 +10,7 @@
 <section class="section-padding-medium">
     <div class="container">
 
-        <div class="col-md-8 col-md-offset-2 well well-lg ">
+        <div class="col-md-8 col-md-offset-2   ">
             <section class="text-center">
                 <h2>Registrera med</h2>
                 <br/>
@@ -37,10 +37,12 @@
 
                                 </p>
                                 <br/>
-                                <i class="fa fa-info-circle text-info fa-2x"></i>
-                                <p class="text-info">
-                                    Vi hämtar bild och namn för att visa på din profil i tävlingen.
-                                </p>
+                                <div class="well well-sm">
+                                    <i class="fa fa-info-circle text-info fa-2x"></i>
+                                    <p class="text-info">
+                                        Vi hämtar bild och namn för att visa på din profil i tävlingen.
+                                    </p>
+                                </div>
                             </div>
                         </form>
 
@@ -62,6 +64,13 @@
                 <div class="col-md-10">
                     <input asp-for="Email" class="form-control" />
                     <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="FullName" class="col-md-2 control-label"></label>
+                <div class="col-md-10">
+                    <input asp-for="FullName" class="form-control" />
+                    <span asp-validation-for="FullName" class="text-danger"></span>
                 </div>
             </div>
             <div class="form-group">
