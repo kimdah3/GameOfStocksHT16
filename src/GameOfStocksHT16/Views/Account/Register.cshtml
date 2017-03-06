@@ -37,7 +37,7 @@
 
                                 </p>
                                 <br/>
-                                <div class="well well-sm">
+                                <div class="">
                                     <i class="fa fa-info-circle text-info fa-2x"></i>
                                     <p class="text-info">
                                         Vi hämtar bild och namn för att visa på din profil i tävlingen.
@@ -55,6 +55,8 @@
 <section class="section-padding-medium">
     <div class="container">
     <div class="col-md-8 col-md-offset-2 text-center">
+        <br/>
+        <hr/>
         <h5>Registrera manuellt:</h5>
         <p class="text-warning"></p>
         <form asp-controller="Account" asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">

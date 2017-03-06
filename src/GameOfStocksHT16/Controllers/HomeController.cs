@@ -18,19 +18,15 @@ namespace GameOfStocksHT16.Controllers
     {
         private readonly IStockService _stockService;
         private IGameOfStocksRepository _gameOfStocksRepository;
-        private SignInManager<ApplicationUser> _signInManager;
 
-        public HomeController(ApplicationDbContext dbContext, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository, SignInManager<ApplicationUser> signInManager)
+        public HomeController(ApplicationDbContext dbContext, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
-            _signInManager = signInManager;
         }
 
         public IActionResult Index()
         {
-            if (_signInManager.IsSignedIn(User)) return RedirectToAction("News");
-
             var users = _gameOfStocksRepository.GetAllUsers().OrderByDescending(u => u.Money).ToList();
             var allUsers = new List<UserModel>();
 

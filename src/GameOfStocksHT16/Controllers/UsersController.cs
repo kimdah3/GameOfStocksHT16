@@ -184,6 +184,7 @@ namespace GameOfStocksHT16.Controllers
                     IsBuying = tran.IsBuying,
                     IsCompleted = tran.IsCompleted,
                     IsSelling = tran.IsSelling,
+                    IsFailed = tran.IsFailed,
                     Label = tran.Label,
                     Name = tran.Name,
                     Quantity = tran.Quantity,

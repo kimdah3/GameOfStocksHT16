@@ -8,25 +8,25 @@
         <div class="row">
 
             <div class="col-md-3 col-sm-6 col-xs-6">
-                <div class="well well-sm text-center">
+                <div class="text-center">
                     <h3>@Model.FullName</h3>
                     <img src="@Model.PictureUrl" width="200" height="200" class="img-circle img-center" />
                 </div>
             </div>
             <div class="col-md-3 col-sm-6 col-xs-6">
                 <br />
+                <br />
+                <br/>
                 <dl class="dl">
                     <dt>@Html.DisplayNameFor(model => model.Email)</dt>
-                    <dd>
-                        @Model.Email
-                    </dd>
+                    <dd> @Model.Email</dd>
                     <dt>@Html.DisplayNameFor(model => model.Money)</dt>
-                    <dd>@Model.Money</dd>
+                    <dd>@Html.DisplayFor(model => model.Money)</dd>
                     <dt>@Html.DisplayNameFor(model => model.ReservedMoney)</dt>
-                    <dd>@Model.ReservedMoney</dd>
+                    <dd>@Html.DisplayFor(model => model.ReservedMoney)</dd>
                     <dt>@Html.DisplayNameFor(model => model.TotalWorth)</dt>
                     <dd>
-                        @Model.TotalWorth
+                        @Html.DisplayFor(model => model.TotalWorth)
                     </dd>
                 </dl>
             </div>
@@ -77,7 +77,7 @@
                     <tbody>
                         @foreach (var item in Model.StockTransactions)
             {
-                if (item.IsCompleted)
+                if (item.IsCompleted ||item.IsFailed)
                 {
                     continue;
                 }
@@ -86,7 +86,7 @@
                         @Html.DisplayFor(modelItem => item.Date)
                     </td>
                     <td>
-                        <a  asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
+                        <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Label)
@@ -254,43 +254,112 @@
                     </thead>
                     <tbody>
                         @foreach (var item in Model.StockTransactions)
-            {
-                if (!item.IsCompleted)
-                {
-                    continue;
-                }
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Date)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Name)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Label)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Quantity)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.TotalMoney)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Bid)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsBuying)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.IsSelling)
-                    </td>
-                </tr>
+                        {
+                            if (!item.IsCompleted)
+                            {
+                                continue;
+                            }
+                            <tr>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Date)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Name)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Label)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.TotalMoney)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.Bid)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsBuying)
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(modelItem => item.IsSelling)
+                                </td>
+                            </tr>
                         }
 
                     </tbody>
                 </table>
             </div>
         </div>
+        @if (Model.StockTransactions.Any(s => s.IsFailed))
+        {
+            <div class="row">
+                <h4>
+                    Misslyckades
+                </h4>
+                <div class="table-responsive">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>
+                                    Datum
+                                </th>
+                                <th>
+                                    Namn
+                                </th>
+                                <th>
+                                    Ticker
+                                </th>
+                                <th>
+                                    Antal
+                                </th>
+
+                                <th>
+                                    Totalt värde
+                                </th>
+                                <th>
+                                    Köpte
+                                </th>
+                                <th>
+                                    Sålde
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.StockTransactions.Where(s => s.IsFailed))
+                            {
+                                
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Date)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Name)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Label)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Quantity)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Bid)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsBuying)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.IsSelling)
+                                    </td>
+                                </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        }
+
     </div>
 </section>
 @section scripts{
