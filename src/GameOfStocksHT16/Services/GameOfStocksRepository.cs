@@ -31,7 +31,7 @@ namespace GameOfStocksHT16.Services
 
         public ApplicationUser GetUserById(string userId)
         {
-            return _context.Users.Include(x => x.StockTransactions).Include(x => x.StockOwnerships).FirstOrDefault(u => u.Id == userId);
+            return _context.Users.Include(x => x.StockTransactions).Include(x => x.StockOwnerships).Include(x => x.MoneyHistory).FirstOrDefault(u => u.Id == userId);
         }
 
         public ApplicationUser GetUserByEmail(string email)
@@ -66,7 +66,7 @@ namespace GameOfStocksHT16.Services
 
         public IEnumerable<ApplicationUser> GetAllUsers()
         {
-            return _context.Users.Include(u => u.StockOwnerships).Include(u => u.StockTransactions).ToList();
+            return _context.Users.Include(u => u.StockOwnerships).Include(u => u.StockTransactions).Include(u => u.MoneyHistory).ToList();
         }
 
         public List<ApplicationUser> GetUsersWithPendingStockTransactions()
@@ -79,6 +79,14 @@ namespace GameOfStocksHT16.Services
             return (_context.SaveChanges() >= 0);
         }
 
+        public void testSaveHistory(List<UserMoneyHistory> list)
+        {
+            foreach(var entity in list)
+            {
+                _context.UserMoneyHistory.Add(entity);
+            }
+            Save(); 
+        }
         public void RemoveStockOwnership(StockOwnership stockOwnership)
         {
             _context.StockOwnership.Remove(stockOwnership);
@@ -97,6 +105,16 @@ namespace GameOfStocksHT16.Services
         public List<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user)
         {
             return _context.StockTransaction.Where(x => x.User == user && x.IsSelling && !x.IsCompleted).ToList();
+        }
+
+        public List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
+        {
+            return _context.UserMoneyHistory.Where(x => x.User == user).ToList();
+        }
+
+        public List<UserMoneyHistory> GetAllUserMoneyHistory()
+        {
+            return _context.UserMoneyHistory.ToList();
         }
     }
 }

@@ -22,6 +22,10 @@ namespace GameOfStocksHT16.Services
         StockOwnership GetStockOwnershipByUserAndLabel(ApplicationUser user, string label);
         IEnumerable<StockOwnership> GetStockOwnershipsByUser(ApplicationUser user);
 
+        List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
+
+        void SaveUsersHistory(List<UserMoneyHistory> list);
+
         void AddStockTransactions(StockTransaction stockTransaction);
         void RemoveStockOwnership(StockOwnership stockOwnership);
         void AddStockOwnerships(List<StockOwnership> newOwnerships);

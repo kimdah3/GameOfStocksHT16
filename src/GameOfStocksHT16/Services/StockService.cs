@@ -401,6 +401,54 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        public void SaveUsersTotalEveryDay(object state)
+        {
+            var moneyList = new List<UserMoneyHistory>();
+            var usersList = _gameOfStocksRepository.GetAllUsers();
+            foreach (var user in usersList)
+            {
+                var userDailyWorth = new UserMoneyHistory()
+                {
+                    Money = user.Money,
+                    User = user,
+                    Time = DateTime.Today
+                };
+                moneyList.Add(userDailyWorth);
+            }
+            _gameOfStocksRepository.SaveUsersHistory(moneyList);
+        }
+
+        public List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
+        {
+            try
+            {
+                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user);
+                return moneyList;
+            }
+            catch (Exception)
+            {
+                return new List<UserMoneyHistory>();
+            }
+        }
+
+        public JsonResult GetUserTotalWorthProgressNew(ApplicationUser user)
+        {
+            var userTotalWorthProgress = new List<decimal>();
+            var userMoneyHistory = _gameOfStocksRepository.GetUserMoneyHistory(user);
+            try
+            {
+                foreach (var entity in userMoneyHistory)
+                {
+                    userTotalWorthProgress.Add(Math.Round(((entity.Money / 100000 - 1) * 100), 2));
+                }
+                return new JsonResult(userTotalWorthProgress);
+            }
+            catch (Exception)
+            {
+                return new JsonResult(userTotalWorthProgress);
+            }
+        }
+
         //Tid för börsstängning, ska vara 1730.
         //Och inte helgdag, därav !IsWeekDay()
         public bool IsTradingTime()

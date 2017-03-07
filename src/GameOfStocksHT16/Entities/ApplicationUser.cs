@@ -16,5 +16,6 @@ namespace GameOfStocksHT16.Entities
 
         public virtual List<StockTransaction> StockTransactions { get; set; }
         public virtual List<StockOwnership> StockOwnerships { get; set; }
+        public virtual List<UserMoneyHistory> MoneyHistory { get; set; }
     }
 }
