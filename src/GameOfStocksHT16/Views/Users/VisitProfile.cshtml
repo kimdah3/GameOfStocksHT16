@@ -23,8 +23,8 @@
                     </dl>
             </div>
             <hr />
-            <div class="col-md-6 well well-sm">
-                <p>Plats för utvecklingskurva..</p>
+            <div class="col-md-6 col-sm-12 col-xs-12">
+                <div id="chartContainer" style="height: 300px; width: 100%;"></div>
             </div>
 
         </div>
@@ -195,3 +195,39 @@
 
     </div>
 </section>
+@section scripts{
+    <script>
+        $(function () {
+            var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
+            var progressToChart = [];
+            $.each(progressAllDays.value, function(index, element) {
+                progressToChart.push({ x: index, y: element });
+            });
+
+            //Better to construct options first and then pass it as a parameter
+            var options = {
+                title: {
+                    text: "Utveckling (%)"
+                },
+                animationEnabled: true,
+                axisX: {
+                    minimum: 0,
+                    maximum: 30
+                },
+                axisY: {
+                    minimum: -100,
+                    maximum: 100
+
+                },
+                data: [
+                {
+                    type: "line", //change it to line, area, column, pie, etc
+                    dataPoints: progressToChart
+                }
+                ]
+            };
+            var chart = new CanvasJS.Chart("chartContainer", options);
+            chart.render();
+        });
+    </script>
+}

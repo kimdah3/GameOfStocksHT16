@@ -120,7 +120,8 @@ namespace GameOfStocksHT16
 
             _downloadStocksTimer = new Timer(stockService.SaveStocksOnStartup, null, 20 * 1000, 60 * 2 * 1000);
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactionsSimplified, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
-            _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalWorthPerDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
+            _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalEveryDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
+            
 
             if (env.IsDevelopment())
             {

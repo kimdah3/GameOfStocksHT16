@@ -321,7 +321,7 @@
             var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
             var progressToChart = [];
             $.each(progressAllDays.value, function(index, element) {
-                progressToChart.push({ x: index, y: element});
+                progressToChart.push({ x: index, y: element });
             });
 
             //Better to construct options first and then pass it as a parameter
@@ -335,8 +335,8 @@
                     maximum: 30
                 },
                 axisY: {
-                    minimum: -50,
-                    maximum: 50
+                    minimum: -100,
+                    maximum: 100
 
                 },
                 data: [
