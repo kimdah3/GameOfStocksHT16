@@ -407,7 +407,7 @@ namespace GameOfStocksHT16.Services
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 15, 0);
-            var eveningClose = new TimeSpan(17, 31, 0);
+            var eveningClose = new TimeSpan(17, 47, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 
@@ -415,7 +415,7 @@ namespace GameOfStocksHT16.Services
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 00, 0);
-            var eveningClose = new TimeSpan(17, 15, 0);
+            var eveningClose = new TimeSpan(17, 30, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 

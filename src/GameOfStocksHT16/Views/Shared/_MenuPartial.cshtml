@@ -7,11 +7,11 @@
 @if (SignInManager.IsSignedIn(User))
 {
     <ul class="nav navbar-nav navbar-right">
-        <li><a asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home fa-2x"></i> <span class="sr-only"></span></a></li>
-        <li><a asp-area="" asp-controller="Home" asp-action="News"><i class="fa fa-newspaper-o fa-2x"></i> <span class="sr-only"></span></a></li>
-        <li><a asp-area="" asp-controller="StockList" asp-action="Index"><i class="fa fa-line-chart fa-2x"></i><span class="sr-only"></span></a></li>
-        <li><a asp-area="" asp-controller="Users" asp-action="Leaderboard"><i class="fa fa-trophy fa-2x"></i><span class="sr-only"></span></a></li>
-        <li><a asp-area="" asp-controller="Users" asp-action="DisplayProfile"><i class="fa fa-user fa-2x"></i><span class="sr-only"></span></a></li>
+        <li><a title="Hem" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home fa-2x"></i> <span class="sr-only"></span></a></li>
+        <li><a title="Nyhetsbrev" asp-area="" asp-controller="Home" asp-action="News"><i class="fa fa-newspaper-o fa-2x"></i> <span class="sr-only"></span></a></li>
+        <li><a title="Aktier" asp-area="" asp-controller="StockList" asp-action="Index"><i class="fa fa-line-chart fa-2x"></i><span class="sr-only"></span></a></li>
+        <li><a title="Topplista" asp-area="" asp-controller="Users" asp-action="Leaderboard"><i class="fa fa-trophy fa-2x"></i><span class="sr-only"></span></a></li>
+        <li><a title="Profil" asp-area="" asp-controller="Users" asp-action="DisplayProfile"><i class="fa fa-user fa-2x"></i><span class="sr-only"></span></a></li>
         <li class="dropdown">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><span class="fa fa-2x fa-caret-down"></span></a>
             <ul class="dropdown-menu" role="menu">

@@ -30,7 +30,7 @@
 /*Welcome*/
 
 #section-welcome-header .jumbotron {
-    background-image: url("../images/GoSomslag.png");
+    background-image: url("../images/antons-header.png");
     background-repeat: no-repeat;
     background-size: cover;
     background-color: darkblue;
@@ -107,5 +107,10 @@
 }
 
 .jumbotron-transparent {
-    background-color: transparent;
+    /*background-color: transparent;*/
+}
+
+
+.user-info-panel {
+    margin-top: 40px;
 }

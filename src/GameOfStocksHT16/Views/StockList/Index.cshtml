@@ -14,14 +14,14 @@
                     <tr>
                         <th>Namn</th>
                         <th>Utveckling</th>
-                        <th>Antal</th>
-                        <th>Pris</th>
-                        <th>Lägst</th>
-                        <th>Högst</th>
                         <th>Köppris</th>
-                        <th>Senaste köptid</th>
-                        <th>Senaste köpdatum</th>
-                        <th>Cap</th>
+                        <th class="hidden-xs">Öppning</th>
+                        <th class="hidden-xs">Lägst</th>
+                        <th class="hidden-xs">Högst</th>
+                        <th>Antal</th>
+                        <th class="hidden-xs">Senaste köptid</th>
+                        <th class="hidden-xs">Senaste köpdatum</th>
+                        <th class="hidden-xs">Cap</th>
                     </tr>
                 </thead>
                 <tbody id="stock-table-body">
@@ -36,14 +36,14 @@
                                     <b>@stock.Change</b>
                                 </span>
                             </td>
-                            <td>@stock.Volume</td>
-                            <td>@stock.Open</td>
-                            <td>@stock.DaysLow</td>
-                            <td>@stock.DaysHigh</td>
                             <td>@stock.LastTradePriceOnly</td>
-                            <td>@stock.LastTradeTime</td>
-                            <td>@stock.LastTradeDate</td>
-                            <td>@stock.Cap</td>
+                            <td class="hidden-xs">@stock.Open</td>
+                            <td class="hidden-xs">@stock.DaysLow</td>
+                            <td class="hidden-xs">@stock.DaysHigh</td>
+                            <td>@stock.Volume</td>
+                            <td class="hidden-xs">@stock.LastTradeTime</td>
+                            <td class="hidden-xs">@stock.LastTradeDate</td>
+                            <td class="hidden-xs">@stock.Cap</td>
                         </tr>
                     }
                 </tbody>
@@ -62,26 +62,9 @@
                         "language": {
                             "sSearch": "Sök:",
                             "sLengthMenu": "Visa _MENU_ rader"
-                        }
+                        },
+                        "responsive": true
                     });
-
-            //table.rows().every(function () {
-            //    var label = $(table.row(this).data()[0]).attr('id');
-            //    var buttonId = "btn-buy-" + label;
-
-            //    this.child(
-            //        "<form>" +
-            //            "<div class='form-group'>" +
-            //                "<label for='model-buy-amount'>Antal:</label>" +
-            //                "<input type='number' min='0' class='form-control' id='buy-amount'>" +
-            //                "<button id='btn-buy-stock' type='submit' class='btn btn-default'>Köp</button>" +
-            //            "</div>" +
-            //        "</form>" +
-            //        "<div id='show-total-cost'>" +
-            //        "</div>"
-            //        );
-            //});
-
         });
     </script>
 }

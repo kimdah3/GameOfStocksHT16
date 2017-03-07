@@ -153,7 +153,7 @@ namespace GameOfStocksHT16.Controllers
             return usersWithPercentPerDay;
         }
 
-        private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
+        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
         {
             var total = 0M;
             var ownerships = user.StockOwnerships;
@@ -169,10 +169,10 @@ namespace GameOfStocksHT16.Controllers
             return total;
         }
 
-        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
+        private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
         {
             var total = 0M;
-            var transactions = user.StockTransactions.Where(x => !x.IsCompleted);
+            var transactions = user.StockTransactions.Where(x => !x.IsCompleted && !x.IsFailed);
 
             if (transactions.Any())
             {

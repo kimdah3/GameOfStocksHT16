@@ -100,10 +100,15 @@
 }
 
 /**JUMBOTRON**/
+.jumbotron h1, .jumbotron h2 {
+    color: #FFF !important;
+}
+
 .jumbotron-custom {
     background-color: #0A2239;
     color: #FFF;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
 }
 
     .jumbotron-custom h1, .jumbotron-custom h2, .jumbotron-custom h3, .jumbotron-custom h4, .jumbotron-custom h5, small {
@@ -119,4 +124,10 @@
 /**btn**/
 .btn{
     border-radius:0;
+}
+
+@media (max-width: 767px) {
+  .text-xs-center {
+    text-align: center;
+  } 
 }
