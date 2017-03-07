@@ -26,6 +26,7 @@ namespace GameOfStocksHT16.Services
         //Old
         List<UserTotalWorth> GetUsersTotalWorthPerDay();
         //New
+        List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
 
         JsonResult GetUserTotalWorthProgress(string email);
         //TEST
