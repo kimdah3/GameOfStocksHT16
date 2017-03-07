@@ -32,100 +32,18 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactions(object state)
         {
-            if (!IsTradingTime() || !IsWeekDay()) return;
-            var pendingStockTransactions = _gameOfStocksRepository.GetUncompletedStockTransactions().ToList();
-
-            if (!pendingStockTransactions.Any()) { return; }
-            var newOwnerships = new List<StockOwnership>();
-
-            foreach (var transaction in pendingStockTransactions)
-            {
-                var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                if (DateTime.Now < newTime) continue;
-                var stockRecentValue = GetStockByLabel(transaction.Label); //Most recent values
-                if (!StockHasBuyer(stockRecentValue, transaction.Date)) continue; //If no recent buyer
-
-                var user = _gameOfStocksRepository.GetUserById(transaction.User.Id);
-                if (user == null) throw new Exception("Internal error");
-
-                if (transaction.IsBuying)
-                {
-                    user.Money += transaction.TotalMoney;
-                    user.ReservedMoney -= transaction.TotalMoney;
-
-
-                    //Get recent value
-                    transaction.Bid = stockRecentValue.LastTradePriceOnly;
-                    transaction.TotalMoney = transaction.Bid * transaction.Quantity;
-
-
-                    var existingStock = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(transaction.User, transaction.Label);
-
-                    var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);
-
-                    if (existingStock != null)
-                    {
-                        existingStock.Quantity += transaction.Quantity;
-                        existingStock.TotalSum += transaction.TotalMoney;
-                        existingStock.Gav = existingStock.TotalSum / existingStock.Quantity;
-                    }
-                    else if (stockToModify != null)
-                    {
-                        stockToModify.Quantity += transaction.Quantity;
-                        stockToModify.TotalSum += transaction.TotalMoney;
-                        stockToModify.Gav = stockToModify.TotalSum / stockToModify.Quantity;
-                    }
-                    else
-                        newOwnerships.Add(new StockOwnership()
-                        {
-                            Name = transaction.Name,
-                            Label = transaction.Label,
-                            Quantity = transaction.Quantity,
-                            Gav = transaction.TotalMoney / transaction.Quantity,
-                            TotalSum = transaction.TotalMoney,
-                            User = transaction.User
-                        });
-                    if (transaction.TotalMoney <= transaction.User.Money)
-                        transaction.User.Money -= transaction.TotalMoney;
-                    else
-                    {
-                        throw new Exception("User no money");
-                    }
-                }
-                else if (transaction.IsSelling)
-                {
-                    transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
-                    transaction.Bid = stockRecentValue.LastTradePriceOnly;
-                }
-                transaction.IsCompleted = true;
-            }
-
-            _gameOfStocksRepository.AddStockOwnerships(newOwnerships);
-
-            try
-            {
-                _gameOfStocksRepository.Save();
-            }
-            catch (DbUpdateException ex)
-            {
-                Debug.WriteLine(ex.Entries.ToString());
-            }
-        }
-
-        public void CompleteStockTransactionsSimplified(object state)
-        {
-            //if (!IsTradingTime()) return;
+            if (!IsTradingTime()) return;
 
             var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
             var newOwnerships = new List<StockOwnership>();
 
             foreach (var user in users)
             {
-                foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted))
+                foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted && !x.IsFailed))
                 {
                     ////Wait 15 min before completing transaction.
-                    //var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                    //if (DateTime.Now < newTime) continue;
+                    var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                    if (DateTime.Now < newTime) continue;
 
                     if (transaction.IsBuying)
                     {
@@ -157,7 +75,7 @@ namespace GameOfStocksHT16.Services
             var stockRecentValue = GetStockByLabel(transaction.Label);
 
             //If no recent buyer of stock, skip transaction
-            //if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+            if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
 
             //Restore reserved money
             transaction.User.Money += transaction.TotalMoney;
@@ -167,8 +85,13 @@ namespace GameOfStocksHT16.Services
             transaction.Bid = stockRecentValue.LastTradePriceOnly;
             transaction.TotalMoney = stockRecentValue.LastTradePriceOnly * transaction.Quantity;
 
-            //If no money, skip transaction for now
-            if (transaction.TotalMoney > transaction.User.Money) return;
+            //If not enough money, skip transaction for now
+            if (transaction.TotalMoney > transaction.User.Money)
+            {
+                transaction.IsFailed = true;
+                WriteToDebug(DateTime.Now, $"Stocktransaction failed, ask: {transaction.TotalMoney}, users money: {transaction.User.Money}, user: {transaction.User.FullName}");
+                return;
+            }
 
             var existingOwnership = transaction.User.StockOwnerships.FirstOrDefault(s => s.Label == transaction.Label);
             var stockToModify = newOwnerships.FirstOrDefault(s => s.User == transaction.User && s.Label == transaction.Label);

@@ -8,9 +8,10 @@ using GameOfStocksHT16.Data;
 namespace GameOfStocksHT16.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20170305193039_IsFaildInSTockTransaction")]
+    partial class IsFaildInSTockTransaction
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
                 .HasAnnotation("ProductVersion", "1.0.1")
@@ -133,25 +134,6 @@ namespace GameOfStocksHT16.Data.Migrations
                     b.ToTable("StockTransaction");
                 });
 
-            modelBuilder.Entity("GameOfStocksHT16.Entities.UserMoneyHistory", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd();
-
-                    b.Property<decimal>("Money");
-
-                    b.Property<DateTime>("Time");
-
-                    b.Property<string>("UserId")
-                        .IsRequired();
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserMoneyHistory");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.EntityFrameworkCore.IdentityRole", b =>
                 {
                     b.Property<string>("Id");
@@ -271,14 +253,6 @@ namespace GameOfStocksHT16.Data.Migrations
                 {
                     b.HasOne("GameOfStocksHT16.Entities.ApplicationUser", "User")
                         .WithMany("StockTransactions")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("GameOfStocksHT16.Entities.UserMoneyHistory", b =>
-                {
-                    b.HasOne("GameOfStocksHT16.Entities.ApplicationUser", "User")
-                        .WithMany("MoneyHistory")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

@@ -1,62 +1,65 @@
 ﻿@model HomeViewModel
 @{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Nyheter";
 }
 <section id="section-welcome-header">
     <div class="jumbotron text-center jumbotron-custom">
-        <h1 class="text-uppercase">Du är inne i GoS!</h1>
+        <h2>Välkommen till</h2>
+        <h1 class="text-uppercase">game of stocks!</h1>
         @*<a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-primary">Logga in</a>
             <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-success">Registrera</a>*@
     </div>
 </section>
+
 <section class="">
     <div class="container">
         <div class="col-lg-8">
-
-            <h3>Nyhetssvep v. 8</h3>
-            <!-- Author -->
-            <p class="lead">
-                av <a href="https://www.facebook.com/sesamsfinansutskott/?fref=ts" target="_blank">Sesams Finansutskott</a>
-            </p>
-            <hr>
-            <!-- Date/Time -->
-            <p>
-                <span class="fa fa-clock-o"></span> Postat @DateTime.Now.ToString("M")
-            </p>
-            <!-- Preview Image -->
-            <hr>
-            <p class="lead">
-                Årets sjunde vecka är nu förbi och veckan som gick bjöd även på en uppgång, vilket är otroligt kul då börsen har stigit 7 veckor i rad och börsåret 2017 har hittills gett en uppgång på 3.52%
-            </p>
-            <p>
-                Under Nytt från och med denna vecka är vi introducerar en ny tävling, veckans fråga. Veckans fråga kan ni svara på i kommentarsfältet fram tills kl 18.00 idag och den lyder: Hur många punkter kommer OMXS30 att sluta på under v. 8? Vinnaren kommer att presenteras i slutet av varje månad. veckans gång har utveckling på aktiemarknaden fortsatt i positiv riktning och flera av världens börser har avkastat mer än 1 %. OMXS30 har följt med i uppgången och under onsdagen nådde det Amerikanska indexet S&P 500 ny rekordnotering. Onsdagen bjöd också på penningpolitiska beslut ifrån riksbanken som fastställde att behålla reporäntan på -0.50 % samt att köpen av statsobligationer som bestämdes i december fortsätter under första halvåret 2017. Den svenska kronan har även haft en bra vecka och stigit i värde mot flertalet valutor tillskillnad från den amerikanska dollarn som har handlats oförändrad mot euron.
-            </p>
-            <p>Veckans snackis har varit spelbolag, detta då de var pressade på börsen under hela fjolåret, men när rapporterna släpptes i veckan rusade flera av bolagen. Leovegas överraskade mest med en nettovinst som var 70 % högre än förväntat och på en vecka har aktien stigit runt 6 %. Kindred överraskade också positivt vilket gjorde att marknadsaktörerna handlade upp aktien kring 6 %. Bättre än förväntat gick det även för Betsson och frågetecknen kring den turkiska liran reddes ut, detta räckte dock inte hela vägen och aktien har tappat runt 2 % under veckan. Strabreeze har även varit på tapeten under veckan och efter en lyckad försäljning av dataspelet Dead by Daylight steg aktien runt 5 % under veckans gång.</p>
-            <dl class="dl-horizontal">
-                <dt>OMXS30:</dt>
-                <dd> 0.84%</dd>
-                <dt>DAX:</dt>
-                <dd> 0.84%</dd>
-                <dt>S&P500:</dt>
-                <dd>0.98%</dd>
-                <dt>Vinnare på Large Cap:</dt>
-                <dd>Sagax B 8.71%</dd>
-                <dt>Förlorare på Large Cap:</dt>
-                <dd>Ratos B -9.16%</dd>
-
-            </dl>
-            <h4>Kommande vecka</h4>
-            <p>
-                Rapportsäsongen går mot sitt slut. Bland de större bolagen som rapporterar denna vecka finns investmentbolag som Melker Schörling på tisdag, Lundbergs på torsdag samt fastighetsbolag som Balder och Wallenstam på onsdag. Makroagendan innehåller bland annat ett tal av Riksbankschefen Stefan Ingves på tisdag. Tysklands Ifo-index, som mäter näringslivets förtroende, kommer på onsdag. På fredag släpps USA:s Michigan-index, som mäter det amerikanska konsumentförtroendet. Veckan kommer förmodligen även att få en lugn start då USA håller helstängt på måndagen för firandet av George Washingtons födelsedag, även känt som presidenternas dag.
-            </p>
-            <h4>Kuriosa</h4>
-           <p>I fjol kickades MTG ur OMXS30 och Fingerprint valdes in. Sedan dess har MTG rusat och Fingerprint rasat, frågan är om finns det chans till ett ytterligare index byte.</p>
+            <div class="row">
+                <h3>Nyhetssvep v. 10</h3>
+                <!-- Author -->
+                <p class="lead">
+                    av <a href="https://www.facebook.com/sesamsfinansutskott/?fref=ts" target="_blank">Sesams Finansutskott</a>
+                </p>
+                <hr>
+                <!-- Date/Time -->
+                <p>
+                    <span class="fa fa-clock-o"></span> Postat den 6 mars.
+                </p>
+                <!-- Preview Image -->
+                <hr>
 
 
-            <hr>
+                <p class="lead">Årets nionde vecka har passerat och börsen har fortsatt starkt uppåt. Efter den svaga avslutningen på vecka 8 tog börsen snabbt igen det och onsdagen bjöd på en rejäl uppgång där både SP500 och Dow Jones satte nya rekordnivåer. Dow Jones klättrade upp över 21000-nivån och stängde över medan SP500 var uppe och nosade på 2400-nivån men orkade inte med att stänga över. Efter den kraftiga uppgången på onsdagen tog kraften slut på börsen och veckan avslutades med två lite svagare dagar. Man kan inget annat än säga att börsen är extremt stark för tillfället, speciellt de amerikanska börserna.</p>
+                <p>
+                    <i>VECKANS FRÅGA; Vilken kurs står Snapchat (nuvarande kurs är:27.09$) i slutet av veckan? Vinnaren av tävlingen presenteras i slutet av månaden.</i>
+                </p>
+                <p>
+                    På torsdagen börsnoterades Snapchat, vilket är den största techbolagsnoteringen på länge, noteringskursen sattes kring 17$ vilket gav ett bolagsvärde kring 24 miljarder dollar. När aktien började att handlas på torsdagen hade kursen stigit till 24$ och står nu efter veckan i 27.09$ vilket ger bolaget ett marknadsvärde på 31,35 miljarder dollar (ca 285 miljarder kronor).
+                </p>
+                
+                <p>
+                    Under veckan har det varit turbulent kring det franska presidentvalet där det visar sig att den republikanske kandidaten François Fillon misstänks ha bidragsfuskat och fler än två tredjedelar av de franska väljarna vill att han ska hoppa av. Den nationalistiska högerkandidaten Le Pen leder än så länge i opinionsmätningarna och hennes framgång sätter press på euron då hon talar för att Frankrike ska lämna eurosamarbetet och införa en egen valuta.
+                </p>
+                
+                <p>
+                    Under fredagen höll den amerikanska centralbankschefen Jannet Yellen tal där agendan låg kring en räntehöjning nu i mars, marknaden har till 92 % prisat in att en räntehöjning kommer att ske vilket har stärkt dollarn under senaste tid. Yellen var dock aktsam kring en räntehöjning och sade att ”en räntehöjning endast är möjlig ifall marknaden utvecklar sig på det sätt som man förväntat”. Uttalandet sänkte dollarn under fredagen och stärkte euron. Då fastighetsbolag är väldigt känsliga för räntehöjningar har vi under veckan sett att just fastighetsbolag utvecklats negativt.
+                </p>
 
+                <dl class="dl-horizontal">
+                    <dt>OMXS30:</dt>
+                    <dd>+0,73%</dd>
+                    <dt>DAX:</dt>
+                    <dd>+1,89%</dd>
+                    <dt>SP500:</dt>
+                    <dd>+0,67%/dd>
+                    <dt>Vinnare på Large Cap:</dt>
+                    <dd>Stora Enso A: +4,64%</dd>
+                    <dt>Förlorare på Large Cap:</dt>
+                    <dd>Fingerprint Cards B: -7,77%</dd>
 
-
+                </dl>
+                <hr>
+            </div>
 
         </div>
         <div class="col-lg-4 ">

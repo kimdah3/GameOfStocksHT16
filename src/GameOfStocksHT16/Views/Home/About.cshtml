@@ -2,13 +2,13 @@
     ViewData["Title"] = "About";
 }
 <div class="section-padding-medium">
-    <div class="container text-center">
-        <div class="jumbotron jumbotron-transparent">
-            <h1>Såhär funkar det!</h1>
-            <br />
-            <p>Alla startar med 100 000 kr i saldo.</p>
-            <p class="">Den person med bäst totala portföljutveckling från tävlingens start till slut (13/3 - 7/4) vinner förstapris.
-            <p>Samma koncept gäller för prisplats två och tre. Pris delas även ut till den person som under hela tävlingsperioden har den bästa utveckling under en specifik dag</p>
+    <div class="container ">
+        <div class="col-md-8 col-md-offset-2 text-center">
+            <h2>Såhär funkar det!</h2>
+            <hr/>
+            <p>Alla startar med 100 000 kr i saldo.
+                Den person med bäst totala portföljutveckling från tävlingens start till slut (13/3 - 7/4) vinner förstapris. 
+            Samma koncept gäller för prisplats två och tre. Pris delas även ut till den person som under hela tävlingsperioden har den bästa utveckling under en specifik dag</p>
             <br />
             <p>
                 <i class="fa fa-trophy fa-3x text-info"></i>
@@ -16,11 +16,9 @@
                 <i class="fa fa-trophy fa-2x text-info"></i>
             </p>
             <br />
-            <div class="alert alert-warning">
-                <p class="lead">
+                <p class="text-info">
                     Plattformen som används är en gratistjänst vilket innebär att på alla transaktioner läggs 15 minuter på, dvs när en order läggs kommer pengarna reserveras i 15 minuter för att sedan köpa på gällande kurs 15 minuter efter ordern. Pga fördröjningen kommer det första köpet vara möjligt från 08.45 och sista köp måste läggas innan 17.15.
                 </p>
-            </div>
             <a asp-controller="Home" asp-action="News" class="btn btn-success">Börja handla</a>
         </div>
     </div>

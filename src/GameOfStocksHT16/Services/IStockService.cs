@@ -11,7 +11,6 @@ namespace GameOfStocksHT16.Services
     public interface IStockService
     {
         void CompleteStockTransactions(object o);
-        void CompleteStockTransactionsSimplified(object o);
         
         void SaveStocksOnStartup(object o);
 

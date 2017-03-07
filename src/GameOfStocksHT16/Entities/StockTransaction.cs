@@ -25,6 +25,7 @@ namespace GameOfStocksHT16.Entities
         [Display(Name = "Sälj")]
         public bool IsSelling { get; set; }
         public bool IsCompleted { get; set; }
+        public bool IsFailed { get; set; }
 
         [Required]
         public ApplicationUser User { get; set; }
