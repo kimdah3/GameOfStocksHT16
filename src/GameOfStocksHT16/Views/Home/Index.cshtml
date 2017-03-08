@@ -23,38 +23,37 @@
 <section>
     <div class="container">
         <!-- Example row of columns -->
-        <div class="row">
             <div class="col-md-4">
                 <h3>Topp 5</h3>
                 <table class="table table-bordered table-condensed table-striped">
                     <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Utveckling</th>
-                        </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>Utveckling</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.CurrentLeaderBoard)
-                        {
-                            <tr>
-                                <td>@item.Email</td>
-                                <td>
-                                    @item.TotalWorth kr
-                                    @if (item.GrowthPercent > 0)
-                                    {
-                                        <span class="font-percent text-success">(@item.GrowthPercent%)</span>
-                                    }
-                                    else if (item.GrowthPercent < 0)
-                                    {
-                                        <span class="font-percent text-danger">(@item.GrowthPercent%)</span>
-                                    }
-                                    else
-                                    {
-                                        <span class="font-percent">(@item.GrowthPercent%)</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
+                    @foreach (var item in Model.CurrentLeaderBoard)
+                    {
+                        <tr>
+                            <td>@item.FullName</td>
+                            <td>
+                                @item.TotalWorth kr
+                                @if (item.GrowthPercent > 0)
+                                {
+                                    <span class="font-percent text-success">(@item.GrowthPercent%)</span>
+                                }
+                                else if (item.GrowthPercent < 0)
+                                {
+                                    <span class="font-percent text-danger">(@item.GrowthPercent%)</span>
+                                }
+                                else
+                                {
+                                    <span class="font-percent">(@item.GrowthPercent%)</span>
+                                }
+                            </td>
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -62,30 +61,30 @@
                 <h3>Dagens vinnare</h3>
                 <table class="table table-bordered table-condensed table-striped">
                     <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Utveckling</th>
-                        </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>Utveckling</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.TodaysWinners)
-                        {
-                            <tr>
-                                <td>@item.Email</td>
-                                @if (item.PercentPerDay > 0)
-                                {
-                                    <td class="font-percent font-color-green">@item.PercentPerDay%</td>
-                                }
-                                else if (item.PercentPerDay < 0)
-                                {
-                                    <td class="font-percent font-color-red">@item.PercentPerDay%</td>
-                                }
-                                else
-                                {
-                                    <td class="font-percent">@item.PercentPerDay%</td>
-                                }
-                            </tr>
-                        }
+                    @foreach (var item in Model.TodaysWinners)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            @if (item.PercentPerDay > 0)
+                            {
+                                <td class="font-percent font-color-green">@item.PercentPerDay%</td>
+                            }
+                            else if (item.PercentPerDay < 0)
+                            {
+                                <td class="font-percent font-color-red">@item.PercentPerDay%</td>
+                            }
+                            else
+                            {
+                                <td class="font-percent">@item.PercentPerDay%</td>
+                            }
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
@@ -93,36 +92,34 @@
                 <h3>Dagens förlorare</h3>
                 <table class="table table-bordered table-condensed table-striped">
                     <thead>
-                        <tr>
-                            <th>Email</th>
-                            <th>Utveckling</th>
-                        </tr>
+                    <tr>
+                        <th>Email</th>
+                        <th>Utveckling</th>
+                    </tr>
                     </thead>
                     <tbody>
-                        @foreach (var item in Model.TodaysLoosers)
-                        {
-                            <tr>
-                                <td>@item.Email</td>
-                                @if (item.PercentPerDay > 0)
-                                {
-                                    <td class="font-percent font-color-green">@item.PercentPerDay%</td>
-                                }
-                                else if (item.PercentPerDay < 0)
-                                {
-                                    <td class="font-percent font-color-red">@item.PercentPerDay%</td>
-                                }
-                                else
-                                {
-                                    <td class="font-percent">@item.PercentPerDay%</td>
-                                }
-                            </tr>
-                        }
+                    @foreach (var item in Model.TodaysLoosers)
+                    {
+                        <tr>
+                            <td>@item.Email</td>
+                            @if (item.PercentPerDay > 0)
+                            {
+                                <td class="font-percent font-color-green">@item.PercentPerDay%</td>
+                            }
+                            else if (item.PercentPerDay < 0)
+                            {
+                                <td class="font-percent font-color-red">@item.PercentPerDay%</td>
+                            }
+                            else
+                            {
+                                <td class="font-percent">@item.PercentPerDay%</td>
+                            }
+                        </tr>
+                    }
                     </tbody>
                 </table>
             </div>
         </div>
-
-    </div>
 </section>
 @section Scripts {
     <script type="text/javascript">

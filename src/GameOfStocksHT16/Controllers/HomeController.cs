@@ -137,23 +137,26 @@ namespace GameOfStocksHT16.Controllers
         private List<UserModel> GetUsersPercentPerDay(List<UserModel> allUsers)
         {
             var usersWithPercentPerDay = new List<UserModel>();
-            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
 
-            foreach (var userWithTotal in usersTotalWorthPerDay)
-            {
-                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
+            //TODO implement list correctly after new way of working with users percent
 
-                usersWithPercentPerDay.Add(new UserModel()
-                {
-                    Email = userWithTotal.Email,
-                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
-                });
-            }
+            //var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
+
+            //foreach (var userWithTotal in usersTotalWorthPerDay)
+            //{
+            //    if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
+
+            //    usersWithPercentPerDay.Add(new UserModel()
+            //    {
+            //        Email = userWithTotal.Email,
+            //        PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
+            //    });
+            //}
 
             return usersWithPercentPerDay;
         }
 
-        private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
+        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
         {
             var total = 0M;
             var ownerships = user.StockOwnerships;
@@ -169,10 +172,10 @@ namespace GameOfStocksHT16.Controllers
             return total;
         }
 
-        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
+        private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
         {
             var total = 0M;
-            var transactions = user.StockTransactions.Where(x => !x.IsCompleted);
+            var transactions = user.StockTransactions.Where(x => x.IsSelling && !x.IsCompleted && !x.IsFailed);
 
             if (transactions.Any())
             {

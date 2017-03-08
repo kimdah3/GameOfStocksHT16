@@ -276,7 +276,6 @@ namespace GameOfStocksHT16.Services
             return stocks;
         }
 
-
         public Stock GetStockByLabel(string label)
         {
             Stock stock;
@@ -301,106 +300,7 @@ namespace GameOfStocksHT16.Services
             }
 
         }
-
-        public void SaveUsersTotalWorthPerDay(object state)
-        {
-            var today = DateTime.Today;
-            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + today.ToString("M", CultureInfo.InvariantCulture) + ".json";
-            var users = _gameOfStocksRepository.GetAllUsers();
-            var allUsersTotalWorth = new List<UserTotalWorth>();
-
-            foreach (var user in users)
-            {
-                var usersTotalWorth = new UserTotalWorth()
-                {
-                    Email = user.Email,
-                    TotalWorth = user.Money + user.ReservedMoney
-                };
-
-                foreach (var stockOwnership in user.StockOwnerships)
-                {
-                    usersTotalWorth.TotalWorth += GetStockByLabel(stockOwnership.Label).LastTradePriceOnly * stockOwnership.Quantity;
-                }
-
-                allUsersTotalWorth.Add(usersTotalWorth);
-            }
-
-            using (var file = File.CreateText(path))
-            {
-                var serializer = new JsonSerializer();
-                serializer.Serialize(file, allUsersTotalWorth);
-            }
-        }
-
-        //New
-        public void SaveUsersTotalEveryDay(object state)
-        {
-            var moneyList = new List<UserMoneyHistory>();
-            var usersList = _gameOfStocksRepository.GetAllUsers();
-            foreach (var user in usersList)
-            {
-                var userDailyWorth = new UserMoneyHistory()
-                {
-                    Money = user.Money,
-                    User = user,
-                    Time = DateTime.Today
-                };
-                moneyList.Add(userDailyWorth);
-            }
-            _gameOfStocksRepository.testSaveHistory(moneyList);
-        }
-
-        //New
-        public List<UserMoneyHistory> getUserMoneyHistory(ApplicationUser user)
-         {
-            try
-            {
-                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user);
-                return moneyList;
-            }
-            catch(Exception)
-            {
-                return new List<UserMoneyHistory>();
-            }
-         }
-
-
-        public List<UserTotalWorth> GetUsersTotalWorthPerDay()
-        {
-            var usersTotalWorth = new List<UserTotalWorth>();
-
-            var path = _hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json";
-            try
-            {
-                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
-                {
-                    var json = r.ReadToEnd();
-                    usersTotalWorth = JsonConvert.DeserializeObject<List<UserTotalWorth>>(json);
-                }
-            }
-            catch (Exception ex)
-            {
-                WriteToDebug(DateTime.Now, "something went wrong reading daily UsersTotalWorth, " + ex.Message);
-            }
-
-            return usersTotalWorth;
-        }
-
-        public bool DailyUsersTotalWorthExists()
-        {
-            try
-            {
-                using (var r = new StreamReader(new FileStream(_hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json", FileMode.Open)))
-                {
-                    return true;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
+        
         //New
         public JsonResult GetUserTotalWorthProgressNew(ApplicationUser user)
         {
@@ -453,13 +353,82 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        //Tid för börsstängning, ska vara 1730.
+        public void SaveUsersTotalEveryDay(object state)
+        {
+            var moneyList = new List<UserMoneyHistory>();
+            var usersList = _gameOfStocksRepository.GetAllUsers();
+            foreach (var user in usersList)
+            {
+                var userDailyWorth = new UserMoneyHistory()
+                {
+                    Money = user.Money + user.ReservedMoney,
+                    User = user,
+                    Time = DateTime.Today
+                };
+
+                foreach (var s in user.StockOwnerships)
+                {
+                    userDailyWorth.Money += (s.Quantity * GetStockByLabel(s.Label).LastTradePriceOnly);
+                }
+
+                userDailyWorth.Money += GetSellingStocksWorth(user);
+
+                moneyList.Add(userDailyWorth);
+            }
+            _gameOfStocksRepository.SaveUsersHistory(moneyList);
+        }
+
+        private decimal GetSellingStocksWorth(ApplicationUser user)
+        {
+            var total = 0M;
+            var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
+
+            if (sellingStocks.Any())
+            {
+                foreach (var sellingStock in sellingStocks)
+                {
+                    total += GetStockByLabel(sellingStock.Label).LastTradePriceOnly * sellingStock.Quantity;
+                }
+            }
+
+            return total;
+        }
+
+        public List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
+        {
+            try
+            {
+                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user);
+                return moneyList;
+            }
+            catch (Exception)
+            {
+                return new List<UserMoneyHistory>();
+            }
+        }
+
+        public bool DailyUsersTotalWorthExists()
+        {
+            try
+            {
+                using (var r = new StreamReader(new FileStream(_hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json", FileMode.Open)))
+                {
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
+
+        //Tid för börsstängning, ska vara 1747.
         //Och inte helgdag, därav !IsWeekDay()
         public bool IsTradingTime()
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 15, 0);
-            var eveningClose = new TimeSpan(17, 31, 0);
+            var eveningClose = new TimeSpan(17, 47, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 
@@ -467,7 +436,7 @@ namespace GameOfStocksHT16.Services
         {
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 00, 0);
-            var eveningClose = new TimeSpan(17, 15, 0);
+            var eveningClose = new TimeSpan(17, 30, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 

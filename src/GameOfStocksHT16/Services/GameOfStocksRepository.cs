@@ -79,7 +79,7 @@ namespace GameOfStocksHT16.Services
             return (_context.SaveChanges() >= 0);
         }
 
-        public void testSaveHistory(List<UserMoneyHistory> list)
+        public void SaveUsersHistory(List<UserMoneyHistory> list)
         {
             foreach(var entity in list)
             {

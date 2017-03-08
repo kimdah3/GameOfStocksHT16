@@ -15,7 +15,7 @@ namespace GameOfStocksHT16.Models.AccountViewModels
 
         [Required]
         [StringLength(30)]
-        [Display(Name = "Namn")]
+        [Display(Name = "Förnamn & Efternamn")]
         public string FullName { get; set; }
 
         [Required]

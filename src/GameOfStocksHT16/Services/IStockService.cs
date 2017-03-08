@@ -18,15 +18,11 @@ namespace GameOfStocksHT16.Services
 
         List<Stock> GetStocks();
 
-        //Old
-        void SaveUsersTotalWorthPerDay(object state);
         //New
         void SaveUsersTotalEveryDay(object state);
 
-        //Old
-        List<UserTotalWorth> GetUsersTotalWorthPerDay();
         //New
-        List<UserMoneyHistory> getUserMoneyHistory(ApplicationUser user);
+        List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
 
         JsonResult GetUserTotalWorthProgress(string email);
         //TEST

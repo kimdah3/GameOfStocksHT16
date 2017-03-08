@@ -24,10 +24,14 @@ namespace GameOfStocksHT16.Services
 
         List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
 
+<<<<<<< HEAD
         List<StockTransaction> GetAllStockTransactionsSortedByDate();
 
         //TEST
         void testSaveHistory(List<UserMoneyHistory> list);
+=======
+        void SaveUsersHistory(List<UserMoneyHistory> list);
+>>>>>>> origin/master
 
         void AddStockTransactions(StockTransaction stockTransaction);
         void RemoveStockOwnership(StockOwnership stockOwnership);

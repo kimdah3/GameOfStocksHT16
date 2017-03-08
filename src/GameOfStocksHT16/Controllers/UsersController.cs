@@ -31,7 +31,6 @@ namespace GameOfStocksHT16.Controllers
         public ActionResult Leaderboard()
         {
             var users = _gameOfStocksRepository.GetAllUsers(); 
-                //_dbContext.Users.Include(u => u.StockOwnerships).OrderByDescending(u => u.Money).ToList();
 
             if (users == null)
                 return View();
@@ -123,7 +122,6 @@ namespace GameOfStocksHT16.Controllers
                 return View(model);
             }
         }
-
 
         [HttpGet]
         public ActionResult DisplayProfile()

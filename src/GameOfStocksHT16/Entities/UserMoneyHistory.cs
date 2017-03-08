@@ -12,6 +12,7 @@ namespace GameOfStocksHT16.Entities
         public int Id { get; set; } 
         public decimal Money { get; set; }
         public DateTime Time { get; set; }
+
         [Required]
         public virtual ApplicationUser User { get; set; }
     }
