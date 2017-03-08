@@ -1,11 +1,33 @@
-@model GameOfStocksHT16.Models.ActivityViewModels.ActivityModel
+﻿@model GameOfStocksHT16.Models.ActivityViewModels.ActivityModel
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Aktivitetssida";
 }
+<section class="section-padding-medium">
+    <div class="container">
+        <h3>Aktiviteter</h3>
+        <hr />
+        @foreach (var activity in Model.Activities)
+        {
+            <img src="@activity.User.PictureUrl" width="75" height="75" class="img-circle" />
+            <p class="">
+                @activity.User.FullName har
+                @if (activity.IsBuying)
+                {
+                    <span>
+                        köpt
+                    </span>
+                }
+                else
+                {
+                    <span>
+                        sålt
+                    </span>
+                }
+                @activity.Quantity st @activity.Name aktier.
+            </p>
+            <hr />
+        }
 
-<h2>Activities</h2>
-@foreach(var activity in Model.Activities)
-{
-    <h2>@activity.User.FullName has bought @activity.Quantity shares of @activity.Name .</h2>
-}
+    </div>
+</section>
