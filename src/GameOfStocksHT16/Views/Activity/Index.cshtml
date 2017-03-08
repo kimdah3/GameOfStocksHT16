@@ -1,0 +1,11 @@
+@model GameOfStocksHT16.Models.ActivityViewModels.ActivityModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Activities</h2>
+@foreach(var activity in Model.Activities)
+{
+    <h2>@activity.User.FullName has bought @activity.Quantity shares of @activity.Name .</h2>
+}

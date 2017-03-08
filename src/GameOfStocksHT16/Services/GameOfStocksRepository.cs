@@ -116,5 +116,12 @@ namespace GameOfStocksHT16.Services
         {
             return _context.UserMoneyHistory.ToList();
         }
+
+        public List<StockTransaction> GetAllStockTransactionsSortedByDate()
+        {
+            var transactions = _context.StockTransaction.OrderBy(x => x.Date).Take(100).ToList();
+            transactions.Reverse();
+            return transactions;
+        }
     }
 }

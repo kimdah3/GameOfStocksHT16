@@ -24,6 +24,8 @@ namespace GameOfStocksHT16.Services
 
         List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
 
+        List<StockTransaction> GetAllStockTransactionsSortedByDate();
+
         //TEST
         void testSaveHistory(List<UserMoneyHistory> list);
 
