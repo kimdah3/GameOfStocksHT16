@@ -137,18 +137,21 @@ namespace GameOfStocksHT16.Controllers
         private List<UserModel> GetUsersPercentPerDay(List<UserModel> allUsers)
         {
             var usersWithPercentPerDay = new List<UserModel>();
-            var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
 
-            foreach (var userWithTotal in usersTotalWorthPerDay)
-            {
-                if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
+            //TODO implement list correctly after new way of working with users percent
 
-                usersWithPercentPerDay.Add(new UserModel()
-                {
-                    Email = userWithTotal.Email,
-                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
-                });
-            }
+            //var usersTotalWorthPerDay = _stockService.GetUsersTotalWorthPerDay();
+
+            //foreach (var userWithTotal in usersTotalWorthPerDay)
+            //{
+            //    if (allUsers.All(u => u.Email != userWithTotal.Email)) continue;
+
+            //    usersWithPercentPerDay.Add(new UserModel()
+            //    {
+            //        Email = userWithTotal.Email,
+            //        PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userWithTotal.Email).TotalWorth / userWithTotal.TotalWorth - 1) * 100), 2)
+            //    });
+            //}
 
             return usersWithPercentPerDay;
         }
@@ -172,7 +175,7 @@ namespace GameOfStocksHT16.Controllers
         private decimal GetTotalWorthFromStockTransactionsByUser(ApplicationUser user)
         {
             var total = 0M;
-            var transactions = user.StockTransactions.Where(x => !x.IsCompleted && !x.IsFailed);
+            var transactions = user.StockTransactions.Where(x => x.IsSelling && !x.IsCompleted && !x.IsFailed);
 
             if (transactions.Any())
             {

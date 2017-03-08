@@ -124,8 +124,8 @@ namespace GameOfStocksHT16
 
             if (env.IsDevelopment())
             {
-                if (!stockService.DailyUsersTotalWorthExists())
-                    stockService.SaveUsersTotalWorthPerDay(this);
+                //if (!stockService.DailyUsersTotalWorthExists()) 
+                //stockService.SaveUsersTotalWorthPerDay(this);
             }
             
             AutoMapper.Mapper.Initialize(cfg =>
