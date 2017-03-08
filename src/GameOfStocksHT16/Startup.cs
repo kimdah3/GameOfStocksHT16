@@ -122,12 +122,6 @@ namespace GameOfStocksHT16
             _completeStockTransTimer = new Timer(stockService.CompleteStockTransactions, null, 30 * 1000, /*Timeout.Infinite*/30 * 1000);
             _saveUsersTotalWorthPerDay = new Timer(stockService.SaveUsersTotalEveryDay, null, GetMillisecondsToMidnight(), TimeSpan.FromDays(1).Milliseconds);
 
-            if (env.IsDevelopment())
-            {
-                //if (!stockService.DailyUsersTotalWorthExists()) 
-                //stockService.SaveUsersTotalWorthPerDay(this);
-            }
-            
             AutoMapper.Mapper.Initialize(cfg =>
             {
                 cfg.CreateMap<Entities.StockTransaction, Models.StockTransationDto>();

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using GameOfStocksHT16.Entities;
+using GameOfStocksHT16.Models.UsersViewModels;
 
 namespace GameOfStocksHT16.Services
 {
@@ -15,23 +16,20 @@ namespace GameOfStocksHT16.Services
         void SaveStocksOnStartup(object o);
 
         Stock GetStockByLabel(string label);
-
         List<Stock> GetStocks();
 
-        //New
         void SaveUsersTotalEveryDay(object state);
 
-        //New
         List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
+        List<UserModel> GetAllUsersWithTotalWorth();
 
-        JsonResult GetUserTotalWorthProgress(string email);
-        //TEST
-        JsonResult GetUserTotalWorthProgressNew(ApplicationUser user);
+        JsonResult GetUserTotalWorthProgress(ApplicationUser user);
+        decimal GetUserTotalWorth(ApplicationUser user);
+
+        List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers);
 
         bool IsTradingTime();
 
         bool IsMarketOpenForStockTransactions();
-
-        bool DailyUsersTotalWorthExists();
     }
 }

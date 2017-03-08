@@ -74,9 +74,19 @@ namespace GameOfStocksHT16.Services
             return _context.Users.Include(u => u.StockTransactions).Where(u => u.StockTransactions.Any(s => (s.IsBuying || s.IsSelling) && !s.IsCompleted && !s.IsFailed)).ToList();
         }
 
+        public bool UsersExists()
+        {
+            return _context.Users.Any();
+        }
+
         public bool Save()
         {
             return (_context.SaveChanges() >= 0);
+        }
+
+        public List<UserMoneyHistory> GetAllUsersTotalYesterday()
+        {
+            return _context.UserMoneyHistory.Include(x => x.User).Where(x => x.Time == DateTime.Today).ToList();
         }
 
         public void SaveUsersHistory(List<UserMoneyHistory> list)

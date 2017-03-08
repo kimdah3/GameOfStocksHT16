@@ -33,8 +33,9 @@ namespace GameOfStocksHT16.Services
         void AddStockOwnerships(List<StockOwnership> newOwnerships);
 
         bool StockTransactionExists(StockTransaction stockTransaction);
-
+        bool UsersExists();
         bool Save();
 
+        List<UserMoneyHistory> GetAllUsersTotalYesterday();
     }
 }

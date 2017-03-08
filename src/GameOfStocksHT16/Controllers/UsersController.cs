@@ -20,7 +20,7 @@ namespace GameOfStocksHT16.Controllers
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
-        public UsersController(UserManager<ApplicationUser> userManager, IStockService stockService,  IGameOfStocksRepository gameOfStocksRepository)
+        public UsersController(UserManager<ApplicationUser> userManager, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
             _userManager = userManager;
             _stockService = stockService;
@@ -30,34 +30,25 @@ namespace GameOfStocksHT16.Controllers
         // GET: Users
         public ActionResult Leaderboard()
         {
-            var users = _gameOfStocksRepository.GetAllUsers(); 
 
-            if (users == null)
-                return View();
+            if (!_gameOfStocksRepository.UsersExists()) return View();
 
             var model = new LeaderBoardViewModel()
             {
                 AllUsers = new List<UserModel>()
             };
-
+            
+            var users = _gameOfStocksRepository.GetAllUsers();
             foreach (var user in users)
             {
-
                 var usersWithTotalWorth = new UserModel()
                 {
                     Email = user.Email,
                     Money = user.Money,
-                    TotalWorth = user.Money + user.ReservedMoney,
+                    TotalWorth = _stockService.GetUserTotalWorth(user),
                     FullName = user.FullName,
                     PictureUrl = user.PictureUrl
                 };
-
-                usersWithTotalWorth.TotalWorth += GetSellingStocksWorth(user);
-
-                foreach (var ownership in user.StockOwnerships)
-                {
-                    usersWithTotalWorth.TotalWorth += _stockService.GetStockByLabel(ownership.Label).LastTradePriceOnly * ownership.Quantity;
-                }
 
                 usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
 
@@ -66,20 +57,6 @@ namespace GameOfStocksHT16.Controllers
             }
             model.AllUsers = model.AllUsers.OrderByDescending(x => x.TotalWorth).ToList();
             return View(model);
-        }
-
-        private decimal GetSellingStocksWorth(ApplicationUser user)
-        {
-            var total = 0M;
-            var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
-            if (sellingStocks.Any())
-                foreach (var sellingStock in sellingStocks)
-                {
-                    total +=
-                        _stockService.GetStockByLabel(sellingStock.Label).LastTradePriceOnly * sellingStock.Quantity;
-                }
-
-            return total;
         }
 
         [HttpGet]
@@ -94,33 +71,22 @@ namespace GameOfStocksHT16.Controllers
                 ModelState.AddModelError("email", "No user with that email");
                 return View();
             }
-            else if (userToCheck.Email == email)
+
+            if (userToCheck.Email == email) return RedirectToAction("DisplayProfile");
+
+            var model = new ProfileViewModel
             {
-                return RedirectToAction("DisplayProfile");
-            }
-            else
-            {
-                var model = new ProfileViewModel
-                {
-                    Email = userToDisplay.Email,
-                    Money = userToDisplay.Money,
-                    StockOwnerships = GetOwnershipsWithLastTradePriceByUser(userToDisplay),
-                    StockTransactions = GetStockTransWithTimeLeft(userToDisplay),
-                    TotalWorth = userToDisplay.Money + userToDisplay.ReservedMoney,
-                    FullName = userToDisplay.FullName,
-                    PictureUrl = userToDisplay.PictureUrl,
-                    ProgressAllDays = _stockService.GetUserTotalWorthProgressNew(userToDisplay)
-                };
+                Email = userToDisplay.Email,
+                Money = userToDisplay.Money,
+                StockOwnerships = GetOwnershipsWithLastTradePriceByUser(userToDisplay),
+                StockTransactions = GetStockTransWithTimeLeft(userToDisplay),
+                TotalWorth = _stockService.GetUserTotalWorth(userToDisplay),
+                FullName = userToDisplay.FullName,
+                PictureUrl = userToDisplay.PictureUrl,
+                ProgressAllDays = _stockService.GetUserTotalWorthProgress(userToDisplay)
+            };
 
-                foreach (var s in model.StockOwnerships)
-                {
-                    model.TotalWorth += (s.Quantity * s.LastTradePrice);
-                }
-
-                model.TotalWorth += GetSellingStocksWorth(userToDisplay);
-
-                return View(model);
-            }
+            return View(model);
         }
 
         [HttpGet]
@@ -137,20 +103,13 @@ namespace GameOfStocksHT16.Controllers
                     Email = user.Email,
                     Money = user.Money,
                     ReservedMoney = user.ReservedMoney,
-                    TotalWorth = user.Money + user.ReservedMoney,
+                    TotalWorth = _stockService.GetUserTotalWorth(user),
                     StockTransactions = GetStockTransWithTimeLeft(user),
                     StockOwnerships = GetOwnershipsWithLastTradePriceByUser(user),
-                    ProgressAllDays = _stockService.GetUserTotalWorthProgressNew(user),
+                    ProgressAllDays = _stockService.GetUserTotalWorthProgress(user),
                     FullName = user.FullName,
                     PictureUrl = user.PictureUrl
                 };
-
-                foreach (var s in model.StockOwnerships)
-                {
-                    model.TotalWorth = model.TotalWorth+ (s.Quantity * s.LastTradePrice);
-                }
-
-                model.TotalWorth += GetSellingStocksWorth(user);
 
                 return View(model);
             }
@@ -211,7 +170,7 @@ namespace GameOfStocksHT16.Controllers
                     Gav = s.Gav,
                     TotalSum = s.TotalSum,
                     LastTradePrice = lastTradePrice,
-                    Growth = (lastTradePrice/s.Gav -1)*100,
+                    Growth = (lastTradePrice / s.Gav - 1) * 100,
                     User = s.User
                 });
             }
