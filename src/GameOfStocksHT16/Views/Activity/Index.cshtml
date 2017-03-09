@@ -8,7 +8,7 @@
         <div class="row text-center">
             <h2>Aktiviteter</h2>
         </div>
- 
+
         @foreach (var activity in Model.Activities)
         {
             @if (activity.User.Email != User.Identity.Name)
@@ -18,7 +18,15 @@
                     <div class="panel panel-default text-center">
                         <div class="panel-heading">
                             <div class="row">
-                                <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
+                                @if (activity.User.PictureUrl == null)
+                                {
+                                    <img src="~/images/default-profile-pic.png" width="40" height="40" class="img-circle" />
+                                }
+                                else
+                                {
+
+                                    <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
+                                }
                             </div>
                             <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { email = @activity.User.Email }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
                             <p><em>@activity.Date</em></p>
@@ -30,7 +38,15 @@
                     <div class="panel panel-default text-center">
                         <div class="panel-heading">
                             <div class="row">
-                                <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
+                                @if (activity.User.PictureUrl == null)
+                                {
+                                    <img src="~/images/default-profile-pic.png" width="40" height="40" class="img-circle" />
+                                }
+                                else
+                                {
+
+                                    <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
+                                }
                             </div>
                             <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { email = @activity.User.Email }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
                             <p><em>@activity.Date</em></p>
