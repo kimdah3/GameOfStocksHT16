@@ -20,7 +20,7 @@
                                 <div class="row">
                                     <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { email = @activity.User.Email }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
+                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
                                 <p><em>@activity.Date</em></p>
                             </div>
                         </div>
@@ -32,7 +32,7 @@
                                 <div class="row">
                                     <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { email = @activity.User.Email }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
+                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
                                 <p><em>@activity.Date</em></p>
                             </div>
                         </div>
