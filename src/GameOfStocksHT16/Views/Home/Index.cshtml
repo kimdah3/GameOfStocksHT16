@@ -11,7 +11,7 @@
     </div>
 </section>
 <section class="">
-    <div class="container">
+    <div class="container text-center">
         <div class="jumbotron jumbotron-transparent">
             <h3 class="">Prestige. Trading. Uppgång. Nedgång. Framgång. Motgång. Spänning.</h3>
             <p>
@@ -70,7 +70,7 @@
                     @foreach (var item in Model.TodaysWinners)
                     {
                         <tr>
-                            <td>@item.Email</td>
+                            <td>@item.FullName</td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
@@ -101,7 +101,7 @@
                     @foreach (var item in Model.TodaysLoosers)
                     {
                         <tr>
-                            <td>@item.Email</td>
+                            <td>@item.FullName</td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>

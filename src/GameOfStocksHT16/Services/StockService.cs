@@ -16,6 +16,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using GameOfStocksHT16.Entities;
+using GameOfStocksHT16.Models.UsersViewModels;
 
 namespace GameOfStocksHT16.Services
 {
@@ -300,57 +301,99 @@ namespace GameOfStocksHT16.Services
             }
 
         }
-        
+
         //New
-        public JsonResult GetUserTotalWorthProgressNew(ApplicationUser user)
+        public JsonResult GetUserTotalWorthProgress(ApplicationUser user)
         {
             var userTotalWorthProgress = new List<decimal>();
             var userMoneyHistory = _gameOfStocksRepository.GetUserMoneyHistory(user);
             try
             {
-                foreach(var entity in userMoneyHistory)
+                foreach (var entity in userMoneyHistory)
                 {
                     userTotalWorthProgress.Add(Math.Round(((entity.Money / 100000 - 1) * 100), 2));
                 }
                 return new JsonResult(userTotalWorthProgress);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 return new JsonResult(userTotalWorthProgress);
             }
         }
 
-        public JsonResult GetUserTotalWorthProgress(string email)
+        public decimal GetUserTotalWorth(ApplicationUser user)
         {
-            var usersTotalWorthProgress = new List<decimal>();
+            var totalWorth = user.Money + user.ReservedMoney;
 
-            var path = _hostingEnvironment.WebRootPath + @"\userdata\";
-            var files = Directory.GetFiles(path);
-
-            try
+            foreach (var s in user.StockOwnerships)
             {
-                foreach (string f in Directory.GetFiles(path))
+                totalWorth += s.Quantity * GetStockByLabel(s.Label).LastTradePriceOnly;
+            }
+
+            foreach (var s in user.StockTransactions.Where(s => s.IsSelling && !s.IsCompleted))
+            {
+                totalWorth += s.Quantity * GetStockByLabel(s.Label).LastTradePriceOnly;
+            }
+
+            return totalWorth;
+        }
+
+        public List<UserModel> GetAllUsersWithTotalWorth()
+        {
+            var allUsersWithTotalWorth = new List<UserModel>();
+
+            var users = _gameOfStocksRepository.GetAllUsers();
+            foreach (var user in users)
+            {
+                var userWithTotalWorth = new UserModel()
                 {
-                    using (var r = new StreamReader(new FileStream(f, FileMode.Open)))
-                    {
-                        var json = r.ReadToEnd();
-                        var usersTotalWorth = JsonConvert.DeserializeObject<List<UserTotalWorth>>(json);
-                        foreach (var userTotalWorth in usersTotalWorth)
-                        {
-                            if (userTotalWorth.Email == email)
-                            {
-                                usersTotalWorthProgress.Add(Math.Round(((userTotalWorth.TotalWorth / 100000 - 1) * 100), 2));
-                            }
-                        }
-                    }
-                }
+                    Email = user.Email,
+                    Money = user.Money,
+                    TotalWorth = user.Money + user.ReservedMoney,
+                    FullName = user.FullName,
+                    GrowthPercent = 0
+                };
 
-                return new JsonResult(usersTotalWorthProgress);
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);
+                userWithTotalWorth.TotalWorth += GetTotalWorthFromSellingStockTransactionsByUser(user);
+                userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+
+                allUsersWithTotalWorth.Add(userWithTotalWorth);
             }
-            catch (Exception)
+
+            return allUsersWithTotalWorth;
+        }
+
+        private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
+        {
+            var total = 0M;
+            var ownerships = user.StockOwnerships;
+
+            if (ownerships.Any())
             {
-                return new JsonResult(usersTotalWorthProgress); //empty if failure.
+                foreach (var ownership in ownerships)
+                {
+                    total += GetStockByLabel(ownership.Label).LastTradePriceOnly * ownership.Quantity;
+                }
             }
+
+            return total;
+        }
+
+        private decimal GetTotalWorthFromSellingStockTransactionsByUser(ApplicationUser user)
+        {
+            var total = 0M;
+            var transactions = user.StockTransactions.Where(x => x.IsSelling && !x.IsCompleted && !x.IsFailed);
+
+            if (transactions.Any())
+            {
+                foreach (var transaction in transactions)
+                {
+                    total += GetStockByLabel(transaction.Label).LastTradePriceOnly * transaction.Quantity;
+                }
+            }
+
+            return total;
         }
 
         public void SaveUsersTotalEveryDay(object state)
@@ -361,17 +404,10 @@ namespace GameOfStocksHT16.Services
             {
                 var userDailyWorth = new UserMoneyHistory()
                 {
-                    Money = user.Money + user.ReservedMoney,
+                    Money = GetUserTotalWorth(user),
                     User = user,
                     Time = DateTime.Today
                 };
-
-                foreach (var s in user.StockOwnerships)
-                {
-                    userDailyWorth.Money += (s.Quantity * GetStockByLabel(s.Label).LastTradePriceOnly);
-                }
-
-                userDailyWorth.Money += GetSellingStocksWorth(user);
 
                 moneyList.Add(userDailyWorth);
             }
@@ -407,19 +443,21 @@ namespace GameOfStocksHT16.Services
             }
         }
 
-        public bool DailyUsersTotalWorthExists()
+        public List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers)
         {
-            try
+            var usersWithPercent = new List<UserPercentModel>();
+
+            var usersHistory = _gameOfStocksRepository.GetAllUsersTotalYesterday();
+            foreach (var userMoneyHistory in usersHistory)
             {
-                using (var r = new StreamReader(new FileStream(_hostingEnvironment.WebRootPath + @"\userdata\UsersTotalWorth " + DateTime.Today.ToString("M", CultureInfo.InvariantCulture) + ".json", FileMode.Open)))
+                usersWithPercent.Add(new UserPercentModel()
                 {
-                    return true;
-                }
+                    FullName = userMoneyHistory.User.FullName,
+                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userMoneyHistory.User.Email).TotalWorth / userMoneyHistory.Money - 1) * 100), 2)
+                });
             }
-            catch (Exception)
-            {
-                return false;
-            }
+
+            return usersWithPercent;
         }
 
         //Tid för börsstängning, ska vara 1747.

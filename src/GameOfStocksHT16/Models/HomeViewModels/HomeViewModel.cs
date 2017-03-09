@@ -9,7 +9,7 @@ namespace GameOfStocksHT16.Models.HomeViewModels
     public class HomeViewModel
     {
         public List<UserModel> CurrentLeaderBoard { get; set; }
-        public List<UserModel> TodaysLoosers { get; set; }
-        public List<UserModel> TodaysWinners { get; set; }
+        public List<UserPercentModel> TodaysLoosers { get; set; }
+        public List<UserPercentModel> TodaysWinners { get; set; }
     }
 }
