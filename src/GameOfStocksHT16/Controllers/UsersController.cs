@@ -47,7 +47,8 @@ namespace GameOfStocksHT16.Controllers
                     Money = user.Money,
                     TotalWorth = _stockService.GetUserTotalWorth(user),
                     FullName = user.FullName,
-                    PictureUrl = user.PictureUrl
+                    PictureUrl = user.PictureUrl,
+                    Id = user.Id
                 };
 
                 usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
@@ -60,11 +61,11 @@ namespace GameOfStocksHT16.Controllers
         }
 
         [HttpGet]
-        public ActionResult VisitProfile(string email)
+        public ActionResult VisitProfile(string id)
         {
             var userId = _userManager.GetUserId(HttpContext.User);
             var userToCheck = _gameOfStocksRepository.GetUserById(userId);
-            var userToDisplay = _gameOfStocksRepository.GetUserByEmail(email);
+            var userToDisplay = _gameOfStocksRepository.GetUserById(id);
 
             if (userToDisplay == null)
             {
@@ -72,7 +73,7 @@ namespace GameOfStocksHT16.Controllers
                 return View();
             }
 
-            if (userToCheck.Email == email) return RedirectToAction("DisplayProfile");
+            if (userToCheck.Id == id) return RedirectToAction("DisplayProfile");
 
             var model = new ProfileViewModel
             {
