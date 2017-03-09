@@ -213,3 +213,7 @@ den 9 mars 2017 15:18:36 sucess, stockList.Count = 334
 den 9 mars 2017 15:20:35 sucess, stockList.Count = 334
 den 9 mars 2017 15:24:50 sucess, stockList.Count = 334
 den 9 mars 2017 15:26:50 sucess, stockList.Count = 334
+den 9 mars 2017 15:36:38 sucess, stockList.Count = 334
+den 9 mars 2017 15:38:38 sucess, stockList.Count = 334
+den 9 mars 2017 15:40:17 sucess, stockList.Count = 334
+den 9 mars 2017 15:42:17 sucess, stockList.Count = 334
