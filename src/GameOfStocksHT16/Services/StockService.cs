@@ -351,7 +351,8 @@ namespace GameOfStocksHT16.Services
                     Money = user.Money,
                     TotalWorth = user.Money + user.ReservedMoney,
                     FullName = user.FullName,
-                    GrowthPercent = 0
+                    GrowthPercent = 0,
+                    Id = user.Id
                 };
 
                 userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);

@@ -8,6 +8,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
 {
     public class UserModel
     {
+        public string Id { get; set; }
         public string Email { get; set; }
         [DisplayFormat(DataFormatString = "{0:c}")]
         public decimal Money { get; set; }
