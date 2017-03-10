@@ -41,7 +41,7 @@
                             </div>
                         </div>
                     }
-                    else if (activity.IsSelling && !activity.IsFailed)
+                    else if (activity.IsSelling && !activity.IsFailed && activity.Name == stock.Name)
                     {
                         <div class="panel panel-default text-center">
                             <div class="panel-heading">
