@@ -28,7 +28,7 @@
                                         <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
                                     }
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
+                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label }, new { data_html="true", data_toggle = "tooltip", title ="Beteckning: " + @activity.Label + "<br>" + "Totalt köpvärde: " + @activity.TotalMoney + "kr" })</p>
                                 <p><em>@activity.Date</em></p>
                             </div>
                         </div>
@@ -48,7 +48,7 @@
                                         <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
                                     }
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label })</p>
+                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label }, new { data_html="true" , data_toggle="tooltip", title="Beteckning: " + @activity.Label + "<br>" + "Totalt säljvärde: " + @activity.TotalMoney + "kr" })</p>
                                 <p><em>@activity.Date</em></p>
                             </div>
                         </div>
@@ -59,3 +59,10 @@
         </div>
     </div>
     </section>
+@section scripts{
+    <script>
+        $(document).ready(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+        });
+    </script>
+}
