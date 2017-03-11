@@ -106,11 +106,26 @@
     color: #3B469D;
 }
 
-/*.jumbotron-transparent {
-    /*background-color: transparent;
-}*/
+.jumbotron-transparent {
+    background-color: transparent;
+}
+.jumbotron-text-grey h2, .jumbotron-text-grey h1{
+    color: #444444 !important;
+}
 
 
 .user-info-panel {
     margin-top: 40px;
+}
+
+.no-margin-bottom{
+    margin-bottom: 0;
+}
+
+.col-padding-top{
+    padding-top:30px;
+}
+
+.col-padding-min-top{
+    padding-top:30px;
 }

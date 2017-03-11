@@ -91,11 +91,11 @@ namespace GameOfStocksHT16.Services
 
         public void SaveUsersHistory(List<UserMoneyHistory> list)
         {
-            foreach(var entity in list)
+            foreach (var entity in list)
             {
                 _context.UserMoneyHistory.Add(entity);
             }
-            Save(); 
+            Save();
         }
         public void RemoveStockOwnership(StockOwnership stockOwnership)
         {
@@ -127,10 +127,9 @@ namespace GameOfStocksHT16.Services
             return _context.UserMoneyHistory.ToList();
         }
 
-        public List<StockTransaction> GetStockTransactionsSortedByDate()
+        public List<StockTransaction> GetCompletedStockTransactionsSortedByDate()
         {
-            var transactions = _context.StockTransaction.OrderByDescending(x => x.Date).Take(100).ToList();
-            return transactions;
+            return _context.StockTransaction.Where(s => !s.IsFailed && s.IsCompleted).OrderByDescending(x => x.Date).Take(100).ToList();
         }
     }
 }

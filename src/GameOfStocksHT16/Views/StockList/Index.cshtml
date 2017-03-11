@@ -27,24 +27,39 @@
                 <tbody id="stock-table-body">
                     @foreach (var stock in Model.Stocks)
                     {
+                        var changeColor = "";
+                        var change = float.Parse(stock.Change.Replace("%"," ").Replace("+","").Replace(".",","));
                         <tr>
                             <td class="">
                                 <a asp-controller="StockList" asp-action="Stock" asp-route-label="@stock.Label" class="stock-button">@stock.Name</a>
                             </td>
                             <td>
-                                <span class="">
-                                    <b>@stock.Change</b>
-                                </span>
-                            </td>
-                            <td>@stock.LastTradePriceOnly</td>
-                            <td class="hidden-xs">@stock.Open</td>
-                            <td class="hidden-xs">@stock.DaysLow</td>
-                            <td class="hidden-xs">@stock.DaysHigh</td>
-                            <td>@stock.Volume</td>
-                            <td class="hidden-xs">@stock.LastTradeTime</td>
-                            <td class="hidden-xs">@stock.LastTradeDate</td>
-                            <td class="hidden-xs">@stock.Cap</td>
-                        </tr>
+                                @if (change / 100.0 > 0)
+                                {
+                                    changeColor = "text-danger";
+                                }
+                                else if(change / 100.0 < 0)
+                                {
+                                    changeColor = "text-success";
+                                }
+                                else
+                                {
+                                    changeColor = "";
+
+                                }
+                                    <span class="@changeColor">
+                                        <b>@stock.Change</b>
+                                    </span>
+                                </td>
+                                <td>@stock.LastTradePriceOnly</td>
+                                <td class="hidden-xs">@stock.Open</td>
+                                <td class="hidden-xs">@stock.DaysLow</td>
+                                <td class="hidden-xs">@stock.DaysHigh</td>
+                                <td>@stock.Volume</td>
+                                <td class="hidden-xs">@stock.LastTradeTime</td>
+                                <td class="hidden-xs">@stock.LastTradeDate</td>
+                                <td class="hidden-xs">@stock.Cap</td>
+                            </tr>
                     }
                 </tbody>
             </table>

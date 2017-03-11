@@ -71,7 +71,7 @@ namespace GameOfStocksHT16.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
+            //if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);
@@ -132,7 +132,7 @@ namespace GameOfStocksHT16.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
+            //if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = _userManager.GetUserId(HttpContext.User);
             var user = _gameOfStocksRepository.GetUserById(userId);

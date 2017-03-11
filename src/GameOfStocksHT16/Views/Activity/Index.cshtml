@@ -1,80 +1,103 @@
-﻿@model GameOfStocksHT16.Models.ActivityViewModels.ActivityModel
+﻿@model GameOfStocksHT16.Models.ActivityViewModels.ActivityViewModel
 
 @{
     ViewData["Title"] = "Aktiviteter";
 }
 <section class="section-padding-medium">
     <div class="container">
-        <div class="col-md-offset-1">
-            <div class="row text-center">
-                <h2>Aktiviteter</h2>
-            </div>
-            @foreach (var activity in Model.Activities)
+        <div class="col-md-10 col-md-offset-1">
+            @foreach (var transaction in Model.MostRecentCompletedTransactions)
             {
-                foreach (var stock in Model.Stocks)
-                {
-                @if (activity.User.Email != User.Identity.Name)
-                {
-                    if (activity.IsBuying && !activity.IsFailed && activity.Name == stock.Name)
+                <div class="row">
+                    @if (transaction.IsBuying)
                     {
-                        <div class="panel panel-default text-center">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    @if (activity.User.PictureUrl == null)
-                                    {
-                                        <img src="~/images/default-profile-pic.png" width="40" height="40" class="img-circle" />
-                                    }
-                                    else
-                                    {
-
-                                        <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
-                                    }
+                        var stock = Model.AllStocks.FirstOrDefault(x => x.Name == transaction.Name);
+                        <div class="col-md-11 ">
+                            <div class="panel panel-default ">
+                                <div class="panel-heading">
+                                    <div class="media">
+                                        <div class="media-left media-middle">
+                                            <a asp-action="VisitProfile" asp-controller="Users" asp-route-id="@transaction.User.Id">
+                                                @if (transaction.User.PictureUrl == null)
+                                                {
+                                                    <img src="~/images/default-profile-pic.png" width="40" height="40" class="media-object img-circle" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object img-circle" src="@transaction.User.PictureUrl" height="40" width="40" />
+                                                }
+                                            </a>
+                                        </div>
+                                        <div class="media-body">
+                                            <p class="no-margin-bottom">
+                                                <a asp-action="VisitProfile" asp-controller="Users" asp-route-id="@transaction.User.Id">@transaction.User.FullName</a>
+                                                har köpt @transaction.Quantity aktier från
+                                                <a asp-action="Stock" asp-controller="StockList" asp-route-label="@transaction.Label"
+                                                   data-html="true"
+                                                   data-toggle="tooltip"
+                                                   title="Köpris/styck: @stock.LastTradePriceOnly kr </br>
+                                        Totalt värde: @transaction.TotalMoney kr </br>">
+                                    @transaction.Name
+                                </a>
+                                                <i class="fa fa-3x fa-exchange text-primary pull-left"></i>
+                                            </p>
+                                            <p class="small no-margin-bottom"><em>@transaction.Date.ToString("dd MMMM  HH:MM")</em>
+                                            
+                                            </p>
+                                        </div>
+                                    </div>
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har köpt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label }, new
-                                                                                                                                                                         {
-                                                                                                                                                                             data_html = "true",
-                                                                                                                                                                             data_toggle = "tooltip", title = "Beteckning: " + @activity.Label + "<br>"
-                                                                                                                                                                             + "Totalt köpvärde: " + @activity.TotalMoney + "kr" + "<br>" + "Nuvarande volym: " + @stock.Volume + "<br>" + "Utveckling: " + @stock.Change + "<br>" +
-                                                                                                                                                                             "Lägsta: " + @stock.DaysLow + "kr<br>" + "Högsta: " + @stock.DaysHigh + "kr<br>" + "Köppris: " + @stock.LastTradePriceOnly + "kr"
-                                                                                                                                                                         })</p>
-                                <p><em>@activity.Date</em></p>
                             </div>
                         </div>
                     }
-                    else if (activity.IsSelling && !activity.IsFailed && activity.Name == stock.Name)
+                    else if (transaction.IsSelling)
                     {
-                        <div class="panel panel-default text-center">
-                            <div class="panel-heading">
-                                <div class="row">
-                                    @if (activity.User.PictureUrl == null)
-                                    {
-                                        <img src="~/images/default-profile-pic.png" width="40" height="40" class="img-circle" />
-                                    }
-                                    else
-                                    {
+                        var stock = Model.AllStocks.FirstOrDefault(x => x.Name == transaction.Name);
+                        <div class="col-md-11 col-md-offset-1">
 
-                                        <img class="img-circle" src="@activity.User.PictureUrl" height="40" width="40" />
-                                    }
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    <div class="media">
+                                        <div class="media-body text-right">
+                                            <p class="no-margin-bottom">
+                                                <a asp-action="VisitProfile" asp-controller="Users" asp-route-id="@transaction.User.Id">@transaction.User.FullName</a>
+                                                har sålt @transaction.Quantity aktier från
+                                                <a asp-action="Stock" asp-controller="StockList" asp-route-label="@transaction.Label"
+                                                   data-html="true"
+                                                   data-toggle="tooltip"
+                                                   title="Köpris/styck: @stock.LastTradePriceOnly kr </br>
+                                        Totalt värde: @transaction.TotalMoney kr </br>">
+
+                                    @transaction.Name
+
+                                                    <i class="fa fa-3x fa-exchange text-danger pull-right"></i>
+                                </a>
+                                            </p>
+                                            <p class="small no-margin-bottom"><em>@transaction.Date.ToString("dd MMMM  HH:MM")<span class="invisible">.</span></em></p>
+                                        </div>
+                                        <div class="media-right media-middle">
+                                            <a asp-action="VisitProfile" asp-controller="Users" asp-route-id="@transaction.User.Id">
+                                                @if (transaction.User.PictureUrl == null)
+                                                {
+                                                    <img src="~/images/default-profile-pic.png" width="40" height="40" class="media-object img-circle" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object img-circle" src="@transaction.User.PictureUrl" height="40" width="40" />
+                                                }
+                                            </a>
+                                        </div>
+                                        
+                                    </div>
                                 </div>
-                                <p>@Html.ActionLink(@activity.User.FullName, "VisitProfile", "Users", new { id = @activity.User.Id }) har sålt @activity.Quantity aktier från @Html.ActionLink(@activity.Name, "Stock", "StockList", new { label = @activity.Label }, new
-                                                                                                                                                                         {
-                                                                                                                                                                             data_html = "true",
-                                                                                                                                                                             data_toggle = "tooltip",
-                                                                                                                                                                             title = "Beteckning: " + @activity.Label + "<br>"
-                                                                                                                                                                             + "Totalt köpvärde: " + @activity.TotalMoney + "kr" + "<br>" + "Nuvarande volym: " + @stock.Volume + "<br>" + "Utveckling: " + @stock.Change + "<br>" +
-                                                                                                                                                                             "Lägsta: " + @stock.DaysLow + "kr<br>" + "Högsta: " + @stock.DaysHigh + "kr<br>" + "Köppris: " + @stock.LastTradePriceOnly + "kr"
-                                                                                                                                                                         })</p>
-                                <p><em>@activity.Date</em></p>
                             </div>
+                            </div>
+                            }
                         </div>
                     }
-
-                }
-              }
-            }
         </div>
     </div>
-    </section>
+</section>
 @section scripts{
     <script>
         $(document).ready(function () {

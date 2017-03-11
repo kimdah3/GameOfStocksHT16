@@ -26,9 +26,13 @@ namespace GameOfStocksHT16.Controllers
 
         public IActionResult Index()
         {
-            var transactions = _gameOfStocksRepository.GetStockTransactionsSortedByDate();
-            var stocks = _stockService.GetStocks();
-            var model = new ActivityModel(transactions, stocks);
+           
+            var model = new ActivityViewModel
+            {
+                MostRecentCompletedTransactions = _gameOfStocksRepository.GetCompletedStockTransactionsSortedByDate(),
+                AllStocks = _stockService.GetStocks()
+            };
+
             return View(model);
         }
     }
