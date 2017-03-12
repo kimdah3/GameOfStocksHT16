@@ -1,167 +1,298 @@
-﻿@model ProfileViewModelSimplified
+﻿@model ProfileViewModel
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = Model.User.FullName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <section class="section-padding-medium">
     <div class="container">
         <div class="row">
-            <div class="col-md-2 col-padding-min-top">
+            <div class="col-md-4 col-padding-min-top col-sm-6 col-xs-12 ">
                 <div class="text-center">
-                    @if (Model.User.PictureUrl == null)
-                    {
-                        <img src="~/images/default-profile-pic.png" width="200" height="200" class="img-circle img-responsive" />
-                    }
-                    else
-                    {
-                        <img src="@Model.User.PictureUrl" width="200" height="200" class="img-circle" />
-                    }
-                </div>
-            </div>
-
-            <div class="col-md-4 col-padding-top ">
-                <table class="table table-condensed">
+                            @if (Model.User.PictureUrl == null)
+                            {
+                                <img src="~/images/default-profile-pic.png" width="200" height="200" class="img-circle img-responsive img-center" />
+                            }
+                            else
+                            {
+                                <img src="@Model.User.PictureUrl" width="200" height="200" class="img-circle img-responsive img-center " />
+                            }
+                        </div>
+                <table class="table table-condensed table-border-profile">
                     <tbody>
                         <tr>
-                            <td>Namn:</td>
-                            <td>@Model.User.FullName</td>
+                            <td class=""><b>Rank:</b></td>
+                            <td>#@Html.DisplayFor(model => model.Position)</td>
                         </tr>
                         <tr>
-                            <td>@Html.DisplayNameFor(model => model.User.Money):</td>
+                            <td><b>@Html.DisplayNameFor(model => model.User.Money):</b></td>
                             <td>@Html.DisplayFor(model => model.User.Money)</td>
                         </tr>
                         <tr>
-                            <td>@Html.DisplayNameFor(model => model.User.ReservedMoney)</td>
+                            <td><b>@Html.DisplayNameFor(model => model.User.ReservedMoney):</b></td>
                             <td>@Html.DisplayFor(model => model.User.ReservedMoney)</td>
                         </tr>
 
                         <tr>
-                            <td>@Html.DisplayNameFor(model => model.User.TotalWorth)</td>
+                            <td><b>@Html.DisplayNameFor(model => model.User.TotalWorth):</b></td>
                             <td>@Html.DisplayFor(model => model.User.TotalWorth)</td>
-                        </tr>
-                        <tr>
-                            <td>Rank:</td>
-                            <td>@Html.DisplayFor(model => model.Position)</td>
                         </tr>
                     </tbody>
                 </table>
             </div>
-            <div class="col-md-6">
-                <div id="chartContainer" style="height: 230px; width: 100%;"></div>
+            <div class="col-md-8 col-sm-12 col-xs-12">
+                <div id="chartContainer" style="height:390px; width: 100%;"></div>
             </div>
         </div>
         <div class="row">
-            <hr />
-            <div class="panel panel-info">
-                <div class="panel-heading">Vänteläge</div>
-                <div class="panel-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Datum
-                                    </th>
-                                    <th>
-                                        Namn
-                                    </th>
-                                    <th>
-                                        Ticker
-                                    </th>
-                                    <th>
-                                        Antal
-                                    </th>
+            <div class="col-lg-12">
+                <hr />
 
-                                    <th>
-                                        Uppskattat
-                                    </th>
-                                    <th>
-                                        Köper
-                                    </th>
-                                    <th>
-                                        Säljer
-                                    </th>
-                                    <th>
-                                        <i class="fa fa-clock-o"></i>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var item in Model.PendingTransactions)
-                                {
-                                    <tr>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Date)
-                                        </td>
-                                        <td>
-                                            <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Label)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.Quantity)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.TotalMoney)
-                                        </td>
+                <div class="panel panel-info">
+                    <div class="panel-heading"><i class="fa fa-2x fa-clock-o pull-right"></i> Vänteläge </div>
+                    @if (Model.PendingTransactions.Any())
+                    {
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Datum
+                                            </th>
+                                            <th>
+                                                Namn
+                                            </th>
+                                            <th>
+                                                Ticker
+                                            </th>
+                                            <th>
+                                                Antal
+                                            </th>
 
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.IsBuying)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.IsSelling)
-                                        </td>
-                                        <td>
-                                            @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
-                                        </td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
+                                            <th>
+                                                Uppskattat
+                                            </th>
+                                            <th>
+                                                Köper
+                                            </th>
+                                            <th>
+                                                Säljer
+                                            </th>
+                                            <th>
+                                                <i class="fa fa-clock-o"></i>
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.PendingTransactions)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Date)
+                                                </td>
+                                                <td>
+                                                    <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Label)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TotalMoney)
+                                                </td>
+
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.IsBuying)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.IsSelling)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+                                                </td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="panel-body">
+                            <p class="small">Inga köp eller sälj i vänteläget..</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="panel panel-success">
+                    <div class="panel-heading"><i class="fa fa-2x fa-smile-o pull-right"></i> Aktier</div>
+                    <div class="panel-body">
+                        @if (Model.StockOwnerships.Any())
+                        {
+                            <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
+                                <span id="buy-sell-error"></span>
+                            </div>
+                            <div class="table-responsive">
+                                <table class="table table-condensed ">
+                                    <thead>
+                                        <tr>
+                                            <th class="col-lg-2">
+                                                Namn
+                                            </th>
+                                            <th class="col-lg-1 hidden-xs">
+                                                Ticker
+                                            </th>
+                                            <th class="col-lg-1">
+                                                Antal
+                                            </th>
+                                            <th class="col-lg-1">
+                                                Totalt värde
+                                            </th>
+                                            <th class="col-lg-1">
+                                                GAV
+                                            </th>
+                                            <th class="col-lg-1 hidden-xs">Aktuell kurs</th>
+                                            <th class="col-lg-1">Utveckling</th>
+                                            <th class="col-lg-2"></th>
+                                            <th class="col-lg-2"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.StockOwnerships)
+                                        {
+                                            <tr>
+                                                <td>
+                                                    <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
+                                                </td>
+                                                <td class="hidden-xs">
+                                                    @Html.DisplayFor(modelItem => item.Label)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.TotalWorth)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Gav)
+                                                </td>
+                                                <td class="hidden-xs">
+                                                    @Html.DisplayFor(modelItem => item.LastTradePrice)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Growth)%
+                                                </td>
+                                                <td>
+                                                    <form asp-controller="api/StockTransactions"
+                                                          asp-action="CreateSellingStockTransaction"
+                                                          asp-route-label="@item.Label"
+                                                          asp-anti-forgery="true"
+                                                          data-ajax-success="ajaxSuccess"
+                                                          data-ajax="true"
+                                                          data-ajax-method="POST"
+                                                          data-ajax-failure="ajaxError"
+                                                          data-ajax-begin="OnBegin"
+                                                          data-ajax-complete="OnComplete"
+                                                          class="">
+                                                        <div class="input-group input-group-sm">
+                                                            <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
+                                                            <span class="input-group-btn">
+                                                                <button data-loading-text="Laddar..." class="btn btn-danger" type="submit">Sälj</button>
+                                                            </span>
+                                                        </div>
+                                                    </form>
+                                                </td>
+                                                <td>
+                                                    <form asp-controller="api/StockTransactions"
+                                                          asp-action="CreateBuyingStockTransaction"
+                                                          asp-route-label="@item.Label"
+                                                          asp-anti-forgery="true"
+                                                          data-ajax-success="ajaxSuccess"
+                                                          data-ajax="true"
+                                                          data-ajax-method="POST"
+                                                          data-ajax-begin="OnBegin"
+                                                          data-ajax-complete="OnComplete"
+                                                          data-ajax-failure="ajaxError">
+                                                        <div class="input-group input-group-sm ">
+                                                            <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
+                                                            <span class="input-group-btn">
+                                                                <button data-loading-text="Laddar..." class="btn btn-primary" type="submit">Köp</button>
+                                                            </span>
+                                                        </div>
+                                                    </form>
+                                                </td>
+
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="small">Du äger inga aktier just nu.</p>
+                        }
                     </div>
                 </div>
             </div>
-
-
         </div>
+
         <div class="row">
-            <hr />
-                <div class="panel panel-success">
-                    <div class="panel-heading">Aktier</div>
+            <div class="col-lg-12">
+
+                <div class="panel panel-default">
+                    <div class="panel-heading"><i class="fa fa-2x fa-history pull-right"></i> Historik</div>
                     <div class="panel-body">
-                        <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
-                            <span id="buy-sell-error"></span>
-                        </div>
                         <div class="table-responsive">
-                            <table class="table">
+                            <table class="table table-condensed">
                                 <thead>
                                     <tr>
-                                        <th class="col-lg-2">
+                                        <th>
+                                            Datum
+                                        </th>
+                                        <th>
                                             Namn
                                         </th>
-                                        <th class="col-lg-1">
+                                        <th>
                                             Ticker
                                         </th>
-                                        <th class="col-lg-1">
+                                        <th>
                                             Antal
                                         </th>
-                                        <th class="col-lg-1">
+
+                                        <th>
                                             Totalt värde
                                         </th>
-                                        <th class="col-lg-1">
-                                            GAV
+                                        <th>
+                                            Köp/Sälj-kurs
                                         </th>
-                                        <th class="col-lg-1">Aktuell kurs</th>
-                                        <th class="col-lg-1">Utveckling</th>
-                                        <th class="col-lg-2"></th>
-                                        <th class="col-lg-2"></th>
+                                        <th>
+                                            Köpte
+                                        </th>
+                                        <th>
+                                            Sålde
+                                        </th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach (var item in Model.StockOwnerships)
-            {
+                                    @foreach (var item in Model.CompletedTransactions)
+                                    {
+                                        if (!item.IsCompleted)
+                                        {
+                                            continue;
+                                        }
                                         <tr>
+                                            <td>
+                                                @Html.DisplayFor(modelItem => item.Date)
+                                            </td>
                                             <td>
                                                 <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
                                             </td>
@@ -172,57 +303,17 @@
                                                 @Html.DisplayFor(modelItem => item.Quantity)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.TotalSum)
+                                                @Html.DisplayFor(modelItem => item.TotalMoney)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Gav)
+                                                @Html.DisplayFor(modelItem => item.Bid)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.LastTradePrice)
+                                                @Html.DisplayFor(modelItem => item.IsBuying)
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item.Growth)%
+                                                @Html.DisplayFor(modelItem => item.IsSelling)
                                             </td>
-                                            <td>
-                                                <form asp-controller="api/StockTransactions"
-                                                      asp-action="CreateSellingStockTransaction"
-                                                      asp-route-label="@item.Label"
-                                                      asp-anti-forgery="true"
-                                                      data-ajax-success="ajaxSuccess"
-                                                      data-ajax="true"
-                                                      data-ajax-method="POST"
-                                                      data-ajax-failure="ajaxError"
-                                                      data-ajax-begin="OnBegin"
-                                                      data-ajax-complete="OnComplete"
-                                                      class="">
-                                                    <div class="input-group input-group-sm">
-                                                        <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
-                                                        <span class="input-group-btn">
-                                                            <button data-loading-text="Laddar..." class="btn btn-danger" type="submit">Sälj</button>
-                                                        </span>
-                                                    </div>
-                                                </form>
-                                            </td>
-                                            <td>
-                                                <form asp-controller="api/StockTransactions"
-                                                      asp-action="CreateBuyingStockTransaction"
-                                                      asp-route-label="@item.Label"
-                                                      asp-anti-forgery="true"
-                                                      data-ajax-success="ajaxSuccess"
-                                                      data-ajax="true"
-                                                      data-ajax-method="POST"
-                                                      data-ajax-begin="OnBegin"
-                                                      data-ajax-complete="OnComplete"
-                                                      data-ajax-failure="ajaxError">
-                                                    <div class="input-group input-group-sm ">
-                                                        <input required="required" name="quantity" id="quantity" type="number" min="1" class="form-control">
-                                                        <span class="input-group-btn">
-                                                            <button data-loading-text="Laddar..." class="btn btn-primary" type="submit">Köp</button>
-                                                        </span>
-                                                    </div>
-                                                </form>
-                                            </td>
-
                                         </tr>
                                     }
                                 </tbody>
@@ -231,6 +322,87 @@
                     </div>
                 </div>
             </div>
+        </div>
+        @if (Model.FailedTransactions.Any())
+            {
+            <div class="row">
+                <div class="col-lg-12">
+
+                    <div class="panel panel-danger">
+                        <div class="panel-heading">
+                        <i class="fa fa-2x fa-info-circle pull-right" 
+                           data-html="true"
+                           data-toggle="tooltip"
+                           title="Du saknade tillräckligt med pengar. Köpet går igenom efter 15 minuters-fördröjningen vilket kan resultera i att summan skiljer sig från när köpet lades, detta för att förhindra fusk i tävlingen."></i>
+                        <i class="fa fa-2x fa-frown-o pull-right"></i> 
+                        Misslyckades</div>
+                        <div class="panel-body">
+                            <div class="table-responsive">
+                                <table class="table table-condensed">
+                                    <thead>
+                                        <tr>
+                                            <th>
+                                                Datum
+                                            </th>
+                                            <th>
+                                                Namn
+                                            </th>
+                                            <th>
+                                                Ticker
+                                            </th>
+                                            <th>
+                                                Antal
+                                            </th>
+
+                                            <th>
+                                                Totalt värde
+                                            </th>
+                                            <th>
+                                                Köpte
+                                            </th>
+                                            <th>
+                                                Sålde
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var item in Model.FailedTransactions)
+                                        {
+
+                                            <tr>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Date)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Name)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Label)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Quantity)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.Bid)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.IsBuying)
+                                                </td>
+                                                <td>
+                                                    @Html.DisplayFor(modelItem => item.IsSelling)
+                                                </td>
+                                            </tr>
+                                        }
+
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
     </div>
 
 </section>
@@ -259,6 +431,7 @@
         };
 
         $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
             var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
             var progressToChart = [];
             $.each(progressAllDays.value, function(index, element) {
@@ -268,7 +441,7 @@
             //Better to construct options first and then pass it as a parameter
             var options = {
                 title: {
-                    text: "Utveckling (%)"
+                    text: "Procentuell utveckling/dag"
                 },
                 animationEnabled: true,
                 axisX: {
@@ -276,8 +449,8 @@
                     maximum: 30
                 },
                 axisY: {
-                    minimum: -100,
-                    maximum: 100
+                    minimum: -50,
+                    maximum: 50
 
                 },
                 data: [

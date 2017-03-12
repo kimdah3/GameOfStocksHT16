@@ -6,48 +6,73 @@
 <section class="section-padding-medium">
     <div class="container">
         <div class="col-md-8 col-md-offset-2">
-            <h3>@Model.Stock.Name</h3>
             <div class="row">
-                <div class="col-md-6">
-                    <dl class="dl-horizontal">
-                        <dt>Utveckling</dt>
-                        <dd>
-                            <span class="">
-                                <b>@Model.Stock.Change</b>
-                            </span>
-                        </dd>
-                        <dt>Antal</dt>
-                        <dd>@Model.Stock.Volume</dd>
-                        <dt>Pris</dt>
-                        <dd>@Model.Stock.LastTradePriceOnly</dd>
-                        <dt>Öppningspris</dt>
-                        <dd>@Model.Stock.Open</dd>
-                        <dt>Lägst</dt>
-                        <dd>@Model.Stock.DaysLow</dd>
-                        <dt>Högst</dt>
-                        <dd>@Model.Stock.DaysHigh</dd>
-
-                        <dt>Senaste köptid</dt>
-                        <dd>@Model.Stock.LastTradeTime</dd>
-                        <dt>Senaste köpdatum</dt>
-                        <dd>@Model.Stock.LastTradeDate</dd>
-                        <dt>Cap</dt>
-                        <dd>@Model.Stock.Cap</dd>
-                    </dl>
+                    <div class="col-md-6 ">
+                    <h3>@Model.Stock.Name</h3>
+                    <table class="table table-condensed table-bordered">
+                        <tbody>
+                            <tr>
+                                <td class=""><b>Ditt innehav</b></td>
+                                <td>@Html.DisplayFor(model => model.UsersQuantity)</td>
+                            </tr>
+                            <tr>
+                                <td class=""><b>Totalt värde</b></td>
+                                <td>@(Model.Stock.LastTradePriceOnly * Model.UsersQuantity)</td>
+                            </tr>
+                            <tr>
+                                <td class=""><b>GAV</b></td>
+                                <td>@Html.DisplayFor(model => model.UsersGav)</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                <div class="col-md-6">
-                    <dl class="dl-horizontal">
-                        <dt>Ditt innehav</dt>
-                        <dd>@Model.UsersQuantity</dd>
-                        <dt>Totalt värde</dt>
-                        <dd>@Model.UsersStockTotalSum</dd>
-                        <dt>GAV</dt>
-                        <dd>@Model.UsersGav</dd>
-                    </dl>
+                <div class="col-md-12">
+
+                    <table class="table table-condensed ">
+                        <thead>
+                            <tr>
+                                <td class=""><b>Utveckling</b></td>
+                                <td class=""><b>Antal</b></td>
+                                <td class=""><b>Pris</b></td>
+                                <td class=""><b>Öppning</b></td>
+                                <td class=""><b>Lägst</b></td>
+                                <td class=""><b>Högst</b></td>
+                                <td class=""><b>Tid</b></td>
+                                <td class=""><b>Datum</b></td>
+                                <td class=""><b>Cap</b></td>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                @if (float.Parse(Model.Stock.Change.Replace("%", " ").Replace("+", "").Replace(".", ",")) / 100.0 > 0)
+                                {
+                                    <td>@Html.DisplayFor(model => model.Stock.Change) <i class="fa fa-arrow-up text-success"></i></td>
+                                }
+                                else if (float.Parse(Model.Stock.Change.Replace("%", " ").Replace("+", "").Replace(".", ",")) / 100.0 < 0)
+                                {
+                                    <td>@Html.DisplayFor(model => model.Stock.Change) <i class="fa fa-arrow-down text-danger"></i></td>
+                                }
+                                else
+                                {
+                                    <td>@Html.DisplayFor(model => model.Stock.Change)</td>
+                                }
+                                <td>@Html.DisplayFor(model => model.Stock.Volume)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.LastTradePriceOnly)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.Open)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.DaysLow)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.DaysHigh)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.LastTradeTime)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.LastTradeDate)</td>
+                                <td>@Html.DisplayFor(model => model.Stock.Cap)</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-6  ">
+                <div class="col-md-6 col-sm-6 ">
                     <div class="panel">
                         <div class="panel-body">
                             <div id="buy-error-box" class="alert alert-warning text-center" style="display:none">
@@ -70,7 +95,7 @@
                                 <div class="form-group">
                                     <label class="col-md-2 control-label">Antal</label>
                                     <div class="col-md-10">
-                                        <input name="quantity" id="buy-amount" type="number" min="1" class="form-control">
+                                        <input name="quantity" placeholder="Antal" id="buy-amount" type="number" min="1" class="form-control">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -86,7 +111,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-6 ">
+                <div class="col-md-6 col-sm-6">
                     <div class="panel">
                         <div class="panel-body">
                             @if (Model.UserHasStock)
@@ -111,7 +136,7 @@
                                     <div class="form-group">
                                         <label class="col-md-2 control-label">Antal</label>
                                         <div class="col-md-10">
-                                            <input name="quantity" id="quantity" type="number" min="1" class="form-control disabled">
+                                            <input name="quantity" id="quantity" type="number" min="1" placeholder="Antal" class="form-control disabled">
                                         </div>
                                     </div>
                                     <div class="form-group">
@@ -120,7 +145,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button data-loading-text="Laddar..."  class="btn btn-danger btn-block" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..." class="btn btn-danger btn-block" type="submit">Genomför</button>
                                     </div>
                                 </form>
                             }
@@ -139,7 +164,7 @@
                                         </div>
                                     </div>
                                     <div class="form-group form-stock-group">
-                                        <button data-loading-text="Laddar..."  class="btn btn-danger btn-block disabled" type="submit">Genomför</button>
+                                        <button data-loading-text="Laddar..." class="btn btn-danger btn-block disabled" type="submit">Genomför</button>
                                     </div>
                                 </div>
                             }
@@ -156,7 +181,7 @@
 @section scripts{
     <script>
         function ajaxSuccess() {
-            location.href = '@Url.Action("DisplayProfile","Users")';
+            location.href = '@Url.Action("Profile","Users")';
         };
 
         function ajaxErrorBuy(XMLHttpRequest) {

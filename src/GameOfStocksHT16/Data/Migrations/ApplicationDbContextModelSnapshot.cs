@@ -111,8 +111,6 @@ namespace GameOfStocksHT16.Data.Migrations
 
                     b.Property<bool>("IsCompleted");
 
-                    b.Property<bool>("IsFailed");
-
                     b.Property<bool>("IsSelling");
 
                     b.Property<string>("Label");

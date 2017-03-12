@@ -9,6 +9,11 @@
         <h2>Välkommen till</h2>
         <h1 class="text-uppercase">game of stocks!</h1>
         @await Html.PartialAsync("_LoginLinksPartial")
+        <div class="row"><div class="col-md-6 col-md-offset-3"><hr /></div></div>
+        <p class="text-white">
+            <em>I samarbete med </em>
+        </p>
+        <div><img src="~/images/nordea.png" /></div>
     </div>
 </section>
 <section class="">
@@ -17,8 +22,7 @@
             <h2 class="">Prestige. Trading. Uppgång. Nedgång. Framgång. Motgång. Spänning.</h2>
             <hr />
             <p>
-
-                Ja, många olika ord kan beskriva Game of Stocks! Historiskt sett har vi sett otroliga prestationer, men även prestationer som gör oss glada att vi handlar med fiktiva pengar... Men det är just tjusningen med denna tävling, att kunna gå all in på högrisk-aktier och ha chansen att slå på jackpot, eller ha ett lågrisk-tänk och se om den mer försiktiga sparformen är vägen till framgång, eller blanda! 
+                Ja, många olika ord kan beskriva Game of Stocks! Historiskt sett har vi sett otroliga prestationer, men även prestationer som gör oss glada att vi handlar med fiktiva pengar... Men det är just tjusningen med denna tävling, att kunna gå all in på högrisk-aktier och ha chansen att slå på jackpot, eller ha ett lågrisk-tänk och se om den mer försiktiga sparformen är vägen till framgång, eller blanda!
             </p>
             <p class="text-uppercase">Allt är möjligt, i Game of Stocks!</p>
         </div>
@@ -27,20 +31,22 @@
 <section>
     <div class="container">
         <!-- Example row of columns -->
-            <div class="col-md-4">
-                <h3>Topp 5</h3>
-                <table class="table table-bordered table-condensed table-striped">
-                    <thead>
+        <div class="col-md-4">
+            <h3>Topp 5</h3>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
                     <tr>
                         <th>Namn</th>
                         <th>Utveckling</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     @foreach (var item in Model.CurrentLeaderBoard)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             <td>
                                 @item.TotalWorth kr
                                 @if (item.GrowthPercent > 0)
@@ -58,23 +64,25 @@
                             </td>
                         </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <h3>Dagens vinnare</h3>
-                <table class="table table-bordered table-condensed table-striped">
-                    <thead>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h3>Dagens vinnare</h3>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
                     <tr>
                         <th>Namn</th>
                         <th>Utveckling</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     @foreach (var item in Model.TodaysWinners)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
@@ -89,23 +97,25 @@
                             }
                         </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <h3>Dagens förlorare</h3>
-                <table class="table table-bordered table-condensed table-striped">
-                    <thead>
+                </tbody>
+            </table>
+        </div>
+        <div class="col-md-4">
+            <h3>Dagens förlorare</h3>
+            <table class="table table-bordered table-condensed table-striped">
+                <thead>
                     <tr>
                         <th>Namn</th>
                         <th>Utveckling</th>
                     </tr>
-                    </thead>
-                    <tbody>
+                </thead>
+                <tbody>
                     @foreach (var item in Model.TodaysLoosers)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
@@ -120,10 +130,10 @@
                             }
                         </tr>
                     }
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
         </div>
+    </div>
 </section>
 @section Scripts {
     <script type="text/javascript">

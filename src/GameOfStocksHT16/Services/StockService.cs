@@ -33,7 +33,7 @@ namespace GameOfStocksHT16.Services
 
         public void CompleteStockTransactions(object state)
         {
-            //if (!IsTradingTime()) return;
+            if (!IsTradingTime()) return;
 
             var users = _gameOfStocksRepository.GetUsersWithPendingStockTransactions();
             var newOwnerships = new List<StockOwnership>();
@@ -43,8 +43,8 @@ namespace GameOfStocksHT16.Services
                 foreach (var transaction in user.StockTransactions.Where(x => !x.IsCompleted && !x.IsFailed))
                 {
                     ////Wait 15 min before completing transaction.
-                    //var newTime = transaction.Date + TimeSpan.FromMinutes(15);
-                    //if (DateTime.Now < newTime) continue;
+                    var newTime = transaction.Date + TimeSpan.FromMinutes(15);
+                    if (DateTime.Now < newTime) continue;
 
                     if (transaction.IsBuying)
                     {
@@ -65,6 +65,10 @@ namespace GameOfStocksHT16.Services
         private void SellStock(StockTransaction transaction)
         {
             var stockRecentValue = GetStockByLabel(transaction.Label);
+
+            //Lasttradeprice = 0 means somethings wrong with yahoo finance api
+            if (stockRecentValue.LastTradePriceOnly == 0.0M) return;
+
             transaction.User.Money += stockRecentValue.LastTradePriceOnly * transaction.Quantity;
             transaction.Bid = stockRecentValue.LastTradePriceOnly;
             transaction.IsCompleted = true;
@@ -76,7 +80,10 @@ namespace GameOfStocksHT16.Services
             var stockRecentValue = GetStockByLabel(transaction.Label);
 
             //If no recent buyer of stock, skip transaction
-            //if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+            if (!StockHasBuyer(stockRecentValue, transaction.Date)) return;
+
+            //Lasttradeprice = 0 means somethings wrong with yahoo finance api
+            if (stockRecentValue.LastTradePriceOnly == 0.0M) return;
 
             //Restore reserved money
             transaction.User.Money += transaction.TotalMoney;
@@ -124,7 +131,6 @@ namespace GameOfStocksHT16.Services
 
             transaction.User.Money -= transaction.TotalMoney;
             transaction.IsCompleted = true;
-            // MÅSTE SPARA CONTEXTEN?? ANNARS FÖRSVINNER DE NYA VÄRDERNA.
         }
 
 
@@ -352,18 +358,22 @@ namespace GameOfStocksHT16.Services
                     TotalWorth = user.Money + user.ReservedMoney,
                     FullName = user.FullName,
                     GrowthPercent = 0,
-                    Id = user.Id
+                    Id = user.Id,
+                    PictureUrl = user.PictureUrl
                 };
 
                 userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);
                 userWithTotalWorth.TotalWorth += GetTotalWorthFromSellingStockTransactionsByUser(user);
                 userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+                userWithTotalWorth.PercentPerDay = GetUserPercentToday(user);
 
                 allUsersWithTotalWorth.Add(userWithTotalWorth);
             }
 
             return allUsersWithTotalWorth;
         }
+
+
 
         private decimal GetTotalWorthFromStockOwnershipsByUser(ApplicationUser user)
         {
@@ -454,11 +464,24 @@ namespace GameOfStocksHT16.Services
                 usersWithPercent.Add(new UserPercentModel()
                 {
                     FullName = userMoneyHistory.User.FullName,
-                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userMoneyHistory.User.Email).TotalWorth / userMoneyHistory.Money - 1) * 100), 2)
+                    PercentPerDay = Math.Round(((allUsers.First(u => u.Email == userMoneyHistory.User.Email).TotalWorth / userMoneyHistory.Money - 1) * 100), 2),
+                    Id = userMoneyHistory.User.Id
                 });
             }
 
             return usersWithPercent;
+        }
+
+        private decimal GetUserPercentToday(ApplicationUser user)
+        {
+            var usersHistory = _gameOfStocksRepository.GetUserTotalYesterdayByUser(user);
+            if (usersHistory != null)
+            {
+                return Math.Round(((usersHistory.Money / user.Money - 1) * 100), 2);
+            }else
+            {
+                return 0M;
+            }
         }
 
         //Tid för börsstängning, ska vara 1747.

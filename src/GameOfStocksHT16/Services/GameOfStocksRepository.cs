@@ -89,6 +89,7 @@ namespace GameOfStocksHT16.Services
             return _context.UserMoneyHistory.Include(x => x.User).Where(x => x.Time == DateTime.Today).ToList();
         }
 
+
         public void SaveUsersHistory(List<UserMoneyHistory> list)
         {
             foreach (var entity in list)
@@ -125,6 +126,11 @@ namespace GameOfStocksHT16.Services
         public List<UserMoneyHistory> GetAllUserMoneyHistory()
         {
             return _context.UserMoneyHistory.ToList();
+        }
+
+        public UserMoneyHistory GetUserTotalYesterdayByUser(ApplicationUser user)
+        {
+            return _context.UserMoneyHistory.FirstOrDefault(x => x.User == user && x.Time == DateTime.Today);
         }
 
         public List<StockTransaction> GetCompletedStockTransactionsSortedByDate()

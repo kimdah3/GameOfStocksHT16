@@ -13,6 +13,7 @@
                         <th class="col-md-1"></th>
                         <th>Namn</th>
                         <th>Totala tillgångar</th>
+                        <th>Dagens utveckling</th>
                         <th>Utveckling</th>
                     </tr>
                 </thead>
@@ -47,6 +48,7 @@
                             <td>
                                 @Html.DisplayFor(m => item.TotalWorth)
                             </td>
+                            <td>@Html.DisplayFor(m => item.PercentPerDay)%</td>
                             @if (item.GrowthPercent > 0)
                             {
                                 <td class="text-success"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>

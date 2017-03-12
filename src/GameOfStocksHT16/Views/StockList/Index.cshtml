@@ -2,7 +2,7 @@
 
 
 @{
-    ViewData["Title"] = "Stock List";
+    ViewData["Title"] = "Aktier";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
@@ -36,11 +36,11 @@
                             <td>
                                 @if (change / 100.0 > 0)
                                 {
-                                    changeColor = "text-danger";
+                                    changeColor = "text-success";
                                 }
                                 else if(change / 100.0 < 0)
                                 {
-                                    changeColor = "text-success";
+                                    changeColor = "text-danger";
                                 }
                                 else
                                 {

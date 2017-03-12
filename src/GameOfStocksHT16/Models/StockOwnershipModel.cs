@@ -14,7 +14,7 @@ namespace GameOfStocksHT16.Models
         public string Label { get; set; }
         [Display(Name = "Antal")]
         public int Quantity { get; set; }
-        [Display(Name = "Totalt värde")]
+        [Display(Name = "Totalt anskaffningsvärde")]
         public decimal TotalSum { get; set; }
         [Display(Name = "GAV")]
         public decimal Gav { get; set; }
@@ -23,5 +23,7 @@ namespace GameOfStocksHT16.Models
         public decimal LastTradePrice { get; set; }
         [Display(Name = "Utveckling")]
         public decimal Growth { get; set; }
+        [Display(Name = "Totalt värde")]
+        public decimal TotalWorth { get; set; }
     }
 }

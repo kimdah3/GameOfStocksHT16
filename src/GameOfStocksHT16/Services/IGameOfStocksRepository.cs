@@ -23,6 +23,7 @@ namespace GameOfStocksHT16.Services
         IEnumerable<StockOwnership> GetStockOwnershipsByUser(ApplicationUser user);
 
         List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
+        UserMoneyHistory GetUserTotalYesterdayByUser(ApplicationUser user);
         List<StockTransaction> GetCompletedStockTransactionsSortedByDate();
 
         void SaveUsersHistory(List<UserMoneyHistory> list);

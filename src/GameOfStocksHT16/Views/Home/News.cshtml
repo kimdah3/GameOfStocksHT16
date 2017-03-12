@@ -5,7 +5,7 @@
 <section id="section-welcome-header">
     <div class="jumbotron text-center jumbotron-custom">
         <h1 class="text-uppercase">Nyheter!</h1>
-        <br/>
+        <br />
         @*<a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-primary">Logga in</a>
             <a asp-area="" asp-controller="Account" asp-action="Register" class="btn btn-success">Registrera</a>*@
     </div>
@@ -33,7 +33,6 @@
                     <i>VECKANS FRÅGA; Vilken kurs står Snapchat (nuvarande kurs är:27.09$) i slutet av veckan? Vinnaren av tävlingen presenteras i slutet av månaden.</i>
                 </p>
                 <p class="lead">Årets nionde vecka har passerat och börsen har fortsatt starkt uppåt. Efter den svaga avslutningen på vecka 8 tog börsen snabbt igen det och onsdagen bjöd på en rejäl uppgång där både SP500 och Dow Jones satte nya rekordnivåer. Dow Jones klättrade upp över 21000-nivån och stängde över medan SP500 var uppe och nosade på 2400-nivån men orkade inte med att stänga över. Efter den kraftiga uppgången på onsdagen tog kraften slut på börsen och veckan avslutades med två lite svagare dagar. Man kan inget annat än säga att börsen är extremt stark för tillfället, speciellt de amerikanska börserna.</p>
-                <p>Årets nionde vecka har passerat och börsen har fortsatt starkt uppåt. Efter den svaga avslutningen på vecka 8 tog börsen snabbt igen det och onsdagen bjöd på en rejäl uppgång där både SP500 och Dow Jones satte nya rekordnivåer. Dow Jones klättrade upp över 21000-nivån och stängde över medan SP500 var uppe och nosade på 2400-nivån men orkade inte med att stänga över. Efter den kraftiga uppgången på onsdagen tog kraften slut på börsen och veckan avslutades med två lite svagare dagar. Man kan inget annat än säga att börsen är extremt stark för tillfället, speciellt de amerikanska börserna.</p>
                 <p>
                     På torsdagen börsnoterades Snapchat, vilket är den största techbolagsnoteringen på länge, noteringskursen sattes kring 17$ vilket gav ett bolagsvärde kring 24 miljarder dollar. När aktien började att handlas på torsdagen hade kursen stigit till 24$ och står nu efter veckan i 27.09$ vilket ger bolaget ett marknadsvärde på 31,35 miljarder dollar (ca 285 miljarder kronor).
                 </p>
@@ -96,7 +95,9 @@
                     @foreach (var item in Model.CurrentLeaderBoard)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             <td>
                                 @item.TotalWorth kr
                                 @if (item.GrowthPercent > 0)
@@ -129,7 +130,9 @@
                     @foreach (var item in Model.TodaysWinners)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
@@ -151,7 +154,9 @@
             <table class="table table-bordered table-condensed table-striped">
                 <thead>
                     <tr>
-                        <th>Namn</th>
+                        <th>
+                        Namn
+                        </th>
                         <th>Utveckling</th>
                     </tr>
                 </thead>
@@ -159,7 +164,9 @@
                     @foreach (var item in Model.TodaysLoosers)
                     {
                         <tr>
-                            <td>@item.FullName</td>
+                            <td>
+                                <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
+                            </td>
                             @if (item.PercentPerDay > 0)
                             {
                                 <td class="font-percent font-color-green">@item.PercentPerDay%</td>
