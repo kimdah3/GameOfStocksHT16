@@ -13,13 +13,11 @@ namespace GameOfStocksHT16.Controllers
 {
     public class ActivityController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
         public ActivityController(UserManager<ApplicationUser> userManager, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
-            _userManager = userManager;
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
         }
@@ -29,7 +27,7 @@ namespace GameOfStocksHT16.Controllers
            
             var model = new ActivityViewModel
             {
-                MostRecentCompletedTransactions = _gameOfStocksRepository.GetCompletedStockTransactionsSortedByDate(),
+                MostRecentCompletedTransactions = _gameOfStocksRepository.GetCompletedStockTransactionsSortedByDate() as List<StockTransaction>,
                 AllStocks = _stockService.GetStocks()
             };
 

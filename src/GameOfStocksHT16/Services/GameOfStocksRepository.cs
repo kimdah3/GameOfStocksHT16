@@ -12,7 +12,7 @@ namespace GameOfStocksHT16.Services
 {
     public class GameOfStocksRepository : IGameOfStocksRepository
     {
-        private ApplicationDbContext _context;
+        private readonly ApplicationDbContext _context;
 
         public GameOfStocksRepository(ApplicationDbContext context)
         {
@@ -46,7 +46,7 @@ namespace GameOfStocksHT16.Services
 
         public IEnumerable<StockTransaction> GetUncompletedStockTransactions()
         {
-            return _context.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted);
+            return _context.StockTransaction.Include(x => x.User).Where(x => !x.IsCompleted).ToList();
         }
 
         public void AddStockOwnerships(List<StockOwnership> newOwnerships)
@@ -69,7 +69,7 @@ namespace GameOfStocksHT16.Services
             return _context.Users.Include(u => u.StockOwnerships).Include(u => u.StockTransactions).Include(u => u.MoneyHistory).ToList();
         }
 
-        public List<ApplicationUser> GetUsersWithPendingStockTransactions()
+        public IEnumerable<ApplicationUser> GetUsersWithPendingStockTransactions()
         {
             return _context.Users.Include(u => u.StockTransactions).Where(u => u.StockTransactions.Any(s => (s.IsBuying || s.IsSelling) && !s.IsCompleted && !s.IsFailed)).ToList();
         }
@@ -84,7 +84,7 @@ namespace GameOfStocksHT16.Services
             return (_context.SaveChanges() >= 0);
         }
 
-        public List<UserMoneyHistory> GetAllUsersTotalYesterday()
+        public IEnumerable<UserMoneyHistory> GetAllUsersTotalYesterday()
         {
             return _context.UserMoneyHistory.Include(x => x.User).Where(x => x.Time == DateTime.Today).ToList();
         }
@@ -113,17 +113,17 @@ namespace GameOfStocksHT16.Services
             return _context.StockTransaction.SingleOrDefault(m => m.Id == id);
         }
 
-        public List<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user)
+        public IEnumerable<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user)
         {
             return _context.StockTransaction.Where(x => x.User == user && x.IsSelling && !x.IsCompleted).ToList();
         }
 
-        public List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
+        public IEnumerable<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
         {
             return _context.UserMoneyHistory.Where(x => x.User == user).ToList();
         }
 
-        public List<UserMoneyHistory> GetAllUserMoneyHistory()
+        public IEnumerable<UserMoneyHistory> GetAllUserMoneyHistory()
         {
             return _context.UserMoneyHistory.ToList();
         }
@@ -133,9 +133,10 @@ namespace GameOfStocksHT16.Services
             return _context.UserMoneyHistory.FirstOrDefault(x => x.User == user && x.Time == DateTime.Today);
         }
 
-        public List<StockTransaction> GetCompletedStockTransactionsSortedByDate()
+        public IEnumerable<StockTransaction> GetCompletedStockTransactionsSortedByDate()
         {
-            return _context.StockTransaction.Where(s => !s.IsFailed && s.IsCompleted).OrderByDescending(x => x.Date).Take(100).ToList();
+            var transactions = _context.StockTransaction.Include(s => s.User).Where(s => !s.IsFailed && s.IsCompleted).OrderByDescending(x => x.Date).Take(100).ToList();
+            return transactions;
         }
     }
 }

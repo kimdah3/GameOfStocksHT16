@@ -23,7 +23,7 @@ namespace GameOfStocksHT16.Services
     public class StockService : IStockService
     {
         private readonly IHostingEnvironment _hostingEnvironment;
-        private IGameOfStocksRepository _gameOfStocksRepository;
+        private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
         public StockService(IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository)
         {
@@ -159,7 +159,7 @@ namespace GameOfStocksHT16.Services
                 //MID 105 - 223 (120 st)
                 //SMALL 224 - 332 (109 st)
 
-                if (!IsMarketOpenForStockUpdates()) return;
+                //if (!IsMarketOpenForStockUpdates()) return;
 
                 var stockList = new List<Stock>();
 
@@ -445,7 +445,7 @@ namespace GameOfStocksHT16.Services
         {
             try
             {
-                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user);
+                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user) as List<UserMoneyHistory>;
                 return moneyList;
             }
             catch (Exception)

@@ -12,19 +12,19 @@ namespace GameOfStocksHT16.Services
         ApplicationUser GetUserById(string userId);
         ApplicationUser GetUserByEmail(string email);
         IEnumerable<ApplicationUser> GetAllUsers();
-        List<ApplicationUser> GetUsersWithPendingStockTransactions();
+        IEnumerable<ApplicationUser> GetUsersWithPendingStockTransactions();
 
         StockTransaction GetStockTransactionById(int id);
         IEnumerable<StockTransaction> GetStockTransactionsByUser(ApplicationUser user);
         IEnumerable<StockTransaction> GetUncompletedStockTransactions();
-        List<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user);
+        IEnumerable<StockTransaction> GetSellingStockTransactionsByUser(ApplicationUser user);
 
         StockOwnership GetStockOwnershipByUserAndLabel(ApplicationUser user, string label);
         IEnumerable<StockOwnership> GetStockOwnershipsByUser(ApplicationUser user);
 
-        List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
+        IEnumerable<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
         UserMoneyHistory GetUserTotalYesterdayByUser(ApplicationUser user);
-        List<StockTransaction> GetCompletedStockTransactionsSortedByDate();
+        IEnumerable<StockTransaction> GetCompletedStockTransactionsSortedByDate();
 
         void SaveUsersHistory(List<UserMoneyHistory> list);
 
@@ -36,6 +36,6 @@ namespace GameOfStocksHT16.Services
         bool UsersExists();
         bool Save();
 
-        List<UserMoneyHistory> GetAllUsersTotalYesterday();
+        IEnumerable<UserMoneyHistory> GetAllUsersTotalYesterday();
     }
 }
