@@ -20,13 +20,12 @@ namespace GameOfStocksHT16.Services
 
         void SaveUsersTotalEveryDay(object state);
 
-        List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user);
-        List<UserModel> GetAllUsersWithTotalWorth();
+        List<UserModel> GetAllUsersWithTotalWorth(List<ApplicationUser> users);
 
-        JsonResult GetUserTotalWorthProgress(ApplicationUser user);
+        JsonResult GetUserTotalWorthProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory);
         decimal GetUserTotalWorth(ApplicationUser user);
 
-        List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers);
+        List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers, List<UserMoneyHistory> usersHistory);
 
         bool IsTradingTime();
 

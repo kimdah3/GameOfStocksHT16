@@ -27,17 +27,112 @@ namespace GameOfStocksHT16.Controllers
         }
 
         // GET: Users
+        //public ActionResult Leaderboard()
+        //{
+        //    if (!_gameOfStocksRepository.UsersExists()) return View();
+
+        //    var model = new LeaderBoardViewModel()
+        //    {
+        //        AllUsers = _stockService.GetAllUsersWithTotalWorth().OrderByDescending(x => x.TotalWorth).ToList()
+        //    };
+
+        //    return View(model);
+        //}
+
+
+        //public ActionResult Leaderboard()
+        //{
+
+        //    if (!_gameOfStocksRepository.UsersExists()) return View();
+
+        //    var model = new LeaderBoardViewModel()
+        //    {
+        //        AllUsers = new List<UserModel>()
+        //    };
+
+        //    var users = _gameOfStocksRepository.GetAllUsers();
+
+        //    foreach (var user in users)
+        //    {
+        //        var usersWithTotalWorth = new UserModel()
+        //        {
+        //            Email = user.Email,
+        //            Money = user.Money,
+        //            TotalWorth = _stockService.GetUserTotalWorth(user),
+        //            FullName = user.FullName,
+        //            PictureUrl = user.PictureUrl,
+        //            Id = user.Id
+        //        };
+
+        //        usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+
+        //        model.AllUsers.Add(usersWithTotalWorth);
+
+        //    }
+        //    model.AllUsers = model.AllUsers.OrderByDescending(x => x.TotalWorth).ToList();
+        //    return View(model);
+        //}
+
+
+
         public ActionResult Leaderboard()
         {
-            if (!_gameOfStocksRepository.UsersExists()) return View();
+            var users = _gameOfStocksRepository.GetAllUsers();
+
+            if (users == null)
+                return View();
 
             var model = new LeaderBoardViewModel()
             {
-                AllUsers = _stockService.GetAllUsersWithTotalWorth().OrderByDescending(x => x.TotalWorth).ToList()
+                AllUsers = new List<UserModel>()
             };
 
+            var stocks = _stockService.GetStocks();
+
+            foreach (var user in users)
+            {
+
+                var usersWithTotalWorth = new UserModel()
+                {
+                    Id = user.Id,
+                    Email = user.Email,
+                    Money = user.Money,
+                    TotalWorth = user.Money + user.ReservedMoney,
+                    FullName = user.FullName,
+                    PictureUrl = user.PictureUrl
+                };
+
+                usersWithTotalWorth.TotalWorth += GetSellingStocksWorth(user, stocks);
+
+                foreach (var ownership in user.StockOwnerships)
+                {
+                    usersWithTotalWorth.TotalWorth += stocks.FirstOrDefault(s => s.Label == ownership.Label).LastTradePriceOnly * ownership.Quantity;
+                }
+
+                usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+
+                model.AllUsers.Add(usersWithTotalWorth);
+
+            }
+            model.AllUsers = model.AllUsers.OrderByDescending(x => x.TotalWorth).ToList();
             return View(model);
         }
+
+        private decimal GetSellingStocksWorth(ApplicationUser user, List<Stock> stocks)
+        {
+            var total = 0M;
+            var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
+            if (sellingStocks.Any())
+                foreach (var sellingStock in sellingStocks)
+                {
+                    if (sellingStock.Label == null) continue;
+                    total +=
+                        stocks.FirstOrDefault(s => s.Label == sellingStock.Label).LastTradePriceOnly * sellingStock.Quantity;
+                }
+
+            return total;
+        }
+
 
         [HttpGet]
         public ActionResult VisitProfile(string id)
@@ -54,16 +149,17 @@ namespace GameOfStocksHT16.Controllers
 
             if (userToCheck.Id == id) return RedirectToAction("Profile");
 
+            var users = _gameOfStocksRepository.GetAllUsers() as List<ApplicationUser>;
+            var userMoneyHistory = _gameOfStocksRepository.GetUserMoneyHistory(userToDisplay).ToList();
             var stockTrans = GetStockTransWithTimeLeftByUser(userToDisplay);
             var ownerships = GetOwnershipsWithLastTradePriceByUser(userToDisplay);
-            var usersWithTotal = _stockService.GetAllUsersWithTotalWorth().OrderByDescending(x => x.TotalWorth).ToList();
-            var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(userToDisplay);
+            var usersWithTotal = _stockService.GetAllUsersWithTotalWorth(users).OrderByDescending(x => x.TotalWorth).ToList();
+            var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(userToDisplay, userMoneyHistory);
 
             var model = new ProfileViewModel
             {
                 User = new UserModel
                 {
-
                     Email = userToDisplay.Email,
                     Money = userToDisplay.Money,
                     TotalWorth = _stockService.GetUserTotalWorth(userToDisplay),
@@ -91,10 +187,13 @@ namespace GameOfStocksHT16.Controllers
 
             if (user == null) return RedirectToAction("Login", "Account");
 
+            var users = _gameOfStocksRepository.GetAllUsers().ToList();
+
+            var userMoneyHistory = _gameOfStocksRepository.GetUserMoneyHistory(user).ToList();
             var stockTrans = GetStockTransWithTimeLeftByUser(user);
             var ownerships = GetOwnershipsWithLastTradePriceByUser(user);
-            var usersWithTotal = _stockService.GetAllUsersWithTotalWorth().OrderByDescending(x => x.TotalWorth).ToList();
-            var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(user);
+            var usersWithTotal = _stockService.GetAllUsersWithTotalWorth(users).OrderByDescending(x => x.TotalWorth).ToList();
+            var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(user, userMoneyHistory);
 
             var model = new ProfileViewModel()
             {
@@ -156,20 +255,21 @@ namespace GameOfStocksHT16.Controllers
 
         private List<StockOwnershipModel> GetOwnershipsWithLastTradePriceByUser(ApplicationUser user)
         {
+            var stocks = _stockService.GetStocks();
             var ownerships = new List<StockOwnershipModel>();
-            foreach (var s in _gameOfStocksRepository.GetStockOwnershipsByUser(user))
+            foreach (var stockOwnership in _gameOfStocksRepository.GetStockOwnershipsByUser(user))
             {
-                var lastTradePrice = _stockService.GetStockByLabel(s.Label).LastTradePriceOnly;
+                var lastTradePrice = stocks.FirstOrDefault(s => s.Label == stockOwnership.Label).LastTradePriceOnly;
                 ownerships.Add(new StockOwnershipModel()
                 {
-                    Label = s.Label,
-                    Name = s.Name,
-                    Quantity = s.Quantity,
-                    Gav = s.Gav,
-                    TotalSum = s.TotalSum,
+                    Label = stockOwnership.Label,
+                    Name = stockOwnership.Name,
+                    Quantity = stockOwnership.Quantity,
+                    Gav = stockOwnership.Gav,
+                    TotalSum = stockOwnership.TotalSum,
                     LastTradePrice = lastTradePrice,
-                    Growth = (lastTradePrice / s.Gav - 1) * 100,
-                    TotalWorth = s.Quantity * lastTradePrice
+                    Growth = (lastTradePrice / stockOwnership.Gav - 1) * 100,
+                    TotalWorth = stockOwnership.Quantity * lastTradePrice
                 });
             }
             return ownerships;

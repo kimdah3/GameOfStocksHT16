@@ -37,10 +37,12 @@ namespace GameOfStocksHT16.Controllers
 
             if (!_gameOfStocksRepository.UsersExists()) return View(model);
 
-            var allUsersWithTotalWorth = _stockService.GetAllUsersWithTotalWorth();
+            var users = _gameOfStocksRepository.GetAllUsers().ToList();
+            var allUsersWithTotalWorth = _stockService.GetAllUsersWithTotalWorth(users);
             model.CurrentLeaderBoard = allUsersWithTotalWorth.OrderByDescending(u => u.TotalWorth).Take(5).ToList();
 
-            var usersWithPercentPerDay = _stockService.GetUsersPercentToday(allUsersWithTotalWorth);
+            var usersHistory = _gameOfStocksRepository.GetAllUsersTotalYesterday().ToList();
+            var usersWithPercentPerDay = _stockService.GetUsersPercentToday(allUsersWithTotalWorth, usersHistory);
             model.TodaysWinners = usersWithPercentPerDay.OrderByDescending(u => u.PercentPerDay).Take(5).ToList();
             model.TodaysLoosers = usersWithPercentPerDay.OrderBy(u => u.PercentPerDay).Take(5).ToList();
 
@@ -59,10 +61,12 @@ namespace GameOfStocksHT16.Controllers
 
             if(!_gameOfStocksRepository.UsersExists()) return View(model);
 
-            var allUsersWithTotalWorth = _stockService.GetAllUsersWithTotalWorth();
+            var users = _gameOfStocksRepository.GetAllUsers().ToList();
+            var allUsersWithTotalWorth = _stockService.GetAllUsersWithTotalWorth(users);
             model.CurrentLeaderBoard = allUsersWithTotalWorth.OrderByDescending(u => u.TotalWorth).Take(5).ToList();
 
-            var usersWithPercentToday = _stockService.GetUsersPercentToday(allUsersWithTotalWorth);
+            var usersHistory = _gameOfStocksRepository.GetAllUsersTotalYesterday().ToList();
+            var usersWithPercentToday = _stockService.GetUsersPercentToday(allUsersWithTotalWorth, usersHistory);
             model.TodaysWinners = usersWithPercentToday.OrderByDescending(u => u.PercentPerDay).Take(5).ToList();
             model.TodaysLoosers = usersWithPercentToday.OrderBy(u => u.PercentPerDay).Take(5).ToList();
 

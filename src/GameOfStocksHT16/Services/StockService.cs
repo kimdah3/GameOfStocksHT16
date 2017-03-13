@@ -17,6 +17,7 @@ using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using GameOfStocksHT16.Entities;
 using GameOfStocksHT16.Models.UsersViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace GameOfStocksHT16.Services
 {
@@ -24,11 +25,13 @@ namespace GameOfStocksHT16.Services
     {
         private readonly IHostingEnvironment _hostingEnvironment;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
+        private readonly ILogger _logger;
 
-        public StockService(IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository)
+        public StockService(IHostingEnvironment hostingEnvironment, IGameOfStocksRepository gameOfStocksRepository, ILogger<StockService> logger)
         {
             _hostingEnvironment = hostingEnvironment;
             _gameOfStocksRepository = gameOfStocksRepository;
+            _logger = logger;
         }
 
         public void CompleteStockTransactions(object state)
@@ -269,14 +272,18 @@ namespace GameOfStocksHT16.Services
             var path = Path.Combine(webRootPath, "stocks.json");
             try
             {
-                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+                using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    var json = r.ReadToEnd();
-                    stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                    using (var r = new StreamReader(fileStream))
+                    {
+                        var json = r.ReadToEnd();
+                        stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                    }
                 }
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Något gick fel vid hämtning av aktier: " + e.Message);
                 return stocks;
             }
 
@@ -291,28 +298,31 @@ namespace GameOfStocksHT16.Services
             var path = Path.Combine(webRootPath, "stocks.json");
             try
             {
-                using (var r = new StreamReader(new FileStream(path, FileMode.Open)))
+                using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
                 {
-                    var json = r.ReadToEnd();
-                    stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                    using (var r = new StreamReader(fileStream))
+                    {
+                        var json = r.ReadToEnd();
+                        stocks = JsonConvert.DeserializeObject<List<Stock>>(json);
+                    }
                 }
                 stock = stocks.Find(x => x.Label.ToLower() == label.ToLower());
-
                 if (stock == null) throw new NullReferenceException("Stock not found in stocks.json");
+
                 return stock;
             }
-            catch (Exception)
+            catch (Exception e)
             {
+                _logger.LogError("Something went wrong finding a certain stock (" + label + "): " + e.Message);
                 return new Stock();
             }
 
         }
 
         //New
-        public JsonResult GetUserTotalWorthProgress(ApplicationUser user)
+        public JsonResult GetUserTotalWorthProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory)
         {
             var userTotalWorthProgress = new List<decimal>();
-            var userMoneyHistory = _gameOfStocksRepository.GetUserMoneyHistory(user);
             try
             {
                 foreach (var entity in userMoneyHistory)
@@ -344,11 +354,10 @@ namespace GameOfStocksHT16.Services
             return totalWorth;
         }
 
-        public List<UserModel> GetAllUsersWithTotalWorth()
+        public List<UserModel> GetAllUsersWithTotalWorth(List<ApplicationUser> users)
         {
             var allUsersWithTotalWorth = new List<UserModel>();
 
-            var users = _gameOfStocksRepository.GetAllUsers();
             foreach (var user in users)
             {
                 var userWithTotalWorth = new UserModel()
@@ -411,6 +420,7 @@ namespace GameOfStocksHT16.Services
         {
             var moneyList = new List<UserMoneyHistory>();
             var usersList = _gameOfStocksRepository.GetAllUsers();
+
             foreach (var user in usersList)
             {
                 var userDailyWorth = new UserMoneyHistory()
@@ -425,40 +435,11 @@ namespace GameOfStocksHT16.Services
             _gameOfStocksRepository.SaveUsersHistory(moneyList);
         }
 
-        private decimal GetSellingStocksWorth(ApplicationUser user)
-        {
-            var total = 0M;
-            var sellingStocks = _gameOfStocksRepository.GetSellingStockTransactionsByUser(user);
+        
 
-            if (sellingStocks.Any())
-            {
-                foreach (var sellingStock in sellingStocks)
-                {
-                    total += GetStockByLabel(sellingStock.Label).LastTradePriceOnly * sellingStock.Quantity;
-                }
-            }
-
-            return total;
-        }
-
-        public List<UserMoneyHistory> GetUserMoneyHistory(ApplicationUser user)
-        {
-            try
-            {
-                var moneyList = _gameOfStocksRepository.GetUserMoneyHistory(user) as List<UserMoneyHistory>;
-                return moneyList;
-            }
-            catch (Exception)
-            {
-                return new List<UserMoneyHistory>();
-            }
-        }
-
-        public List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers)
+        public List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers, List<UserMoneyHistory> usersHistory)
         {
             var usersWithPercent = new List<UserPercentModel>();
-
-            var usersHistory = _gameOfStocksRepository.GetAllUsersTotalYesterday();
             foreach (var userMoneyHistory in usersHistory)
             {
                 usersWithPercent.Add(new UserPercentModel()
@@ -472,17 +453,7 @@ namespace GameOfStocksHT16.Services
             return usersWithPercent;
         }
 
-        private decimal GetUserPercentToday(ApplicationUser user)
-        {
-            var usersHistory = _gameOfStocksRepository.GetUserTotalYesterdayByUser(user);
-            if (usersHistory != null)
-            {
-                return Math.Round(((usersHistory.Money / user.Money - 1) * 100), 2);
-            }else
-            {
-                return 0M;
-            }
-        }
+        
 
         //Tid för börsstängning, ska vara 1747.
         //Och inte helgdag, därav !IsWeekDay()

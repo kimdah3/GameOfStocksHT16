@@ -129,7 +129,7 @@
                 <tbody>
                     @foreach (var item in Model.TodaysWinners)
                     {
-                        @*<tr>
+                        <tr>
                             <td>
                                 <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
                             </td>
@@ -145,7 +145,7 @@
                             {
                                 <td class="font-percent">@item.PercentPerDay%</td>
                             }
-                        </tr>*@
+                        </tr>
                     }
                 </tbody>
             </table>
@@ -163,7 +163,7 @@
                 <tbody>
                     @foreach (var item in Model.TodaysLoosers)
                     {
-                        @*<tr>
+                        <tr>
                             <td>
                                 <a class="" asp-action="VisitProfile" asp-controller="Users" asp-route-id="@item.Id">@item.FullName</a>
                             </td>
@@ -179,7 +179,7 @@
                             {
                                 <td class="font-percent">@item.PercentPerDay%</td>
                             }
-                        </tr>*@
+                        </tr>
                     }
                 </tbody>
             </table>
