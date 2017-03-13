@@ -159,7 +159,7 @@ namespace GameOfStocksHT16.Services
                 //MID 105 - 223 (120 st)
                 //SMALL 224 - 332 (109 st)
 
-                if (!IsTradingTime()) return;
+                if (!IsMarketOpenForStockUpdates()) return;
 
                 var stockList = new List<Stock>();
 
@@ -499,6 +499,14 @@ namespace GameOfStocksHT16.Services
             var currentTime = DateTime.Now.TimeOfDay;
             var morningOpen = new TimeSpan(09, 00, 0);
             var eveningClose = new TimeSpan(17, 30, 0);
+            return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
+        }
+
+        public bool IsMarketOpenForStockUpdates()
+        {
+            var currentTime = DateTime.Now.TimeOfDay;
+            var morningOpen = new TimeSpan(09, 00, 0);
+            var eveningClose = new TimeSpan(17, 45, 0);
             return currentTime >= morningOpen && currentTime <= eveningClose && IsWeekDay();
         }
 
