@@ -365,7 +365,7 @@ namespace GameOfStocksHT16.Services
                 userWithTotalWorth.TotalWorth += GetTotalWorthFromStockOwnershipsByUser(user);
                 userWithTotalWorth.TotalWorth += GetTotalWorthFromSellingStockTransactionsByUser(user);
                 userWithTotalWorth.GrowthPercent = Math.Round(((userWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
-                userWithTotalWorth.PercentPerDay = GetUserPercentToday(user);
+                //userWithTotalWorth.PercentPerDay = GetUserPercentToday(user);
 
                 allUsersWithTotalWorth.Add(userWithTotalWorth);
             }

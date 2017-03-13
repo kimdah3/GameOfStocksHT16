@@ -13,13 +13,11 @@ namespace GameOfStocksHT16.Controllers
 {
     public class StockListController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
-        public StockListController(UserManager<ApplicationUser> userManager, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
+        public StockListController(IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
-            _userManager = userManager;
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
         }
@@ -37,8 +35,8 @@ namespace GameOfStocksHT16.Controllers
         [Authorize]
         public IActionResult Stock(string label)
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var user = _gameOfStocksRepository.GetUserById(userId);
+            var userId = User.Identity.Name;
+            var user = _gameOfStocksRepository.GetUserByEmail(userId);
 
             var model = new StockViewModel
             {
@@ -54,7 +52,8 @@ namespace GameOfStocksHT16.Controllers
                 model.UsersQuantity = ownership.Quantity;
                 model.UsersStockTotalSum = ownership.TotalSum;
                 model.UsersGav = ownership.Gav;
-            }else
+            }
+            else
             {
                 model.UserHasStock = false;
             }

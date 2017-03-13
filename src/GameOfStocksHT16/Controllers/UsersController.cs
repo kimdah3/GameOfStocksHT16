@@ -17,13 +17,11 @@ namespace GameOfStocksHT16.Controllers
     [Authorize]
     public class UsersController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IStockService _stockService;
         private readonly IGameOfStocksRepository _gameOfStocksRepository;
 
-        public UsersController(UserManager<ApplicationUser> userManager, IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
+        public UsersController(IStockService stockService, IGameOfStocksRepository gameOfStocksRepository)
         {
-            _userManager = userManager;
             _stockService = stockService;
             _gameOfStocksRepository = gameOfStocksRepository;
         }
@@ -44,8 +42,8 @@ namespace GameOfStocksHT16.Controllers
         [HttpGet]
         public ActionResult VisitProfile(string id)
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var userToCheck = _gameOfStocksRepository.GetUserById(userId);
+            var userId = User.Identity.Name;/* _userManager.GetUserId(HttpContext.User);*/
+            var userToCheck = _gameOfStocksRepository.GetUserByEmail(userId);
             var userToDisplay = _gameOfStocksRepository.GetUserById(id);
 
             if (userToDisplay == null)
@@ -88,8 +86,8 @@ namespace GameOfStocksHT16.Controllers
         [HttpGet]
         public ActionResult Profile()
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var user = _gameOfStocksRepository.GetUserById(userId);
+            var userId = User.Identity.Name; /*_userManager.GetUserId(HttpContext.User);*/
+            var user = _gameOfStocksRepository.GetUserByEmail(userId);
 
             if (user == null) return RedirectToAction("Login", "Account");
 
@@ -124,8 +122,8 @@ namespace GameOfStocksHT16.Controllers
         [Route("api/Users/[action]")]
         public string GetMoney()
         {
-            var userId = _userManager.GetUserId(HttpContext.User);
-            var user = _gameOfStocksRepository.GetUserById(userId);
+            var userId = User.Identity.Name; /*_userManager.GetUserId(HttpContext.User);*/
+            var user = _gameOfStocksRepository.GetUserByEmail(userId);
             return $"{user.Money:c}";
         }
 
