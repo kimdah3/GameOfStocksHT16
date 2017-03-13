@@ -69,7 +69,7 @@ namespace GameOfStocksHT16
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IStockService, StockService>();
+            services.AddSingleton<IStockService, StockService>();
             services.AddSingleton<IGameOfStocksRepository, GameOfStocksRepository>();
         }
 
@@ -150,19 +150,6 @@ namespace GameOfStocksHT16
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
-            app.Use(async (context, next) =>
-            {
-                if (context.Request.IsHttps)
-                {
-                    await next();
-                }
-                else
-                {
-                    var sslPortStr = sslPort == 0 || sslPort == 443 ? string.Empty : $":{sslPort}";
-                    var httpsUrl = $"https://{context.Request.Host.Host}{sslPortStr}{context.Request.Path}";
-                    context.Response.Redirect(httpsUrl);
-                }
-            });
 
             app.UseMvc(routes =>
             {

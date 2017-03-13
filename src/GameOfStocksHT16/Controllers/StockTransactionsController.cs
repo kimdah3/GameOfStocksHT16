@@ -68,7 +68,7 @@ namespace GameOfStocksHT16.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("B?rsen ?r st?ngd.");
+            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = User.Identity.Name;
             var user = _gameOfStocksRepository.GetUserByEmail(userId);
@@ -76,13 +76,15 @@ namespace GameOfStocksHT16.Controllers
             if (user == null) return BadRequest("Logga in f?rst.");
 
             var stock = _stockService.GetStockByLabel(label);
-            if (quantity <= 0 || stock.Volume < quantity) return BadRequest("Du kan inte handla mindre ?n 0 eller mer ?n aktiens volym.");
+            if (stock.Label == null || stock.Label == "") return BadRequest("Något internt fel har uppstått.");
 
-            if (user.Money <= stock.LastTradePriceOnly * quantity) return BadRequest("Inte tillr?ckligt med pengar.");
+            if (quantity <= 0 || stock.Volume < quantity) return BadRequest("Du kan inte handla mindre än 0 eller mer än aktiens volym.");
+
+            if (user.Money <= stock.LastTradePriceOnly * quantity) return BadRequest("Inte tillräckligt med pengar.");
 
             //If quantity is over 20%
             var maxStockVolume = (double)stock.Volume * 1 / 5;
-            if (maxStockVolume <= quantity) return BadRequest("Du kan inte handla mer ?n 20% av en akties totala volym.");
+            if (maxStockVolume <= quantity) return BadRequest("Du kan inte handla mer än 20% av en akties totala volym.");
 
             //If quantity in possesion and pending is over 20% in stock volume
             var quantityInPossesion = GetUsersStockQuantityInPossesion(user, label) + GetUsersStockQuantityInPending(user, label);
@@ -90,8 +92,8 @@ namespace GameOfStocksHT16.Controllers
             {
                 var currentOwnerShipPercent = Math.Round((double)(quantityInPossesion) / stock.Volume * 100, 2);
                 var requestedQuantityPercent = Math.Round((double)(quantityInPossesion + quantity) / stock.Volume * 100, 2);
-                return BadRequest("Antalet du ?ger kan inte ?verstiga mer ?n 20% av dagsvolymen, du ?ger just nu "
-                        + currentOwnerShipPercent + "% och f?rs?ker k?pa totalt " + requestedQuantityPercent + "%.");
+                return BadRequest("Antalet du äger kan inte överstiga mer än 20% av dagsvolymen, du äger just nu "
+                        + currentOwnerShipPercent + "% och försöker köpa totalt " + requestedQuantityPercent + "%.");
             }
 
             var stockTransaction = new StockTransaction()
@@ -129,18 +131,19 @@ namespace GameOfStocksHT16.Controllers
         {
             if (!ModelState.IsValid) return BadRequest(ModelState);
 
-            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("B?rsen ?r st?ngd.");
+            if (!_stockService.IsMarketOpenForStockTransactions()) return BadRequest("Börsen är stängd.");
 
             var userId = User.Identity.Name;
             var user = _gameOfStocksRepository.GetUserByEmail(userId);
 
             var stockOwnership = _gameOfStocksRepository.GetStockOwnershipByUserAndLabel(user, label);
 
-            if (user == null || stockOwnership == null || quantity <= 0) return BadRequest("N?got gick ?t skogen.");
+            if (user == null || stockOwnership == null || quantity <= 0) return BadRequest("Något gick åt skogen.");
 
-            if (quantity > stockOwnership.Quantity) return BadRequest("Du f?rs?ker s?lja mer ?n vad du har.");
+            if (quantity > stockOwnership.Quantity) return BadRequest("Du försöker sälja mer än vad du har.");
 
             var stock = _stockService.GetStockByLabel(label);
+            if(stock.Label == null || stock.Label =="") return BadRequest("Något internt fel har uppstått.");
 
             var stockTransaction = new StockTransaction()
             {
