@@ -36,7 +36,7 @@ namespace GameOfStocksHT16.Services
 
         public ApplicationUser GetUserByEmail(string email)
         {
-            return _context.Users.FirstOrDefault(u => u.Email == email);
+            return _context.Users.Include(x => x.StockTransactions).Include(x => x.StockOwnerships).Include(x => x.MoneyHistory).FirstOrDefault(u => u.Email == email);
         }
 
         public IEnumerable<StockTransaction> GetStockTransactionsByUser(ApplicationUser user)

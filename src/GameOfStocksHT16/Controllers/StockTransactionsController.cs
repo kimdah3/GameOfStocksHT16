@@ -191,8 +191,10 @@ namespace GameOfStocksHT16.Controllers
             var quantity = 0;
 
             var ownership = user.StockOwnerships.FirstOrDefault(s => s.Label == label);
-            if (ownership != null) quantity = ownership.Quantity;
-
+            if (ownership != null)
+            {
+                quantity = ownership.Quantity;
+            }
             return quantity;
         }
 
