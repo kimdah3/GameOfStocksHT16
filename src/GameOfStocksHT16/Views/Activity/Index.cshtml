@@ -95,6 +95,11 @@
                             }
                         </div>
                     }
+            <div class="scroll-top-wrapper ">
+                <span class="scroll-top-inner" title="Gå till toppen av sidan">
+                    <i class="fa fa-2x fa-arrow-circle-up"></i>
+                </span>
+            </div>
         </div>
     </div>
 </section>
@@ -103,5 +108,27 @@
         $(document).ready(function () {
             $('[data-toggle="tooltip"]').tooltip();
         });
+
+        $(function () {
+
+            $(document).on('scroll', function () {
+
+                if ($(window).scrollTop() > 100) {
+                    $('.scroll-top-wrapper').addClass('show');
+                } else {
+                    $('.scroll-top-wrapper').removeClass('show');
+                }
+            });
+
+            $('.scroll-top-wrapper').on('click', scrollToTop);
+        });
+
+        function scrollToTop() {
+            verticalOffset = typeof (verticalOffset) != 'undefined' ? verticalOffset : 0;
+            element = $('body');
+            offset = element.offset();
+            offsetTop = offset.top;
+            $('html, body').animate({ scrollTop: offsetTop }, 500, 'linear');
+        }
     </script>
 }
