@@ -138,5 +138,11 @@ namespace GameOfStocksHT16.Services
             var transactions = _context.StockTransaction.Include(s => s.User).Where(s => !s.IsFailed && s.IsCompleted).OrderByDescending(x => x.Date).Take(100).ToList();
             return transactions;
         }
+
+        public IEnumerable<ApplicationUser> GetSearchResult(string name)
+        {
+            var result = _context.Users.Where(x => x.FullName.Contains(name)).ToList();
+            return result;
+        }
     }
 }

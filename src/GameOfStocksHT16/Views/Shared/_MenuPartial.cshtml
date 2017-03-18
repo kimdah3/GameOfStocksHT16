@@ -6,6 +6,17 @@
 
 @if (SignInManager.IsSignedIn(User))
 {
+    <div class="col-sm-5 col-md-3">
+        @using (Html.BeginForm("Result", "Search", FormMethod.Post, new { @class = "navbar-form navbar-left" }))
+        {
+            <div class="form-group has-feedback">
+                <label for="search" class="sr-only">Search</label>
+                <input type="text" class="form-control" name="SearchString" id="search" placeholder="Sök efter användare">
+                <span class="glyphicon glyphicon-search form-control-feedback"></span>
+            </div>
+        }
+    </div>
+
     <ul class="nav navbar-nav navbar-right">
         <li><a title="Hem" asp-area="" asp-controller="Home" asp-action="Index"><i class="fa fa-home fa-2x"></i> <span class="sr-only"></span></a></li>
         <li><a title="Nyhetsbrev" asp-area="" asp-controller="Home" asp-action="News"><i class="fa fa-newspaper-o fa-2x"></i> <span class="sr-only"></span></a></li>

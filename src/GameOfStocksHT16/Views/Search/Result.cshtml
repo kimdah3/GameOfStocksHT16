@@ -1,0 +1,61 @@
+@model GameOfStocksHT16.Models.UsersViewModels.SearchViewModel
+
+@{
+    ViewData["Title"] = "Sökresultat";
+}
+
+<section class="section-padding-medium">
+    <div class="container">
+        <div class="col-md-10 col-md-offset-1">
+            @if (Model.Result.Count() > 0)
+            {
+                <div class="col-md-4 col-md-offset-4 text-center">
+                    <h2>Sökresultat</h2>
+                </div>
+                @foreach (var user in Model.Result)
+                {
+                    <div class="row">
+                        <div class="col-md-8  col-md-offset-2">
+                            <div class="panel panel-default ">
+                                <div class="panel-heading">
+                                    <div class="media">
+                                        <a asp-action="VisitProfile" asp-controller="Users" asp-route-id="@user.Id">
+                                            <div class="media-body">
+                                                <h4>@user.FullName</h4>
+                                            </div>
+                                            <div class="media-left media-middle">
+                                                @if (user.PictureUrl == null)
+                                                {
+                                                    <img src="~/images/default-profile-pic.png" width="40" height="40" class="media-object img-circle" />
+                                                }
+                                                else
+                                                {
+                                                    <img class="media-object img-circle" src="@user.PictureUrl" height="40" width="40" />
+                                                }
+                                            </div>
+
+
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+            else
+            {
+                <div class="col-md-10 col-md-offset-1 text-center">
+                    <h2>Vi hittade ingen person som matchade din sökning :(</h2>
+                </div>
+            }
+
+        </div>
+    </div>
+</section>
+
+
+                    @section Scripts {
+                        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+                    }

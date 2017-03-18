@@ -37,5 +37,6 @@ namespace GameOfStocksHT16.Services
         bool Save();
 
         IEnumerable<UserMoneyHistory> GetAllUsersTotalYesterday();
+        IEnumerable<ApplicationUser> GetSearchResult(string name);
     }
 }
