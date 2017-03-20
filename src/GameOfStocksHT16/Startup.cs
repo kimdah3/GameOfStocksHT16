@@ -69,7 +69,7 @@ namespace GameOfStocksHT16
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
-            services.AddScoped<IStockService, StockService>();
+            services.AddSingleton<IStockService, StockService>();
             services.AddSingleton<IGameOfStocksRepository, GameOfStocksRepository>();
         }
 

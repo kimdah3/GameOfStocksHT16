@@ -116,12 +116,19 @@ namespace GameOfStocksHT16.Controllers
 
             _gameOfStocksRepository.AddStockTransactions(stockTransaction);
 
-            if (!_gameOfStocksRepository.Save())
-                return StatusCode(500, "A problem happend while handeling your request.");
+            try
+            {
+                if (!_gameOfStocksRepository.Save())
+                    return StatusCode(500, "A problem happend while handeling your request.");
 
-            var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
+                var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
 
-            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, createdStockTransaction);
+                return CreatedAtRoute("GetStockTransaction", new {id = stockTransaction.Id}, createdStockTransaction);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Ett internt fel har uppstått");
+            }
         }
 
         [Authorize]
@@ -172,18 +179,26 @@ namespace GameOfStocksHT16.Controllers
             }
 
             // Saves db
-            if (!_gameOfStocksRepository.Save())
+            try
             {
-                if (_gameOfStocksRepository.StockTransactionExists(stockTransaction))
+                if (!_gameOfStocksRepository.Save())
                 {
-                    return new StatusCodeResult(StatusCodes.Status409Conflict);
+                    if (_gameOfStocksRepository.StockTransactionExists(stockTransaction))
+                    {
+                        return new StatusCodeResult(StatusCodes.Status409Conflict);
+                    }
+                    return StatusCode(500, "A problem happend while handeling your request.");
                 }
-                return StatusCode(500, "A problem happend while handeling your request.");
+
+                var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
+
+                return CreatedAtRoute("GetStockTransaction", new {id = stockTransaction.Id}, createdStockTransaction);
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Ett internt fel har uppstått");
             }
 
-            var createdStockTransaction = Mapper.Map<Models.StockTransationDto>(stockTransaction);
-
-            return CreatedAtRoute("GetStockTransaction", new { id = stockTransaction.Id }, createdStockTransaction);
         }
 
         private int GetUsersStockQuantityInPossesion(ApplicationUser user, string label)
