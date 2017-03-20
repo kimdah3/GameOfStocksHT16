@@ -86,7 +86,18 @@ namespace GameOfStocksHT16.Services
 
         public IEnumerable<UserMoneyHistory> GetAllUsersTotalYesterday()
         {
+            var today = DateTime.Now;
+            var day = (int)today.DayOfWeek;
+            if (day == 1)
+            {
+                var dateReversed3Days = DateTime.Today - TimeSpan.FromDays(3);
+                return _context.UserMoneyHistory.Include(x => x.User).Where(x => x.Time == dateReversed3Days).ToList();
+            }
+            else
+            {
             return _context.UserMoneyHistory.Include(x => x.User).Where(x => x.Time == DateTime.Today).ToList();
+                
+            }
         }
 
 
