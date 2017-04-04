@@ -1,7 +1,7 @@
-@model GameOfStocksHT16.Models.UsersViewModels.SearchViewModel
+ï»¿@model GameOfStocksHT16.Models.UsersViewModels.SearchViewModel
 
 @{
-    ViewData["Title"] = "Sökresultat";
+    ViewData["Title"] = "SÃ¶kresultat";
 }
 
 <section class="section-padding-medium">
@@ -10,7 +10,7 @@
             @if (Model.Result.Count() > 0)
             {
                 <div class="col-md-4 col-md-offset-4 text-center">
-                    <h2>Sökresultat</h2>
+                    <h2>SÃ¶kresultat</h2>
                 </div>
                 @foreach (var user in Model.Result)
                 {
@@ -47,7 +47,7 @@
             else
             {
                 <div class="col-md-10 col-md-offset-1 text-center">
-                    <h2>Vi hittade ingen person som matchade din sökning :(</h2>
+                    <h2>Vi hittade ingen person som matchade din sÃ¶kning :(</h2>
                 </div>
             }
 
