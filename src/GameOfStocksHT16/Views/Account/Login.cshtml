@@ -12,88 +12,107 @@
     <div class="container">
 
         <div class="row">
-            <div class="col-md-12 text-center">
-                <section>
-                    <h2>Logga in med:</h2>
-                    @{
-                        var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
-                        if (loginProviders.Count == 0)
-                        {
-                            <div>
-                                <p>
-                                    There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
-                                    for details on setting up this ASP.NET application to support logging in via external services.
-                                </p>
-                            </div>
-                        }
-                        else
-                        {
-                            <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                                <div>
-                                    <p >
-                                        @foreach (var provider in loginProviders)
-                                        {
-                                            <button type="submit" class="btn btn-primary" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
-                                        }
-                                    </p>
-                                </div>
-                            </form>
-                        }
-                    }
-                    <br />
-                    <p>
-                        <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]">Registrera dig som ny användare?</a>
-                    </p>
-                    <p>
-                        <a asp-action="ForgotPassword">Glömt ditt lösenord?</a>
-                    </p>
-                </section>
+            <div class="col-md-8 col-md-offset-2 text-center">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <h5>Logga in med Facebook:</h5>
+                        <section>
+                            <br />
+                            @{
+                                var loginProviders = SignInManager.GetExternalAuthenticationSchemes().ToList();
+                                if (loginProviders.Count == 0)
+                                {
+                                    <div>
+                                        <p>
+                                            There are no external authentication services configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532715">this article</a>
+                                            for details on setting up this ASP.NET application to support logging in via external services.
+                                        </p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                                        <div>
+                                            <p>
+                                                @foreach (var provider in loginProviders)
+                                                {
+                                                    <button type="submit" class="btn btn-primary" name="provider" value="@provider.AuthenticationScheme" title="Log in using your @provider.DisplayName account">@provider.AuthenticationScheme</button>
+                                                }
+                                            </p>
+                                        </div>
+                                    </form>
+                                }
+                            }
+                        </section>
+                    </div>
+                </div>
             </div>
-            <div class="col-md-6 col-md-offset-3 text-center">
-                <br />
-                <br />
-                <br />
-                <hr />
-                <section>
-                    <h5>Logga in med mail:</h5>
+            </div>
+        <div class="row">
 
-                    <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
-                        <hr />
-                        <div asp-validation-summary="All" class="text-danger"></div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <input id="email" onclick="clearFields()" asp-for="Email" value="Email" class="form-control" />
-                                <span asp-validation-for="Email" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="col-md-12">
-                                <input id="password" asp-for="Password" value="Password" class="form-control" />
-                                <span asp-validation-for="Password" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="">
-                                <div class="checkbox">
-                                    <label asp-for="RememberMe">
-                                        <input asp-for="RememberMe" />
-                                        @Html.DisplayNameFor(m => m.RememberMe)
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="">
-                                <button type="submit" class="btn btn-default">Logga in</button>
-                            </div>
-                           
-                        </div>
-
-                    </form>
-                </section>
+            <div class="col-md-8 col-md-offset-2  text-center">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        Registrera
+                    </div>
+                    <div class="panel-body">
+                        <section>
+                            <p>
+                                <a asp-action="Register" asp-route-returnurl="@ViewData["ReturnUrl"]" class="btn btn-success">Ny användare</a>
+                            </p>
+                            <p>
+                                <a asp-action="ForgotPassword">Glömt ditt lösenord?</a>
+                            </p>
+                        </section>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+        <div class="row">
+            <div class="col-md-8 col-md-offset-2  text-center">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <section>
+                            <h5>Logga in med mail:</h5>
+
+                            <form asp-controller="Account" asp-action="Login" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal">
+                                <div a0sp-validation-summary="All" class="text-danger"></div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input id="email" onclick="clearFields()" asp-for="Email" value="Email" class="form-control" />
+                                        <span asp-validation-for="Email" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="col-md-12">
+                                        <input id="password" asp-for="Password" value="Password" class="form-control" />
+                                        <span asp-validation-for="Password" class="text-danger"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="">
+                                        <div class="checkbox">
+                                            <label asp-for="RememberMe">
+                                                <input asp-for="RememberMe" />
+                                                @Html.DisplayNameFor(m => m.RememberMe)
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="">
+                                        <button type="submit" class="btn btn-default">Logga in</button>
+                                    </div>
+
+                                </div>
+
+                            </form>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+                </div>
 </section>
 
 
