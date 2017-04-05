@@ -4,73 +4,84 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <section class="section-padding-medium">
-    <div class="container">
-        <div class="table-responsive">
-            <table class="table table-bordered table-condensed table-striped">
-                <thead>
-                    <tr>
-                        <th class="text-center col-md-1">#</th>
-                        <th class="col-md-1"></th>
-                        <th>Namn</th>
-                        <th>Totala tillgångar</th>
-                        @*<th>Dagens utveckling</th>*@
-                        <th>Utveckling</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.AllUsers)
-                    {
-                        int i = Model.AllUsers.IndexOf(item);
+    @if (User.Identity.Name == "dahlberg_kim@hotmail.com" || User.Identity.Name == "alexander.lienius@outlook.com")
+    {
+        <div class="container">
+            <div class="table-responsive">
+                <table class="table table-bordered table-condensed table-striped">
+                    <thead>
                         <tr>
-                            <td class="text-center">@(i + 1)</td>
-                            <td class="text-center">
-                                @if (item.PictureUrl == null)
-                                {
-                                    <img src="~/images/default-profile-pic.png" width="50" height="50" class="img-circle" />
-                                }
-                                else
-                                {
-                                    <img src="@item.PictureUrl" width="50" height="50" class="img-circle" />
-                                }
-                            </td>
-                            <td>
-                                <a class="" asp-action="VisitProfile" asp-route-id="@item.Id">
-                                    @if (item.FullName == null)
+                            <th class="text-center col-md-1">#</th>
+                            <th class="col-md-1"></th>
+                            <th>Namn</th>
+                            <th>Totala tillgångar</th>
+                            @*<th>Dagens utveckling</th>*@
+                            <th>Utveckling</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model.AllUsers)
+                        {
+                            int i = Model.AllUsers.IndexOf(item);
+                            <tr>
+                                <td class="text-center">@(i + 1)</td>
+                                <td class="text-center">
+                                    @if (item.PictureUrl == null)
                                     {
-                                        @item.Email
+                                        <img src="~/images/default-profile-pic.png" width="50" height="50" class="img-circle" />
                                     }
                                     else
                                     {
-                                        @item.FullName
+                                        <img src="@item.PictureUrl" width="50" height="50" class="img-circle" />
                                     }
-                                </a>
-                            </td>
-                            <td>
-                                @Html.DisplayFor(m => item.TotalWorth)
-                            </td>
-                            @*<td>@Html.DisplayFor(m => item.PercentPerDay)%</td>*@
-                            @if (item.GrowthPercent > 0)
-                            {
-                                <td class="text-success"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
-                            }
-                            else if (item.GrowthPercent < 0)
-                            {
+                                </td>
+                                <td>
+                                    <a class="" asp-action="VisitProfile" asp-route-id="@item.Id">
+                                        @if (item.FullName == null)
+                                        {
+                                            @item.Email
+                                        }
+                                        else
+                                        {
+                                            @item.FullName
+                                        }
+                                    </a>
+                                </td>
+                                <td>
+                                    @Html.DisplayFor(m => item.TotalWorth)
+                                </td>
+                                @*<td>@Html.DisplayFor(m => item.PercentPerDay)%</td>*@
+                                @if (item.GrowthPercent > 0)
+                                {
+                                    <td class="text-success"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
+                                }
+                                else if (item.GrowthPercent < 0)
+                                {
 
-                                <td class="text-danger"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-down fa-2x pull-right"></i></td>
-                            }
-                            else
-                            {
-                                <td>@Html.DisplayFor(m => item.GrowthPercent)%</td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
+                                    <td class="text-danger"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-down fa-2x pull-right"></i></td>
+                                }
+                                else
+                                {
+                                    <td>@Html.DisplayFor(m => item.GrowthPercent)%</td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+            <div class=""></div>
+
+
         </div>
-        <div class=""></div>
-
-
-    </div>
+    }
+    else
+    {
+        <div class="container">
+            <div class="jumbotron jumbotron-custom ">
+                <h3 class="">För att göra tävlingen ytterligare spännande har vi valt att dölja topplistan fram tills tävlingen är slut.</h3>
+            </div>
+        </div>
+    }
 </section>
 
 @section scripts

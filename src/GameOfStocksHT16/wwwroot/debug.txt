@@ -264,3 +264,4 @@ den 18 mars 2017 10:03:12 sucess, stockList.Count = 334
 den 18 mars 2017 10:05:12 sucess, stockList.Count = 334
 den 18 mars 2017 10:07:12 sucess, stockList.Count = 334
 den 18 mars 2017 10:09:12 sucess, stockList.Count = 334
+den 5 april 2017 08:11:36 sucess, stockList.Count = 334
