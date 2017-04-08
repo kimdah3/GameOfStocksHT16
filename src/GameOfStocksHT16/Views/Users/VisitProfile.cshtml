@@ -4,6 +4,8 @@
     ViewData["Title"] = @Model.User.FullName;
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (User.Identity.Name == "dahlberg_kim@hotmail.com" || User.Identity.Name == "alexander.lienius@outlook.com")
+{
 <section class="section-padding-medium">
     <div class="container">
         <div class="row">
@@ -15,29 +17,29 @@
                         </div>
                         <div class="panel-body">
                             @if (Model.User.PictureUrl == null)
-                        {
+                            {
                             <img src="~/images/default-profile-pic.png" width="200" height="200" class="img-circle img-responsive img-center" />
-                        }
-                        else
-                        {
+                            }
+                            else
+                            {
                             <img src="@Model.User.PictureUrl" width="200" height="200" class="img-circle img-responsive img-center " />
-                        }
+                            }
 
-                        <table class="table table-condensed table-border-visitprofile">
-                            <tbody>
-                                <tr>
-                                    <td class=""><h5><i class="fa fa-trophy"></i> Rank:</h5></td>
-                                    <td><h5>#@Html.DisplayFor(model => model.Position)</h5></td>
-                                </tr>
+                            <table class="table table-condensed table-border-visitprofile">
+                                <tbody>
+                                    <tr>
+                                        <td class=""><h5><i class="fa fa-trophy"></i> Rank:</h5></td>
+                                        <td><h5>#@Html.DisplayFor(model => model.Position)</h5></td>
+                                    </tr>
 
 
-                                <tr>
-                                    <td><h5>@Html.DisplayNameFor(model => model.User.TotalWorth):</h5></td>
-                                    <td><h5>@Html.DisplayFor(model => model.User.TotalWorth)</h5></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                                    <tr>
+                                        <td><h5>@Html.DisplayNameFor(model => model.User.TotalWorth):</h5></td>
+                                        <td><h5>@Html.DisplayFor(model => model.User.TotalWorth)</h5></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -46,70 +48,70 @@
             </div>
         </div>
         <div class="row">
-            <hr class="visible-xs visible-sm"/>
+            <hr class="visible-xs visible-sm" />
             <div class="col-lg-6 col-md-6 col-sm-6">
                 <div class="panel panel-success">
                     <div class="panel-heading"><i class="fa fa-2x fa-smile-o pull-right"></i> Aktier</div>
                     <div class="panel-body">
                         @if (Model.StockOwnerships.Any())
                         {
-                            <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
-                                <span id="buy-sell-error"></span>
-                            </div>
-                            <div class="table-responsive">
-                                <table class="table table-condensed ">
-                                    <thead>
-                                        <tr>
-                                            <th class="col-lg-1">
-                                                Namn
-                                            </th>
+                        <div id="buy-sell-error-box" style="display:none" class="alert alert-warning ">
+                            <span id="buy-sell-error"></span>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-condensed ">
+                                <thead>
+                                    <tr>
+                                        <th class="col-lg-1">
+                                            Namn
+                                        </th>
 
-                                            <th class="col-lg-1">
-                                                Antal
-                                            </th>
-                                            <th class="col-lg-1">
-                                                Totalt värde
-                                            </th>
-                                            <th class="col-lg-1">
-                                                GAV
-                                            </th>
-                                            <th class="col-lg-1 hidden-xs">Aktuell kurs</th>
-                                            <th class="col-lg-1">Utveckling</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.StockOwnerships)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Quantity)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TotalWorth)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Gav)
-                                                </td>
-                                                <td class="hidden-xs">
-                                                    @Html.DisplayFor(modelItem => item.LastTradePrice)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Growth)%
-                                                </td>
+                                        <th class="col-lg-1">
+                                            Antal
+                                        </th>
+                                        <th class="col-lg-1">
+                                            Totalt värde
+                                        </th>
+                                        <th class="col-lg-1">
+                                            GAV
+                                        </th>
+                                        <th class="col-lg-1 hidden-xs">Aktuell kurs</th>
+                                        <th class="col-lg-1">Utveckling</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.StockOwnerships)
+                                    {
+                                    <tr>
+                                        <td>
+                                            <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Quantity)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalWorth)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Gav)
+                                        </td>
+                                        <td class="hidden-xs">
+                                            @Html.DisplayFor(modelItem => item.LastTradePrice)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Growth)%
+                                        </td>
 
 
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
-                            </div>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                         }
                         else
                         {
-                            <p class="small">@Model.User.FullName äger inga aktier just nu.</p>
+                        <p class="small">@Model.User.FullName äger inga aktier just nu.</p>
                         }
                     </div>
                 </div>
@@ -120,74 +122,74 @@
                     <div class="panel-heading"><i class="fa fa-2x fa-clock-o pull-right"></i> Vänteläge </div>
                     @if (Model.PendingTransactions.Any())
                     {
-                        <div class="panel-body">
-                            <div class="table-responsive">
-                                <table class="table table-condensed">
-                                    <thead>
-                                        <tr>
-                                            <th>
-                                                Datum
-                                            </th>
-                                            <th>
-                                                Namn
-                                            </th>
-                                            <th>
-                                                Antal
-                                            </th>
+                    <div class="panel-body">
+                        <div class="table-responsive">
+                            <table class="table table-condensed">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Datum
+                                        </th>
+                                        <th>
+                                            Namn
+                                        </th>
+                                        <th>
+                                            Antal
+                                        </th>
 
-                                            <th>
-                                                Uppskattat
-                                            </th>
-                                            <th>
-                                                Köper
-                                            </th>
-                                            <th>
-                                                Säljer
-                                            </th>
-                                            <th>
-                                                <i class="fa fa-clock-o"></i>
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        @foreach (var item in Model.PendingTransactions)
-                                        {
-                                            <tr>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Date)
-                                                </td>
-                                                <td>
-                                                    <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.Quantity)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TotalMoney)
-                                                </td>
+                                        <th>
+                                            Uppskattat
+                                        </th>
+                                        <th>
+                                            Köper
+                                        </th>
+                                        <th>
+                                            Säljer
+                                        </th>
+                                        <th>
+                                            <i class="fa fa-clock-o"></i>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var item in Model.PendingTransactions)
+                                    {
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Date)
+                                        </td>
+                                        <td>
+                                            <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label">@item.Name</a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Quantity)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalMoney)
+                                        </td>
 
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.IsBuying)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.IsSelling)
-                                                </td>
-                                                <td>
-                                                    @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
-                                                </td>
-                                            </tr>
-                                        }
-                                    </tbody>
-                                </table>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsBuying)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsSelling)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TimeLeftToCompletion.Minutes) Min
+                                        </td>
+                                    </tr>
+                                    }
+                                </tbody>
+                            </table>
 
-                            </div>
                         </div>
+                    </div>
                     }
                     else
                     {
-                        <div class="panel-body">
-                            <p class="small">@Model.User.FullName har inga köp eller sälj i vänteläget..</p>
-                        </div>
+                    <div class="panel-body">
+                        <p class="small">@Model.User.FullName har inga köp eller sälj i vänteläget..</p>
+                    </div>
                     }
                 </div>
             </div>
@@ -234,36 +236,36 @@
                                 <tbody>
                                     @foreach (var item in Model.CompletedTransactions)
                                     {
-                                        if (!item.IsCompleted)
-                                        {
-                                            continue;
-                                        }
-                                        <tr>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Date)
-                                            </td>
-                                            <td>
-                                                <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Label)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Quantity)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.TotalMoney)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.Bid)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.IsBuying)
-                                            </td>
-                                            <td>
-                                                @Html.DisplayFor(modelItem => item.IsSelling)
-                                            </td>
-                                        </tr>
+                                    if (!item.IsCompleted)
+                                    {
+                                    continue;
+                                    }
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Date)
+                                        </td>
+                                        <td>
+                                            <a asp-controller="StockList" asp-action="Stock" asp-route-label="@item.Label" class="">@item.Name</a>
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Label)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Quantity)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.TotalMoney)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Bid)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsBuying)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.IsSelling)
+                                        </td>
+                                    </tr>
                                     }
                                 </tbody>
                             </table>
@@ -275,38 +277,49 @@
     </div>
 </section>
 @section scripts{
-    <script>
-        $(function () {
-            var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
-            var progressToChart = [];
-            $.each(progressAllDays.value, function(index, element) {
-                progressToChart.push({ x: index, y: element });
+        <script>
+            $(function () {
+                var progressAllDays = @Json.Serialize(Model.ProgressAllDays);
+                var progressToChart = [];
+                $.each(progressAllDays.value, function(index, element) {
+                    progressToChart.push({ x: index, y: element });
+                });
+
+                //Better to construct options first and then pass it as a parameter
+                var options = {
+                    title: {
+                        text: "Procentuell utveckling/dag"
+                    },
+                    animationEnabled: true,
+                    axisX: {
+                        minimum: 0,
+                        maximum: 30
+                    },
+                    axisY: {
+                        minimum: -50,
+                        maximum: 50
+
+                    },
+                    data: [
+                    {
+                        type: "line", //change it to line, area, column, pie, etc
+                        dataPoints: progressToChart
+                    }
+                    ]
+                };
+                var chart = new CanvasJS.Chart("chartContainer", options);
+                chart.render();
             });
-
-            //Better to construct options first and then pass it as a parameter
-            var options = {
-                title: {
-                    text: "Procentuell utveckling/dag"
-                },
-                animationEnabled: true,
-                axisX: {
-                    minimum: 0,
-                    maximum: 30
-                },
-                axisY: {
-                    minimum: -50,
-                    maximum: 50
-
-                },
-                data: [
-                {
-                    type: "line", //change it to line, area, column, pie, etc
-                    dataPoints: progressToChart
-                }
-                ]
-            };
-            var chart = new CanvasJS.Chart("chartContainer", options);
-            chart.render();
-        });
-    </script>
+        </script>
+    }
+}
+else
+{
+<div class="section-padding-medium">
+    <div class="container">
+        <div class="jumbotron jumbotron-custom ">
+            <h3 class="">För att göra tävlingen ytterligare spännande har vi valt att dölja andras profiler fram tills tävlingen är slut.</h3>
+        </div>
+    </div>
+</div>
 }
