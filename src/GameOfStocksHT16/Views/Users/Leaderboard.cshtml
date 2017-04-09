@@ -8,7 +8,7 @@
     {
         <div class="container">
             <div class="table-responsive">
-                <table class="table table-bordered table-condensed table-striped">
+                <table id="leaderboard-table" class="table table-bordered table-condensed table-striped">
                     <thead>
                         <tr>
                             <th class="text-center col-md-1">#</th>
@@ -17,6 +17,8 @@
                             <th>Totala tillgångar</th>
                             @*<th>Dagens utveckling</th>*@
                             <th>Utveckling</th>
+                            <th>Högst positiv daglig utveckling</th>
+                            <th>Högst negativ daglig utveckling</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -50,7 +52,6 @@
                                 <td>
                                     @Html.DisplayFor(m => item.TotalWorth)
                                 </td>
-                                @*<td>@Html.DisplayFor(m => item.PercentPerDay)%</td>*@
                                 @if (item.GrowthPercent > 0)
                                 {
                                     <td class="text-success"><b>@Html.DisplayFor(m => item.GrowthPercent)%</b> <i class="fa fa-arrow-up fa-2x  pull-right"></i></td>
@@ -64,6 +65,10 @@
                                 {
                                     <td>@Html.DisplayFor(m => item.GrowthPercent)%</td>
                                 }
+
+                                <td><span class="text-success">@Html.DisplayFor(m => item.HighestProgress)%</span></td>
+                                <td><span class="text-danger">@Html.DisplayFor(m => item.HighestNegativProgress)%</span></td>
+
                             </tr>
                         }
                     </tbody>
@@ -87,5 +92,16 @@
 @section scripts
 {
     <script type="text/javascript">
+        $(function () {
+            var table = $('#leaderboard-table')
+                    .DataTable({
+                        "iDisplayLength": 120,
+                        "language": {
+                            "sSearch": "Sök:",
+                            "sLengthMenu": "Visa _MENU_ rader"
+                        },
+                        "responsive": true
+                    });
+        });
     </script>
 }

@@ -32,6 +32,10 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public decimal GrowthPercent { get; set; }
         [Display(Name = "Utveckling/dag")]
         public decimal PercentPerDay { get; set; }
+
+        public decimal HighestProgress { get; set; }
+        public decimal HighestNegativProgress { get; set; }
+        
     }
 }
 

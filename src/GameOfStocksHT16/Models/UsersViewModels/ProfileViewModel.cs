@@ -13,6 +13,7 @@ namespace GameOfStocksHT16.Models.UsersViewModels
         public JsonResult ProgressAllDays { get; set; }
 
         public int Position { get; set; }
+        public decimal HighestProgress { get; set; }
 
         public List<StockTransactionModel> PendingTransactions { get; set; }
         public List<StockTransactionModel> CompletedTransactions { get; set; }

@@ -337,6 +337,81 @@ namespace GameOfStocksHT16.Services
             }
         }
 
+        public decimal GetHighestDailyProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory)
+        {
+            var userTotalWorthProgress = new List<decimal>();
+            var highestProgress = 0M;
+
+            try
+            {
+                foreach (var entity in userMoneyHistory)
+                {
+                    userTotalWorthProgress.Add(Math.Round(((entity.Money / 100000 - 1) * 100), 2));
+                }
+
+                for (int i = 0; i < userTotalWorthProgress.Count; i++)
+                {
+                    var dayBefore = 0M;
+
+                    if (i != 0)
+                    {
+                        dayBefore = userTotalWorthProgress[i - 1];
+                    }
+
+                    var daily = userTotalWorthProgress[i] - dayBefore;
+
+                    if (daily > highestProgress)
+                    {
+                        highestProgress = daily;
+                    }
+                }
+
+
+                return highestProgress;
+            }
+            catch (Exception)
+            {
+                return 0M;
+            }
+        }
+        public decimal GetHighestDailyNegativeProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory)
+        {
+            var userTotalWorthProgress = new List<decimal>();
+            var lowestProgress = 0M;
+
+            try
+            {
+                foreach (var entity in userMoneyHistory)
+                {
+                    userTotalWorthProgress.Add(Math.Round(((entity.Money / 100000 - 1) * 100), 2));
+                }
+
+                for (int i = 0; i < userTotalWorthProgress.Count; i++)
+                {
+                    var dayBefore = 0M;
+
+                    if (i != 0)
+                    {
+                        dayBefore = userTotalWorthProgress[i - 1];
+                    }
+
+                    var daily = userTotalWorthProgress[i] - dayBefore;
+
+                    if (daily < lowestProgress)
+                    {
+                        lowestProgress = daily;
+                    }
+                }
+
+
+                return lowestProgress;
+            }
+            catch (Exception)
+            {
+                return 0M;
+            }
+        }
+
         public decimal GetUserTotalWorth(ApplicationUser user)
         {
             var totalWorth = user.Money + user.ReservedMoney;
@@ -435,7 +510,7 @@ namespace GameOfStocksHT16.Services
             _gameOfStocksRepository.SaveUsersHistory(moneyList);
         }
 
-        
+
 
         public List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers, List<UserMoneyHistory> usersHistory)
         {
@@ -453,7 +528,7 @@ namespace GameOfStocksHT16.Services
             return usersWithPercent;
         }
 
-        
+
 
         //Tid för börsstängning, ska vara 1747.
         //Och inte helgdag, därav !IsWeekDay()

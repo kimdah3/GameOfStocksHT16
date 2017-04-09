@@ -37,6 +37,10 @@
                                         <td><h5>@Html.DisplayNameFor(model => model.User.TotalWorth):</h5></td>
                                         <td><h5>@Html.DisplayFor(model => model.User.TotalWorth)</h5></td>
                                     </tr>
+                                    <tr>
+                                        <td><h5>@Html.DisplayNameFor(model => model.HighestProgress):</h5></td>
+                                        <td><h5>@Html.DisplayFor(model => model.HighestProgress)%</h5></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -296,8 +300,8 @@
                         maximum: 30
                     },
                     axisY: {
-                        minimum: -50,
-                        maximum: 50
+                        minimum: -100,
+                        maximum: 100
 
                     },
                     data: [

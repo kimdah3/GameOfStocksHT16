@@ -23,6 +23,8 @@ namespace GameOfStocksHT16.Services
         List<UserModel> GetAllUsersWithTotalWorth(List<ApplicationUser> users);
 
         JsonResult GetUserTotalWorthProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory);
+        decimal GetHighestDailyProgress(ApplicationUser user, List<UserMoneyHistory> userMoneyHistory);
+        decimal GetHighestDailyNegativeProgress(ApplicationUser user, List<UserMoneyHistory> list);
         decimal GetUserTotalWorth(ApplicationUser user);
 
         List<UserPercentModel> GetUsersPercentToday(List<UserModel> allUsers, List<UserMoneyHistory> usersHistory);

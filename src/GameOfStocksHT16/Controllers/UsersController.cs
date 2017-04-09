@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 using GameOfStocksHT16.Services;
 using GameOfStocksHT16.Entities;
 using GameOfStocksHT16.Models;
+using Newtonsoft.Json;
 
 namespace GameOfStocksHT16.Controllers
 {
@@ -99,7 +100,9 @@ namespace GameOfStocksHT16.Controllers
                     Money = user.Money,
                     TotalWorth = user.Money + user.ReservedMoney,
                     FullName = user.FullName,
-                    PictureUrl = user.PictureUrl
+                    PictureUrl = user.PictureUrl,
+                    HighestProgress = 0M,
+                    HighestNegativProgress = 0M
                 };
 
                 usersWithTotalWorth.TotalWorth += GetSellingStocksWorth(user, stocks);
@@ -110,6 +113,8 @@ namespace GameOfStocksHT16.Controllers
                 }
 
                 usersWithTotalWorth.GrowthPercent = Math.Round(((usersWithTotalWorth.TotalWorth / 100000 - 1) * 100), 2);
+                usersWithTotalWorth.HighestProgress = _stockService.GetHighestDailyProgress(user, _gameOfStocksRepository.GetUserMoneyHistory(user).ToList());
+                usersWithTotalWorth.HighestNegativProgress = _stockService.GetHighestDailyNegativeProgress(user, _gameOfStocksRepository.GetUserMoneyHistory(user).ToList());
 
                 model.AllUsers.Add(usersWithTotalWorth);
 
@@ -156,6 +161,9 @@ namespace GameOfStocksHT16.Controllers
             var usersWithTotal = _stockService.GetAllUsersWithTotalWorth(users).OrderByDescending(x => x.TotalWorth).ToList();
             var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(userToDisplay, userMoneyHistory);
 
+            var highestProgress = _stockService.GetHighestDailyProgress(userToDisplay, userMoneyHistory);
+
+
             var model = new ProfileViewModel
             {
                 User = new UserModel
@@ -172,6 +180,7 @@ namespace GameOfStocksHT16.Controllers
                 FailedTransactions = stockTrans.Where(s => s.IsFailed).ToList(),
                 StockOwnerships = ownerships,
                 ProgressAllDays = usersTotalWorthProgress,
+                HighestProgress = highestProgress
             };
 
             return View(model);
@@ -194,6 +203,7 @@ namespace GameOfStocksHT16.Controllers
             var ownerships = GetOwnershipsWithLastTradePriceByUser(user);
             var usersWithTotal = _stockService.GetAllUsersWithTotalWorth(users).OrderByDescending(x => x.TotalWorth).ToList();
             var usersTotalWorthProgress = _stockService.GetUserTotalWorthProgress(user, userMoneyHistory);
+            var highestProgress = _stockService.GetHighestDailyProgress(user, userMoneyHistory);
 
             var model = new ProfileViewModel()
             {
@@ -212,7 +222,10 @@ namespace GameOfStocksHT16.Controllers
                 FailedTransactions = stockTrans.Where(s => s.IsFailed).ToList(),
                 StockOwnerships = ownerships,
                 ProgressAllDays = usersTotalWorthProgress,
+                HighestProgress = highestProgress
             };
+
+
 
             return View(model);
         }
