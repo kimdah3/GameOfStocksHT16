@@ -128,25 +128,25 @@ namespace GameOfStocksHT16
             });
 
             // FACEBOOK 
-            var facebookAuthenticatonOptions = new FacebookOptions
-            {
-                AppId = Configuration["Authentication:Facebook:AppId"],
-                AppSecret = Configuration["Authentication:Facebook:AppSecret"],
-                Events = new OAuthEvents
-                {
-                    OnCreatingTicket = context =>
-                    {
-                        var client = new FacebookClient(context.AccessToken);
-                        dynamic info = client.Get("me", new { fields = "name,id,email,picture.width(300).height(300)" });
-                        context.Identity.AddClaim(new Claim("pictureUrl", (string)info["picture"]["data"]["url"]));
-                        context.Identity.AddClaim(new Claim(ClaimTypes.Email, info.email));
-                        return Task.FromResult(0);
-                    }
-                }
-            };
-            facebookAuthenticatonOptions.Scope.Add("public_profile");
-            facebookAuthenticatonOptions.Scope.Add("email");
-            app.UseFacebookAuthentication(facebookAuthenticatonOptions);
+            //var facebookAuthenticatonOptions = new FacebookOptions
+            //{
+            //    AppId = Configuration["Authentication:Facebook:AppId"],
+            //    AppSecret = Configuration["Authentication:Facebook:AppSecret"],
+            //    Events = new OAuthEvents
+            //    {
+            //        OnCreatingTicket = context =>
+            //        {
+            //            var client = new FacebookClient(context.AccessToken);
+            //            dynamic info = client.Get("me", new { fields = "name,id,email,picture.width(300).height(300)" });
+            //            context.Identity.AddClaim(new Claim("pictureUrl", (string)info["picture"]["data"]["url"]));
+            //            context.Identity.AddClaim(new Claim(ClaimTypes.Email, info.email));
+            //            return Task.FromResult(0);
+            //        }
+            //    }
+            //};
+            //facebookAuthenticatonOptions.Scope.Add("public_profile");
+            //facebookAuthenticatonOptions.Scope.Add("email");
+            //app.UseFacebookAuthentication(facebookAuthenticatonOptions);
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
 
